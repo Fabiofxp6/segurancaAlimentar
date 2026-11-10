@@ -30,6 +30,6 @@ São necessários vínculos e histórico de designação, além da checagem de p
 
 ## Pendências e verificação futura
 
-P002 a P006 tratam de representação, ação/inspeção, designação, autoridade e mudanças em andamento. A Etapa 6 detalhará o contrato. Verificar futuramente ações e estabelecimentos distintos, alteração de vínculo, designação revogada e tentativa por acesso direto. Autoridade e autoaprovação continuam sem decisão; não se cria regra para elas neste ADR.
+P002 a P006 tratam de representação, ação/inspeção, designação, autoridade e mudanças em andamento. A [Spec 0003](../specs/0003-acesso-vinculos-supervisao.md) detalha o contrato na Etapa 6, ainda Proposto. A [matriz](../matriz-rastreabilidade.md) registra cobertura documental e validação futura, sem encerrar essas políticas. Verificar futuramente ações e estabelecimentos distintos, alteração de vínculo, designação revogada e tentativa por acesso direto. Autoridade e autoaprovação continuam sem decisão; não se cria regra para elas neste ADR.
 
 Relacionados: RF002, RF016 a RF019, RF022, RS001, RS002 e RS010 no [PRD](../prd/0001-sistema-avaliacao-seguranca-alimentar.md); [arquitetura](../arquitetura.md).

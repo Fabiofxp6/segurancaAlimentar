@@ -175,7 +175,7 @@ Logs técnicos não são trilha oficial de auditoria. Formato, destino, retenç�
 
 ## Relação com os requisitos
 
-Esta é uma relação local da fundação, não a matriz completa prevista para a Etapa 6. Indica contribuição futura parcial; nenhum requisito fica implementado por esta entrega.
+Esta é uma relação local da fundação, complementar à [matriz completa elaborada na Etapa 6](../matriz-rastreabilidade.md). Indica contribuição futura parcial; nenhum requisito fica implementado por esta entrega.
 
 | Requisitos existentes | Contribuição da fundação | Verificação futura |
 |---|---|---|
@@ -215,6 +215,6 @@ Todos os cenários estão planejados e não executados. A evidência deve identi
 
 ## Continuidade
 
-A [spec de autenticação](0002-autenticacao.md) foi elaborada na Etapa 5 e permanece Proposta. Seu [ADR 0008](../adr/0008-sessoes-no-servidor-com-postgresql.md) recomenda backend de sessões em banco, ainda não aprovado; não modifica a configuração real da fundação. A próxima etapa solicitável é a Etapa 6, com spec de perfis/acesso e matriz completa, sem avanço automático. Esta spec será revisada conforme as decisões de ambiente e identidade forem efetivamente tomadas; não avançará para Implementado por aprovação do texto.
+A [spec de autenticação](0002-autenticacao.md) foi elaborada na Etapa 5 e permanece Proposta. Seu [ADR 0008](../adr/0008-sessoes-no-servidor-com-postgresql.md) recomenda backend de sessões em banco, ainda não aprovado; não modifica a configuração real da fundação. A [Spec 0003 de acesso](0003-acesso-vinculos-supervisao.md) e a [matriz completa](../matriz-rastreabilidade.md) foram elaboradas na Etapa 6, também Propostas; não resolvem por si as escolhas físicas de P002. As Etapas 7 e 8 foram elaboradas para revisão; a [revisão final](../revisao-final-fundacao.md) e o [estado](../state.md) registram a passagem à próxima atividade que o usuário solicitar, sem início automático de implementação. Esta spec será revisada conforme as decisões de ambiente e identidade forem efetivamente tomadas; não avançará para Implementado por aprovação do texto.
 
 O [estado](../state.md), as [etapas](../etapas.md) e o [acompanhamento no Trello](../acompanhamento-trello.md) indicam o ponto de retomada. Nesta entrega nenhum código, ambiente, dependência, banco, migração ou configuração real foi criado ou alterado.

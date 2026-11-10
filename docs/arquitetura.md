@@ -1,6 +1,6 @@
 # Arquitetura do Sistema de Avaliação de Segurança Alimentar
 
-- **Status:** proposta de detalhamento para revisão, originada na Etapa 3; referências atualizadas na Etapa 5.
+- **Status:** proposta de detalhamento para revisão, originada na Etapa 3; referências atualizadas na Etapa 8.
 - **Data:** 10/11/2026.
 - **Base:** [PRD 0001](prd/0001-sistema-avaliacao-seguranca-alimentar.md), [decisões confirmadas](decisoes-confirmadas.md), [pendências](pendencias.md) e fontes F003, F005, F007 e F008 do [índice](referencias/README.md).
 
@@ -182,6 +182,6 @@ Todos os ADRs novos estão Propostos como documentos para revisão. Os seis prim
 | [0007](adr/0007-monolito-modular.md) | Aplicação única com organização modular | Recomendação a validar |
 | [0008](adr/0008-sessoes-no-servidor-com-postgresql.md) | Sessões nativas no servidor com PostgreSQL | Recomendação nova a validar |
 
-A [spec de fundação](specs/0001-fundacao-tecnica.md) foi elaborada na Etapa 4 e a [spec de autenticação](specs/0002-autenticacao.md) na Etapa 5, ambas com contratos candidatos e bloqueios indicados. A spec de acesso será preparada na Etapa 6, somente quando solicitada. Nomes de apps, modelos, campos, rotas, contratos, migrações e cenários detalhados de testes pertencem a essas entregas ou às specs funcionais posteriores. A matriz completa continua prevista para a Etapa 6.
+A [spec de fundação](specs/0001-fundacao-tecnica.md) foi elaborada na Etapa 4 e a [spec de autenticação](specs/0002-autenticacao.md) na Etapa 5, ambas com contratos candidatos e bloqueios indicados. A [spec de acesso](specs/0003-acesso-vinculos-supervisao.md) e a [matriz completa](matriz-rastreabilidade.md) foram elaboradas na Etapa 6 e permanecem Propostas; representação física, autoridades e políticas não foram aprovadas. Nomes de apps, modelos, campos, rotas, contratos, migrações e cenários detalhados de testes pertencem a essas entregas ou às specs funcionais posteriores. A matriz liga as 58 entradas às fontes, relações, cobertura documental e validação futura, distinguindo contratos parciais de funções futuras.
 
-O [estado](state.md), as [etapas](etapas.md) e a [rotina no Trello](acompanhamento-trello.md) registram a continuidade. A elaboração da arquitetura e das specs de fundação/autenticação não cria software nem aprova a execução da etapa seguinte.
+O [estado](state.md), as [etapas](etapas.md) e a [rotina no Trello](acompanhamento-trello.md) registram a continuidade. A elaboração da arquitetura e das specs de fundação/autenticação/acesso não cria software nem aprova a execução da etapa seguinte. As oito etapas documentais foram elaboradas para revisão; [AGENTS](../AGENTS.md), [README](../README.md) e [revisão final](revisao-final-fundacao.md) orientam a continuidade sem resolver políticas abertas por inferência.

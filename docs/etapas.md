@@ -9,13 +9,15 @@ Atualizado em: 10/11/2026. Trabalho organizado conforme pedido do usuário: uma 
 | 3 | Definir arquitetura e escolhas estruturais | Arquitetura, ADRs iniciais e skill de ADR | Concluída para revisão do usuário |
 | 4 | Especificar fundação técnica | Spec de fundação e skill de specs | Concluída para revisão do usuário |
 | 5 | Especificar autenticação | Spec de autenticação e ADR de backend proposto | Concluída para revisão do usuário; documentos Propostos |
-| 6 | Especificar permissões e vínculos | Spec de acesso e matriz de rastreabilidade | Não iniciada |
-| 7 | Adaptar instruções técnicas | Skills de Python, Django e segurança | Preparação parcial antecipada pelo pedido de curadoria; revisão integrada pendente |
-| 8 | Consolidar orientações e revisar coerência | AGENTS, CLAUDE, README do projeto e revisão final | Não iniciada |
+| 6 | Especificar permissões e vínculos | Spec de acesso e matriz de rastreabilidade | Concluída para revisão do usuário; documentos Propostos |
+| 7 | Adaptar instruções técnicas | Skills de Python, Django e segurança | Revisão integrada concluída para revisão do usuário |
+| 8 | Consolidar orientações e revisar coerência | AGENTS, CLAUDE, README do projeto e revisão final | Elaborada e conferida para revisão do usuário |
 
 ## Acompanhamento contínuo
 
 Atualizar o Trello junto de todas as atividades do projeto, incluindo análise, documentação, decisões, implementação e verificações. Registrar resultado, situação e pendências conforme a [rotina de acompanhamento](acompanhamento-trello.md). Essa orientação vale para todas as etapas e não autoriza avançar automaticamente.
+
+As notas de entrega abaixo registram o escopo e a situação no momento de cada atividade. Para a situação vigente, consultar a tabela acima e o [estado](state.md); indicações antigas de etapa não iniciada são históricas.
 
 ## Entrega da Etapa 1
 
@@ -86,6 +88,31 @@ Foram recuperadas as 183 entradas de dados dos RF com tipos, formatos e condiç�
 
 Tipos sugeridos, UUID, máscaras, limites e políticas não foram aprovados pela transcrição. As confirmações posteriores sobre usuário/senha e sessão Django prevalecem sobre a fonte mais antiga. RF014 mantém o bloqueio de conclusão como proposta; RF027 e RF028 seguem para validação. PRD continua Proposto, sem código ou testes de aplicação. Revisão acompanhada no Trello.
 
+## Entrega da Etapa 6
+
+- [Spec 0003](specs/0003-acesso-vinculos-supervisao.md), Proposta: matriz de papéis, dados/tipos/referências de RF002/RS001/RS002, vínculos, supervisão, services, rotas, forms, falhas, revogação, concorrência e Admin.
+- [Matriz completa](matriz-rastreabilidade.md) com 28 RF, 14 RNF e 16 RS: fontes, decisões, relações entre requisitos, cobertura parcial/futura e 58 cenários VR.
+- Trinta e seis cenários AC futuros; autoridade, autoaprovação, agrupamento, cardinalidades e vigência permanecem nas pendências, sem concessão por inferência.
+- Skills spec, Django e segurança aplicadas; Graphify executado na detecção e em uma tentativa de extração, conforme seu [registro](registro-graphify.md); mapa pendente por ausência de fragmentos finais. Sem dependências instaladas ou configuração global alterada.
+- Documentação de continuidade e Trello atualizados; conteúdo dos 58 requisitos, fontes e arquivos alheios ao recorte preservados. Verificações documentais não são testes de aplicação.
+
+O pedido de avançar autorizou somente a Etapa 6. Não criou software, migrações ou ambiente, não resolveu automaticamente as políticas abertas e não iniciou a revisão integrada da Etapa 7.
+
+## Entrega da Etapa 7
+
+- Skills [Python](../.agents/skills/python-boas-praticas/SKILL.md), [Django](../.agents/skills/django-boas-praticas/SKILL.md) e [segurança](../.agents/skills/seguranca-aplicacao/SKILL.md) revisadas com as três specs, preservando nomes e licenças.
+- [Registro da revisão](revisao-skills-tecnicas.md) com lacunas, correspondência aos contratos, nove situações examinadas no papel e verificações de formato, referências e integridade.
+- Exceções nativas de ORM/form/sessão, propostas ainda não aprovadas e acesso contextual/revogação ficaram explícitos, sem duplicar as specs ou modificar o produto.
+- Catálogo, estado e Trello atualizados. Nenhum perfil TOML ou agente foi executado; não houve instalação, código, ambiente, banco/migração ou teste de aplicação. Graphify permanece pendente, sem nova extração nesta revisão.
+
+## Entrega da Etapa 8
+
+- [AGENTS](../AGENTS.md) com retomada seletiva, fontes, limites, invariantes, skills/agentes, preservação e rotina do Trello.
+- [CLAUDE](../CLAUDE.md) como entrada que aponta para AGENTS e estado, sem uma segunda cópia das regras.
+- [README da raiz](../README.md) com visão do sistema, situação real, mapa documental e decisões necessárias antes da execução.
+- [Revisão final](revisao-final-fundacao.md): coerência do conjunto, pontos de retomada atualizados, links/IDs/formatos e integridade. Requisitos, dados, critérios e políticas preservados.
+- Estado, índices e Trello atualizados. Sem código, dependência, ambiente, banco/migração, implantação ou teste de aplicação; Graphify continua pendente e perfis não executados.
+
 ## Retomada
 
-Etapa 5 concluída para revisão, mantendo o detalhamento recuperado no PRD. Aguardar revisão e solicitação da Etapa 6 para preparar somente a spec de acesso/vínculos/supervisão e a matriz completa. Preservar as pendências de ambiente, identidade e acesso. Revisão integrada das skills, AGENTS, CLAUDE, README da raiz e implementação permanecem nos trabalhos próprios.
+As oito etapas da fundação documental foram elaboradas e conferidas para revisão. Aguardar revisão do usuário e a solicitação de uma nova atividade delimitada: decisão, ajuste documental ou recorte de implementação. Nenhuma fase posterior está iniciada. As políticas abertas e os contratos Propostos continuam sem aprovação automática.

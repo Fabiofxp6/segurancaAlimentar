@@ -47,4 +47,4 @@ Nova spec começa como `Proposto`; aprovação documental deve ter origem e data
 
 Deixar cenários não executados desmarcados. Marcar `[x]` apenas com execução bem-sucedida e evidência correspondente; comandos descritos ou testes apenas escritos não são testes passados.
 
-Conferir contratos, dependências, IDs, links e coerência com arquitetura e requisitos. Ligar a spec no PRD e atualizar estado, etapas e Trello. A presença local desta skill não comprova descoberta automática; o AGENTS será preparado na etapa prevista.
+Conferir contratos, dependências, IDs, links e coerência com arquitetura e requisitos. Ligar a spec no PRD e atualizar estado, etapas e Trello. A presença local desta skill não comprova descoberta automática; o [AGENTS da raiz](../../../AGENTS.md) orienta sua consulta no recorte autorizado.

@@ -55,3 +55,15 @@ As skills técnicas antes previstas na Etapa 7 foram preparadas agora pelo pedid
 As pastas awesome completas são retiradas da raiz após publicar e conferir o material selecionado. Cópias compactadas de recuperação foram criadas fora do projeto, preservando inclusive os arquivos locais encontrados. Não houve alteração nas fontes, no `.env`, na aplicação, no blog de referência ou nas três skills já existentes.
 
 Os avisos e licenças aproveitados estão em [NOTICE](../.agents/third-party/NOTICE.md). As referências do levantamento alimentar continuam em seu [índice](referencias/README.md), sem alteração dos originais. O [estado](state.md), as [etapas](etapas.md) e o [Trello](acompanhamento-trello.md) registram esta atividade adicional.
+
+
+## Revisão posterior: Etapa 7
+
+A revisão integrada anteriormente pendente foi realizada por solicitação do usuário em 10/11/2026, conforme o [registro](revisao-skills-tecnicas.md). Foram atualizadas apenas as três skills de Python, Django e segurança, preservando nomes, licenças e perfis TOML. O manifesto JSON desta curadoria continua como registro histórico da seleção/adaptação original; seus hashes não são uma certificação da versão atual após a revisão.
+
+Esta nota não altera as origens, os descartes ou as verificações históricas acima. Não houve nova instalação, execução dos perfis ou implementação. O estado atual e as etapas guardam a próxima atividade solicitável.
+
+
+## Consolidação posterior: Etapa 8
+
+As orientações antes previstas foram elaboradas em [AGENTS](../AGENTS.md), [CLAUDE](../CLAUDE.md) e [README da raiz](../README.md), com [revisão final](revisao-final-fundacao.md). Indicações anteriores de etapas pendentes nesta curadoria registram o momento histórico; o [estado](state.md) é a referência vigente. O manifesto e as fontes originais da curadoria foram preservados, sem reescrever a procedência ou afirmar execução dos perfis.

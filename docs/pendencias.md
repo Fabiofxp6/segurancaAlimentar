@@ -1,6 +1,6 @@
 # Pendências e propostas
 
-Atualizado em: 10/11/2026. Registro iniciado na Etapa 1, com detalhamentos até a Etapa 5.
+Atualizado em: 10/11/2026. Registro iniciado na Etapa 1, com detalhamentos até a Etapa 6.
 
 As pessoas responsáveis nominalmente e os prazos ainda não foram definidos. A coluna de encaminhamento identifica o papel que precisa participar, sem atribuir uma decisão a alguém que não a assumiu. Todas as pendências abaixo estão abertas.
 
@@ -18,7 +18,7 @@ Origem: F007; contexto técnico. F008; pendências.
 
 ## P002 Identidade e vínculos
 
-Definir campos adicionais, estratégia de identificador, representação dos perfis e vínculos de usuários com estabelecimentos. Não presumir UUID físico ou múltiplos perfis porque aparecem como exemplos. A [Spec 0001](specs/0001-fundacao-tecnica.md) propõe o nome contas.Usuario para a identidade mínima; nome, identificador e campos iniciais devem ser validados antes da primeira migração. Perfis e vínculos continuam no recorte da Etapa 6.
+Definir campos adicionais, estratégia de identificador, representação dos perfis e vínculos de usuários com estabelecimentos. Não presumir UUID físico ou múltiplos perfis porque aparecem como exemplos. A [Spec 0001](specs/0001-fundacao-tecnica.md) propõe o nome contas.Usuario para a identidade mínima; nome, identificador e campos iniciais devem ser validados antes da primeira migração. A [Spec 0003](specs/0003-acesso-vinculos-supervisao.md) detalha dados, concessões e bloqueios candidatos, sem escolher a persistência. Validar também perfil único/múltiplo, normalização/nome, autoridade de gestão de vínculos, autoelevação e bootstrap administrativo antes da implementação correspondente.
 
 Encaminhamento: Equipe, com validação do responsável pelo produto.
 
@@ -28,7 +28,7 @@ Origem: F003; RF001, RF002 e RF003.
 
 ## P003 Ação e inspeção
 
-Determinar se uma ação equivale a uma inspeção ou pode reunir várias.
+Determinar se uma ação equivale a uma inspeção ou pode reunir várias. A Spec 0003 usa contexto como referência lógica, sem criar entidade, FK ou relação física definitiva. Resolver antes de materializar os vínculos e as rotas de supervisão.
 
 Encaminhamento: Responsável pelo processo de fiscalização.
 
@@ -38,7 +38,7 @@ Origem: F003; RF002. F005; seção 5.
 
 ## P004 Designação do supervisor
 
-Definir quem designa, substitui e encerra, quantos supervisores existem por ação e sua vigência.
+Definir quem designa, substitui e encerra, quantos supervisores existem por ação e sua vigência. Na Spec 0003 permanecem candidatos os critérios de elegibilidade, sobreposição, período aberto, agendamento/retroatividade e intervalo com fim exclusivo. Não foi criada unicidade de supervisor por ação ou autoridade administrativa automática.
 
 Encaminhamento: Responsável pelo processo de fiscalização.
 
@@ -48,7 +48,7 @@ Origem: F003; RF002 e RS002.
 
 ## P005 Autoridade aprovadora
 
-Definir quem aprova alteração/cancelamento, substituição na ausência e tratamento da solicitação do próprio supervisor. Não conceder esse poder ao administrador por inferência.
+Definir quem aprova alteração/cancelamento, substituição na ausência e tratamento da solicitação do próprio supervisor. Não conceder esse poder ao administrador por inferência. A matriz de papéis da Spec 0003 mantém essas células pendentes; propõe não conceder a operação enquanto a política estiver indefinida, sem aprovar uma regra definitiva de autoaprovação.
 
 Encaminhamento: Responsável pelo processo de fiscalização.
 
@@ -238,6 +238,8 @@ Origem: F003; prioridades A validar. F005; seções 11 e 12.
 - Criar um app para cada área da visão conceitual não foi decidido. As áreas lógicas foram detalhadas como proposta na [arquitetura](arquitetura.md); o [ADR 0007](adr/0007-monolito-modular.md) recomenda monólito modular, ainda sem aprovação. A estrutura física será detalhada nas specs pertinentes.
 - O backend nativo de sessão no servidor com PostgreSQL do [ADR 0008](adr/0008-sessoes-no-servidor-com-postgresql.md) e os contratos da [Spec 0002](specs/0002-autenticacao.md) permanecem Propostos; prazo, tentativas, recuperação e revogação global não foram escolhidos.
 - Metas de desempenho, tamanhos, máscaras, fórmulas, identificadores físicos e prazos ainda não aprovados não devem ser tratados como definitivos.
+
+A [matriz de rastreabilidade](matriz-rastreabilidade.md) liga as 58 entradas às fontes, relações e validação futura; não encerra P001 a P022. Os dados/rotas/services da Spec 0003 são Propostos e não implementam acesso.
 
 O uso de MVT com services, templates, views derivadas de View e a base de login por usuário/senha deixaram de ser propostas após F008. O registro dessas escolhas está no documento de decisões confirmadas.
 

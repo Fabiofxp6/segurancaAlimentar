@@ -56,4 +56,4 @@ Ao concluir, conferir:
 - Coerência com specs e ADRs existentes; indicar o trabalho futuro quando ainda não existirem.
 - Estado e etapa atualizados com o resultado real. Não marcar testes ou funções como executados/implementados por haver apenas documentação.
 
-Esta skill é local ao projeto. Sua presença em disco não comprova carregamento automático por uma ferramenta; a leitura também poderá ser orientada pelo AGENTS quando ele for preparado na etapa prevista.
+Esta skill é local ao projeto. Sua presença em disco não comprova carregamento automático por uma ferramenta; a leitura é orientada pelo [AGENTS da raiz](../../../AGENTS.md), sem comprovar que uma sessão o carregou automaticamente.

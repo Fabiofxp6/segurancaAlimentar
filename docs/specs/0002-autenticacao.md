@@ -252,14 +252,14 @@ Não prometer transação única entre toda atualização auxiliar nativa, como 
 
 ## Relação local com os requisitos
 
-Esta tabela delimita a contribuição da autenticação. A matriz completa de fontes, RF/RNF/RS e validação continua na Etapa 6. Documento redigido não significa requisito implementado.
+Esta tabela delimita a contribuição da autenticação. A [matriz completa de fontes, RF/RNF/RS e validação](../matriz-rastreabilidade.md) foi elaborada na Etapa 6 e continua Proposta. Documento redigido não significa requisito implementado.
 
 | Origem ou requisito | Parte detalhada aqui | Validação futura relacionada |
 |---|---|---|
 | F003/RF001; F008/DC007 | Entrada por usuário/senha, conta ativa e saída; base Django confirmada | AU01 a AU08, AU11/AU12 e AU19 a AU22 |
 | F003/RS003 | Credenciais transitórias, validação nativa e mensagem genérica | AU04 a AU08, AU23 e AU29 |
 | F003/RS004 | Sessão reconhecida, expiração, logout e impossibilidade de reutilizar a sessão encerrada | AU15 a AU22, AU24, AU26/AU27; backend/políticas a validar |
-| RF002; RS001/RS002 | Identidade como pré-requisito e distinção entre autenticação e autorização | AU28; contratos de perfil, vínculo e supervisão continuam na Etapa 6 |
+| RF002; RS001/RS002 | Identidade como pré-requisito e distinção entre autenticação e autorização | AU28; contratos de perfil, vínculo e supervisão estão na Spec 0003, elaborada na Etapa 6 |
 | RS005, RS009 e RS011 | Transporte/configuração, validação de entrada, CSRF e proteção de segredos | AU02/AU03, AU09/AU10, AU13/AU14 e AU29; implantação ainda pendente |
 | RS012; RNF10 | Falha sanitizada e diagnóstico sem dados sensíveis | AU23/AU24 e AU29; retenção/coleta em P015/P017 |
 | RNF01, RNF07 e RNF08 | Contratos de tela para navegador, celular/tablet e acesso legível | AU30; homologação P019 ainda necessária |
@@ -317,6 +317,6 @@ Todos os cenários abaixo estão **planejados, não executados**. Usar contas/da
 1. Validar o backend de sessões no servidor proposto no ADR 0008 e os nomes/rotas/forms candidatos, preservando a base já confirmada.
 2. Resolver P001 e a parte estrutural de P002 antes de criar ambiente/modelo/migração. Escolher políticas de P014 e as proteções operacionais aplicáveis; não fechar a pendência inteira pela aprovação do form.
 3. Validar em P014/P020 o tratamento de resposta perdida sem reenvio silencioso de senha e a proteção de dados ainda abertos ao sair/expirar/trocar conta.
-4. Revisar esta spec. A próxima etapa solicitável é a Etapa 6, para acesso, vínculos, supervisão e matriz completa, sem iniciar automaticamente sua elaboração ou implementação.
+4. Revisar esta spec. A [Spec 0003 de acesso](0003-acesso-vinculos-supervisao.md) e a [matriz completa](../matriz-rastreabilidade.md) foram elaboradas na Etapa 6 e permanecem Propostas, sem implementação. As Etapas 7 e 8 foram elaboradas para revisão; [skills](../revisao-skills-tecnicas.md), [revisão final](../revisao-final-fundacao.md) e [estado](../state.md) registram a continuidade, sem iniciar implementação.
 
 O [estado](../state.md), as [etapas](../etapas.md) e o [acompanhamento no Trello](../acompanhamento-trello.md) registram a entrega. O resultado desta etapa é documental e permanece Proposto.

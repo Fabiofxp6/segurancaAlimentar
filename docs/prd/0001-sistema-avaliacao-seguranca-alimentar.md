@@ -6,7 +6,7 @@
 - **Fontes:** [índice de referências](../referencias/README.md), [catálogo revisado F003](../referencias/catalogo-requisitos-origem.md) e [decisões confirmadas](../decisoes-confirmadas.md).
 - **Pendências:** [registro P001 a P022](../pendencias.md).
 - **Arquitetura:** [proposta de detalhamento e índice dos ADRs](../arquitetura.md), elaborados na Etapa 3; escolhas anteriores e recomendações novas estão distinguidas.
-- **Especificações:** [Spec 0001 de fundação técnica](../specs/0001-fundacao-tecnica.md), Proposta na Etapa 4, e [Spec 0002 de autenticação](../specs/0002-autenticacao.md), Proposta na Etapa 5. Perfis/acesso e matriz completa continuam previstos na Etapa 6. O roteiro das demais áreas está ao final deste documento.
+- **Especificações:** [Spec 0001 de fundação técnica](../specs/0001-fundacao-tecnica.md), Proposta na Etapa 4, e [Spec 0002 de autenticação](../specs/0002-autenticacao.md), Proposta na Etapa 5. A [Spec 0003 de acesso](../specs/0003-acesso-vinculos-supervisao.md) e a [matriz completa](../matriz-rastreabilidade.md) foram elaboradas na Etapa 6, também Propostas. O roteiro das demais áreas está ao final deste documento.
 
 ## Objetivo
 
@@ -2114,7 +2114,7 @@ As validações de conclusão de RF014 precisam de detalhamento, incluindo a pro
 |---|---|---|
 | Etapa 4 | [Fundação técnica proposta](../specs/0001-fundacao-tecnica.md) | Requisitos de qualidade e segurança aplicáveis à base; demais funções permanecem futuras |
 | Etapa 5 | [Autenticação proposta](../specs/0002-autenticacao.md) | RF001, RS003 e RS004 detalhados, com as políticas abertas identificadas |
-| Etapa 6 | Perfis e acesso | RF002 e RS001/RS002; limites de RF016 e dos atos de RF018/RF022, sem implementar esses fluxos |
+| Etapa 6 | [Perfis e acesso propostos](../specs/0003-acesso-vinculos-supervisao.md) e [matriz](../matriz-rastreabilidade.md) | RF002 e RS001/RS002; limites de RF016 e dos atos de RF018/RF022, sem implementar esses fluxos |
 | Após o recorte inicial, por solicitação | Cadastros e checklist | RF003, RF004 e RF007 |
 | Após o recorte inicial, por solicitação | Inspeção, respostas e envios | RF005, RF006, RF008 a RF012 e RF014 |
 | Após o recorte inicial, por solicitação | Resultado, termos e ciência | RF013, RF015, RF020, RF021 e RF025 |
@@ -2123,7 +2123,7 @@ As validações de conclusão de RF014 precisam de detalhamento, incluindo a pro
 | Após o recorte inicial, por solicitação | Consultas e indicadores | RF024 e RF026 |
 | Somente após validar a proposta e solicitar o trabalho | Adiamento e reanálise | RF027 e RF028 |
 
-Os grupos posteriores organizam o trabalho futuro; não fixam número de arquivos, contratos ou ordem definitiva de implementação. RNF e RS acompanham as áreas em que se aplicam. A matriz completa será preparada na Etapa 6. As specs de fundação e autenticação estão Propostas; acesso e demais specs serão elaboradas nos recortes correspondentes.
+Os grupos posteriores organizam o trabalho futuro; não fixam número de arquivos, contratos ou ordem definitiva de implementação. RNF e RS acompanham as áreas em que se aplicam. A [matriz completa](../matriz-rastreabilidade.md) foi elaborada na Etapa 6, com cobertura documental e validações futuras, sem evidência de implementação. As specs de fundação, autenticação e acesso estão Propostas; demais specs serão elaboradas nos recortes correspondentes.
 
 ## Critérios de conclusão do produto
 
@@ -2142,4 +2142,4 @@ São cenários de validação para a versão de software que incorporar as área
 
 ## Situação desta entrega
 
-Este PRD foi iniciado na Etapa 2 e recebeu esta revisão de detalhamento por solicitação do usuário, com comparação ao documento F003. Foram preservados os 58 IDs e recuperados dados, formatos, regras de manutenção e verificações, com fluxos e critérios explícitos. O status permanece Proposto; a revisão não implementa funções nem aprova pendências. A Etapa 5 foi posteriormente solicitada e está documentada na Spec 0002, também Proposta; a Etapa 6 não foi iniciada. O [estado](../state.md) registra o ponto de retomada e as [etapas](../etapas.md) mostram a sequência acordada.
+Este PRD foi iniciado na Etapa 2 e recebeu esta revisão de detalhamento por solicitação do usuário, com comparação ao documento F003. Foram preservados os 58 IDs e recuperados dados, formatos, regras de manutenção e verificações, com fluxos e critérios explícitos. O status permanece Proposto; a revisão não implementa funções nem aprova pendências. A Etapa 5 foi posteriormente solicitada e está documentada na Spec 0002, também Proposta; a Etapa 6 foi posteriormente solicitada e suas entregas permanecem Propostas; a Etapa 7 revisou as skills técnicas e a Etapa 8 consolidou as orientações e a [revisão final](../revisao-final-fundacao.md), sem aceitar automaticamente este PRD ou iniciar implementação. O [estado](../state.md) registra o ponto de retomada e as [etapas](../etapas.md) mostram a sequência acordada.

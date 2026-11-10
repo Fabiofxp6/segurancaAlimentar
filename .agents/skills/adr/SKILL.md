@@ -45,4 +45,4 @@ Não reescrever silenciosamente a decisão de um ADR aceito. Para contrariá-la,
 
 Conferir links, IDs, origem da escolha, alternativas, custos e coerência entre decisão e proposta. Relacionar os requisitos existentes sem criar IDs para cada detalhe técnico. Não criar specs ou outras skills apenas para completar links.
 
-Atualizar os documentos de continuidade e o Trello com o resultado real. Verificações documentais não são testes executados da aplicação. Esta skill é local; sua existência não comprova carregamento automático, e o AGENTS será preparado na etapa prevista.
+Atualizar os documentos de continuidade e o Trello com o resultado real. Verificações documentais não são testes executados da aplicação. Esta skill é local; sua existência não comprova carregamento automático, e o [AGENTS da raiz](../../../AGENTS.md) orienta a retomada conforme o estado atual.
