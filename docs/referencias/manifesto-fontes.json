@@ -1,0 +1,105 @@
+{
+  "recorded_on": "2026-11-10",
+  "stage": 1,
+  "sources": [
+    {
+      "id": "F001",
+      "title": "Ata de levantamento",
+      "document_date": "01/10/2026; revisão de 06/10/2026",
+      "original_path": "/Users/fabiomarques/Downloads/Ata_Reuniao_Seguranca_Alimentar_Detalhada.docx",
+      "local_path": "arquivos/Ata_Reuniao_Seguranca_Alimentar_Detalhada.docx",
+      "sha256": "cb6bbadd468e8e78be70e9d11864fa28e88261f52451bf45bef77b3699fe3005",
+      "bytes": 165224,
+      "purpose": "Contexto, inspeção em campo, evidências, termos e ciência das partes. Score ainda complementar na ata.",
+      "kind": "source_copy"
+    },
+    {
+      "id": "F002",
+      "title": "Requisitos originais CESMAC",
+      "document_date": "13/10/2026",
+      "original_path": "/Users/fabiomarques/Downloads/Especificação de Requisitos - CESMAC.pdf",
+      "local_path": "arquivos/Especificacao_Requisitos_CESMAC_2026-10-13.pdf",
+      "sha256": "caa4a9e266004b38358a45d35b562e7d4ac1728a2bc61433812a7b162b94030a",
+      "bytes": 107113,
+      "purpose": "Histórico de 11 RF. O RF09 de offline completo foi substituído por decisão posterior.",
+      "kind": "source_copy"
+    },
+    {
+      "id": "F003",
+      "title": "Requisitos revisados editáveis",
+      "document_date": "09/11/2026",
+      "original_path": "/Users/fabiomarques/.codex/.chatgpt-projects/g-p-6ae127df829481919e48ee327d3267ea/deliverables/Documento_Requisitos_Python_Django_Revisado.docx",
+      "local_path": "arquivos/Documento_Requisitos_Python_Django_Revisado.docx",
+      "sha256": "c38370cef0b2844a91dd402c4894cf47f073d9c49a4a72eef2bbade7bddf5544",
+      "bytes": 440230,
+      "purpose": "Catálogo de referência com 28 RF, 14 RNF e 16 RS; inclui propostas e definições abertas.",
+      "kind": "source_copy"
+    },
+    {
+      "id": "F004",
+      "title": "Requisitos revisados PDF",
+      "document_date": "09/11/2026",
+      "original_path": "/Users/fabiomarques/.codex/.chatgpt-projects/g-p-6ae127df829481919e48ee327d3267ea/deliverables/Documento_Requisitos_Python_Django_Revisado.pdf",
+      "local_path": "arquivos/Documento_Requisitos_Python_Django_Revisado.pdf",
+      "sha256": "d78d5061b26782a163180461b2ca8e61927ce6d91287249c6f88cca285c6e61f",
+      "bytes": 438048,
+      "purpose": "Representação em PDF de F003; não é outro catálogo de requisitos.",
+      "kind": "source_copy"
+    },
+    {
+      "id": "F005",
+      "title": "Visão geral editável",
+      "document_date": "09/11/2026",
+      "original_path": "/Users/fabiomarques/.codex/.chatgpt-projects/g-p-6ae127df829481919e48ee327d3267ea/deliverables/Documentacao_Geral_Projeto_Seguranca_Alimentar.docx",
+      "local_path": "arquivos/Documentacao_Geral_Projeto_Seguranca_Alimentar.docx",
+      "sha256": "dec5fbec02a973d6cca5bc264a927bedb2045d1408d52d6be50e62b98cde0e4a",
+      "bytes": 52557,
+      "purpose": "Objetivos, escopo, ciclo, dados, viabilidade e propostas técnicas anteriores ao planejamento de 10/11.",
+      "kind": "source_copy"
+    },
+    {
+      "id": "F006",
+      "title": "Visão geral PDF",
+      "document_date": "09/11/2026",
+      "original_path": "/Users/fabiomarques/.codex/.chatgpt-projects/g-p-6ae127df829481919e48ee327d3267ea/deliverables/Documentacao_Geral_Projeto_Seguranca_Alimentar.pdf",
+      "local_path": "arquivos/Documentacao_Geral_Projeto_Seguranca_Alimentar.pdf",
+      "sha256": "605e19cc8d25da765505f8d47a67356a4c4a8dcf159954800135464be590ed02",
+      "bytes": 239081,
+      "purpose": "Representação em PDF de F005; não constitui aprovação adicional.",
+      "kind": "source_copy"
+    },
+    {
+      "id": "F007",
+      "title": "Análise independente da referência",
+      "document_date": "09/11/2026",
+      "original_path": "/Users/fabiomarques/Downloads/Analise_Projeto_Referencia_Para_Fundacao.md",
+      "local_path": "arquivos/Analise_Projeto_Referencia_Para_Fundacao.md",
+      "sha256": "4de21c514d70a88ccc270e95009cb6195a4c02cea1e63e001bbe1677f8591468",
+      "bytes": 48057,
+      "purpose": "Referência de organização de PRD, skills, specs, arquitetura, estado e AGENTS. Suas propostas não eram decisões aprovadas naquele momento.",
+      "kind": "source_copy"
+    },
+    {
+      "id": "F008",
+      "title": "Decisões recentes e autorização por etapas",
+      "document_date": "10/11/2026",
+      "original_path": null,
+      "local_path": "decisoes-conversa-2026-11-10.md",
+      "sha256": "38dbaca80c6329db90a0e3626aa80a96d289ccc6791b6cd174e7c35344bfa616",
+      "bytes": 2330,
+      "purpose": "Resumo das confirmações expressas do usuário e do escopo de execução; complementa e atualiza as fontes anteriores.",
+      "kind": "conversation_summary"
+    },
+    {
+      "id": "F009",
+      "title": "Protótipo de referência",
+      "document_date": "Artefato de referência anterior às decisões mais recentes",
+      "original_path": "/Users/fabiomarques/.codex/.chatgpt-projects/g-p-6ae127df829481919e48ee327d3267ea/deliverables/Prototipo_RF08_refinado.png",
+      "local_path": "arquivos/Prototipo_RF08_refinado.png",
+      "sha256": "6b476d1bd74ccd083424e5d34a767ed7364824cd937808b3f77bff36aaf13da4",
+      "bytes": 1677022,
+      "purpose": "Ilustrativo. A tela de cancelamento ainda não demonstra solicitação e aprovação; textos, números e limites não são regras aprovadas.",
+      "kind": "source_copy"
+    }
+  ]
+}

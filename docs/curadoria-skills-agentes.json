@@ -1,0 +1,499 @@
+{
+  "date": "2026-11-10",
+  "authorization": "Solicitação do usuário após a Etapa 4: selecionar, descartar o restante e organizar skills e agentes locais.",
+  "repositories": {
+    "awesome-claude-agents": {
+      "revision": "2050f3c60fcfea497f7b6b3ec6566cc316367a7e",
+      "agents": 33,
+      "selected_sources": 9
+    },
+    "awesome-codex-skills": {
+      "revision": "0930e1373789d2eda449039f7ac154b33031de89",
+      "skills": 880,
+      "general_skills": 48,
+      "integration_skills": 832,
+      "selected_sources": 3
+    }
+  },
+  "selected_sources": [
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/core/code-reviewer.md",
+      "source_sha256": "3de9668245b1da9615d25f877bf90917d1c40e64b4151f203421d58965ccd999",
+      "destinations": [
+        ".agents/skills/revisao-codigo/SKILL.md",
+        ".codex/agents/revisor_qualidade.toml"
+      ],
+      "mode": "adaptação"
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/core/documentation-specialist.md",
+      "source_sha256": "946ccfc8b60a2329f46b5fa234704a00de9ae4fab15bc3b29caf96426eac145f",
+      "destinations": [
+        ".codex/agents/analista_documentacao.toml"
+      ],
+      "mode": "adaptação"
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/orchestrators/project-analyst.md",
+      "source_sha256": "5f0e2fa3f42f0b733d7c6714464f49111cf89eea009630e2f6f49d02b2c1ef62",
+      "destinations": [
+        ".agents/skills/planejamento/SKILL.md",
+        ".codex/agents/analista_documentacao.toml"
+      ],
+      "mode": "adaptação"
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/specialized/django/django-backend-expert.md",
+      "source_sha256": "f84587c6af09f3a82d32302367d17e3f211d844bb4d13470d4ffaa67e80e1b3f",
+      "destinations": [
+        ".agents/skills/django-boas-praticas/SKILL.md",
+        ".codex/agents/especialista_django.toml"
+      ],
+      "mode": "adaptação"
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/specialized/django/django-orm-expert.md",
+      "source_sha256": "a545417a97ab914c952d8dc978ed6749e3bee3a0a8c1e6cdcaa8ef24b5118ac5",
+      "destinations": [
+        ".agents/skills/django-boas-praticas/SKILL.md",
+        ".codex/agents/revisor_dados.toml"
+      ],
+      "mode": "adaptação"
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/specialized/python/python-expert.md",
+      "source_sha256": "f573bd29478b7d1e74d95fa6a05ae8fe63c96c558abc7e161d54ef2e2e10803c",
+      "destinations": [
+        ".agents/skills/python-boas-praticas/SKILL.md",
+        ".codex/agents/especialista_django.toml"
+      ],
+      "mode": "adaptação"
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/specialized/python/security-expert.md",
+      "source_sha256": "52e53643cc0044831f31ea22c1e0d4ddab6771283d711b12526dc2a7e7d42361",
+      "destinations": [
+        ".agents/skills/seguranca-aplicacao/SKILL.md",
+        ".codex/agents/revisor_seguranca.toml"
+      ],
+      "mode": "adaptação"
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/specialized/python/testing-expert.md",
+      "source_sha256": "2ac58993e2e80ae1a7bb4244b735b9b14db1e27246c35390a3bc252e5aa7c461",
+      "destinations": [
+        ".agents/skills/testes/SKILL.md",
+        ".codex/agents/revisor_qualidade.toml"
+      ],
+      "mode": "adaptação"
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/universal/frontend-developer.md",
+      "source_sha256": "34d83ac414ddd224776286aca13216991d028051e833c75345c898c066e41555",
+      "destinations": [
+        ".agents/skills/interface-web/SKILL.md",
+        ".codex/agents/especialista_interface.toml"
+      ],
+      "mode": "adaptação"
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "create-plan/SKILL.md",
+      "source_sha256": "e3c1af59fe8fc6a040f50504babb5003c4489eee4fcfd987794227758f7291a3",
+      "destinations": [
+        ".agents/skills/planejamento/SKILL.md"
+      ],
+      "mode": "adaptação"
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "meeting-notes-and-actions/SKILL.md",
+      "source_sha256": "932eaf79198aba4322dca81bafe5fa0f1d00668b9b8b3f06918397b4a2d03f69",
+      "destinations": [
+        ".agents/skills/atas-reuniao/SKILL.md"
+      ],
+      "mode": "referência conceitual; redação local própria"
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "webapp-testing/SKILL.md",
+      "source_sha256": "51b7349e77ec63b7744a6f63647e7566a0b4d2e301121cc10e8c2113af6556a2",
+      "destinations": [
+        ".agents/skills/testes/SKILL.md"
+      ],
+      "mode": "adaptação"
+    }
+  ],
+  "discarded_general_entries": [
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/core/code-archaeologist.md",
+      "reason": "Sobreposição com perfis selecionados ou orquestração/otimização sem necessidade atual."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/core/performance-optimizer.md",
+      "reason": "Sobreposição com perfis selecionados ou orquestração/otimização sem necessidade atual."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/orchestrators/team-configurator.md",
+      "reason": "Sobreposição com perfis selecionados ou orquestração/otimização sem necessidade atual."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/orchestrators/tech-lead-orchestrator.md",
+      "reason": "Sobreposição com perfis selecionados ou orquestração/otimização sem necessidade atual."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/specialized/django/django-api-developer.md",
+      "reason": "Outra stack ou integração não adotada."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/specialized/laravel/laravel-backend-expert.md",
+      "reason": "Outra stack ou integração não adotada."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/specialized/laravel/laravel-eloquent-expert.md",
+      "reason": "Outra stack ou integração não adotada."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/specialized/python/devops-cicd-expert.md",
+      "reason": "Sobreposição com perfis selecionados ou orquestração/otimização sem necessidade atual."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/specialized/python/django-expert.md",
+      "reason": "Sobreposição com perfis selecionados ou orquestração/otimização sem necessidade atual."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/specialized/python/fastapi-expert.md",
+      "reason": "Outra stack ou integração não adotada."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/specialized/python/ml-data-expert.md",
+      "reason": "Outra stack ou integração não adotada."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/specialized/python/performance-expert.md",
+      "reason": "Sobreposição com perfis selecionados ou orquestração/otimização sem necessidade atual."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/specialized/python/web-scraping-expert.md",
+      "reason": "Outra stack ou integração não adotada."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/specialized/rails/rails-activerecord-expert.md",
+      "reason": "Outra stack ou integração não adotada."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/specialized/rails/rails-api-developer.md",
+      "reason": "Outra stack ou integração não adotada."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/specialized/rails/rails-backend-expert.md",
+      "reason": "Outra stack ou integração não adotada."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/specialized/react/react-component-architect.md",
+      "reason": "Outra stack ou integração não adotada."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/specialized/react/react-nextjs-expert.md",
+      "reason": "Outra stack ou integração não adotada."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/specialized/vue/vue-component-architect.md",
+      "reason": "Outra stack ou integração não adotada."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/specialized/vue/vue-nuxt-expert.md",
+      "reason": "Outra stack ou integração não adotada."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/specialized/vue/vue-state-manager.md",
+      "reason": "Outra stack ou integração não adotada."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/universal/api-architect.md",
+      "reason": "Outra stack ou integração não adotada."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/universal/backend-developer.md",
+      "reason": "Sobreposição com perfis selecionados ou orquestração/otimização sem necessidade atual."
+    },
+    {
+      "repository": "awesome-claude-agents",
+      "source": "agents/universal/tailwind-css-expert.md",
+      "reason": "Outra stack ou integração não adotada."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "agent-deep-links/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "brand-guidelines/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "canvas-design/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "changelog-generator/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "codebase-migrate/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "competitive-ads-extractor/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "connect/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "connect-apps/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "content-research-writer/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "datadog-logs/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "deploy-pipeline/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "developer-growth-analysis/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "domain-name-brainstormer/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "email-draft-polish/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "file-organizer/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "gh-address-comments/SKILL.md",
+      "reason": "Duplica ferramenta/skill já disponível; sem necessidade de instalação local."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "gh-fix-ci/SKILL.md",
+      "reason": "Duplica ferramenta/skill já disponível; sem necessidade de instalação local."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "helium-mcp/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "image-enhancer/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "internal-comms/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "invoice-organizer/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "issue-triage/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "langsmith-fetch/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "lead-research-assistant/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "linear/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "mcp-builder/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "meeting-insights-analyzer/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "notion-knowledge-capture/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "notion-meeting-intelligence/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "notion-research-documentation/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "notion-spec-to-implementation/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "paperjsx/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "pr-review-ci-fix/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "raffle-winner-picker/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "sentry-triage/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "skill-creator/SKILL.md",
+      "reason": "Duplica ferramenta/skill já disponível; sem necessidade de instalação local."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "skill-installer/SKILL.md",
+      "reason": "Duplica ferramenta/skill já disponível; sem necessidade de instalação local."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "skill-share/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "slack-gif-creator/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "spreadsheet-formula-helper/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "support-ticket-triage/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "tailored-resume-generator/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "template-skill/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "theme-factory/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    },
+    {
+      "repository": "awesome-codex-skills",
+      "source": "video-downloader/SKILL.md",
+      "reason": "Depende de serviço/ferramenta não adotado ou trata tema fora do escopo atual."
+    }
+  ],
+  "discarded_integration_group": {
+    "directory": "awesome-codex-skills/composio-skills",
+    "count": 832,
+    "reason": "Integrações via Composio/Rube sem adoção no projeto; não substituir os conectores já disponíveis."
+  },
+  "outputs": {
+    "new_skills": 8,
+    "preserved_skills": [
+      "prd",
+      "adr",
+      "spec"
+    ],
+    "project_skills_total": 11,
+    "codex_agent_profiles": 6
+  },
+  "validation_scope": "Arquivos e referências; agentes não executados, dependências não instaladas e aplicação não implementada."
+}
