@@ -1,0 +1,21 @@
+services:
+  postgres:
+    build: ./docker/postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?defina POSTGRES_DB}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_ADMIN_PASSWORD:?defina POSTGRES_ADMIN_PASSWORD}
+      APP_DB_USER: ${POSTGRES_USER:?defina POSTGRES_USER}
+      APP_DB_PASSWORD: ${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:?defina POSTGRES_PORT}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "127.0.0.1", "-U", "postgres", "-d", "postgres"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  postgres-data:

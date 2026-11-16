@@ -1,30 +1,30 @@
 # Spec 0003: Acesso, vínculos e supervisão por ação
 
-- **Status:** Proposto, para revisão; sem implementação.
+- **Status:** Cadastros, perfis e vínculos implementados e verificados na I03. Supervisão por ação segue em especificação.
 - **Data:** 10/11/2026. **Etapa:** 6.
 - **Produto:** [PRD 0001](../prd/0001-sistema-avaliacao-seguranca-alimentar.md), principalmente RF002, RS001 e RS002; limites de RF016/RF017, RF018/RF022, RS007 e RS010.
 - **Base:** [decisões DC005 a DC013 e DC017](../decisoes-confirmadas.md), [arquitetura](../arquitetura.md), [ADR 0005](../adr/0005-autorizacao-contextual-por-acao.md), F003/F008 no [índice](../referencias/README.md).
-- **Dependências:** [fundação](0001-fundacao-tecnica.md) e [autenticação](0002-autenticacao.md), ambas Propostas; [pendências](../pendencias.md) P001 a P006, P011/P012, P014, P016/P017 e P020.
-- **Rastreabilidade:** [matriz completa do catálogo](../matriz-rastreabilidade.md). Os cenários AC01 a AC36 abaixo são verificações futuras, não resultados de testes.
+- **Dependências:** [fundação](0001-fundacao-tecnica.md) e [autenticação](0002-autenticacao.md), verificadas localmente; [pendências](../pendencias.md) P001 a P006, P011/P012, P014, P016/P017 e P020.
+- **Rastreabilidade:** [matriz completa do catálogo](../matriz-rastreabilidade.md). As evidências parciais dos cenários AC estão na [entrega da I03](../entrega-i03.md).
 
 ## Objetivo e recorte
 
 Especificar como o servidor decide quem pode consultar ou executar uma operação, combinando identidade válida, perfil-base, vínculo, contexto e situação atual do recurso. Detalhar gestão de usuários, vínculos de estabelecimento e designações de supervisão, sem transformar uma função contextual em privilégio permanente.
 
-Esta entrega contém contratos candidatos, dados, interfaces de service, rotas, telas, falhas, concorrência e aceite. Não cria código, modelos, banco, migrações ou permissões no Django. Não implementa inspeção, upload, publicação, correção, cancelamento ou auditoria: delimita os controles que esses casos de uso deverão consumir. Não inicia as Etapas 7 ou 8.
+A I03 implementou a manutenção cadastral, o vínculo com estabelecimento e a concessão técnica do perfil Administrador. Os contratos de supervisão, inspeção, upload, publicação, correção e cancelamento continuam em seus recortes. [Evidências da I03](../entrega-i03.md)
 
 ## Base confirmada e escolhas abertas
 
 | Tema | Base preservada | O que esta spec não decide |
 |---|---|---|
-| Perfis-base | Fiscalização, Administrador e Estabelecimento; cliente significa estabelecimento | Perfil único ou múltiplos por conta, representação física e campos adicionais, P002 |
+| Perfis-base | Fiscalização, Administrador e Estabelecimento; cliente significa estabelecimento | Um perfil-base por conta na I03, conforme DC027. P002 mantém campos cadastrais adicionais em revisão. |
 | Supervisor | Fiscal designado para uma ação; atuação contextual, sem quarto perfil | Quem designa/substitui/encerra, quantidade, vigência e ausência, P004 |
 | Ação e inspeção | A designação precisa identificar seu escopo | Equivalência ou agrupamento de inspeções, P003 |
 | Aprovação | Correção concluída e cancelamento em andamento exigem autorização, justificativa e histórico | Quem aprova, substituição e pedido próprio do supervisor, P005/P006 |
-| Estabelecimento | Próprios envios e resultados/documentos finais liberados; sem avaliação interna | Cardinalidade dos vínculos, janela de envio e condições de liberação, P002/P011/P012 |
+| Estabelecimento | Próprios envios e resultados/documentos finais liberados; sem avaliação interna | Uma unidade por conta e várias contas por unidade. Janela de envio e liberação em P011/P012. |
 | Identidade e arquitetura | Usuário customizado, sessão Django, views próprias diretamente de `View`, services sem HTTP | Novas bibliotecas, backend de permissões por objeto, representação por `Group` ou enum persistido |
 
-Os nomes, formatos de retorno, rotas e regras técnicas novos abaixo são **propostas**, não decisões confirmadas. Pendências não são encerradas por documentar uma solução. Até a política aplicável ser escolhida, não existe concessão automática para a operação dependente dela; o comportamento seguro proposto é recusar a concessão e registrar o motivo técnico restrito.
+Os nomes, formatos de retorno, rotas e regras técnicas abaixo descrevem a proposta original. O recorte implementado e suas escolhas técnicas estão no [registro da I03](../entrega-i03.md). Pendências não são encerradas por documentar uma solução. Até a política aplicável ser escolhida, não existe concessão automática para a operação dependente dela; o comportamento seguro proposto é recusar a concessão e registrar o motivo técnico restrito.
 
 ## Modelo lógico de acesso
 
@@ -51,7 +51,7 @@ O Django fornece grupos e permissões de modelo, mas sua existência não implem
 | Operação | Administrador | Fiscalização | Estabelecimento | Supervisor da ação |
 |---|---|---|---|---|
 | Manter usuários e perfis-base | V, gestão autorizada RF002 | N | N | N, designação não concede gestão |
-| Gerir vínculos com estabelecimento | P, P002 | N | N | N |
+| Gerir vínculos com estabelecimento | V, DC027 | N | N | N |
 | Cadastrar estabelecimentos/checklists e atribuir inspeção | V, RF003/RF004/RF005 | N para essas concessões administrativas | N | Sem acréscimo |
 | Iniciar diretamente uma inspeção | Não concedido só pelo perfil administrativo | V, RF006, conforme escopo operacional futuro | N | Como fiscal, sem supervisão automática |
 | Preencher checklist e registrar evidências | Não concedido só pelo perfil administrativo | V, acesso à inspeção RF008/RF009 | N | Como fiscal autorizado |
@@ -64,7 +64,7 @@ O Django fornece grupos e permissões de modelo, mas sua existência não implem
 | Aplicar correção ou efetivar cancelamento | P para executor e escopo | P para executor; autorização específica obrigatória | N | P; designação não é autorização genérica de execução |
 | Consultar auditoria e decisões internas | P, P017 | P, P017 e escopo | N | P, não equivale a acesso irrestrito |
 
-Os V não aprovam prioridades, fórmulas, categorias de arquivo, modelos documentais ou contratos de funções futuras. Fiscal iniciado diretamente ainda precisa de regra explícita de escopo; P002 não autoriza consultar todas as inspeções. Não resolver múltiplos perfis por união automática de poderes: enquanto P002 estiver aberta, essa combinação não está especificada como concessão.
+Os V não aprovam prioridades, fórmulas, categorias de arquivo, modelos documentais ou contratos de funções futuras. Fiscal iniciado diretamente ainda precisa de regra explícita de escopo; P002 não autoriza consultar todas as inspeções. A I03 representa um perfil-base por conta. A concessão de Administrador segue o procedimento técnico de DC027.
 
 ## Entidades e dados candidatos
 
@@ -92,8 +92,8 @@ Proposta de apresentação de data/hora: `dd/MM/yyyy HH:mm`, preservando o insta
 
 | Conceito lógico | Dados candidatos e tipos | Invariantes e dependências |
 |---|---|---|
-| Atuação-base do usuário | Referência ao usuário; código de perfil fechado; situação atual | Não copiar privilégios técnicos para perfil de negócio. Um campo ou associação depende de P002 |
-| Vínculo de estabelecimento | Referência ao usuário e estabelecimento; situação; início/fim quando aprovados; ator/momento de concessão e encerramento | P002 decide uma/múltiplas unidades, pessoas por unidade e autoridade de manutenção. Não selecionar o estabelecimento somente por parâmetro do cliente |
+| Atuação-base do usuário | Referência ao usuário; código de perfil fechado; situação atual | A I03 persiste `Usuario.perfil`. Flags técnicas permanecem independentes da concessão. |
+| Vínculo de estabelecimento | Referência ao usuário e estabelecimento; situação; início/fim quando aprovados; ator/momento de concessão e encerramento | Persistido em `VinculoEstabelecimento`. Um vínculo aberto por conta, autoria e instante de abertura e encerramento. A consulta da unidade exige vínculo, perfil e situação no banco. |
 | Contexto de fiscalização | Referência estável ao escopo autorizado e relação com a inspeção | P003 decide inspeção isolada versus agrupamento. A expressão contexto nesta spec não cria uma nova entidade de domínio |
 | Designação de supervisor | Referências da tabela RF002, situação e história de alterações | Não existe `supervisor: bool` global; não impor unicidade de supervisor por ação enquanto P004 permitir essa dúvida |
 | Registro do ato de gestão | Referências do objeto e ator, ação, instante e valores anteriores/novos pertinentes | Histórico preservado sem senha/token; formato, retenção e acesso em P017 e futura spec de auditoria |
@@ -111,7 +111,7 @@ Os nomes abaixo representam operações candidatas, não classes obrigatórias. 
 |---|---|---|
 | Consultar usuários gerenciáveis | Ator, filtros permitidos e paginação validada | Lista mínima filtrada; sem hash, sessão, segredos ou dados fora do escopo; limite/paginação ainda a aprovar |
 | Manter usuário/perfil | Ator, dados validados, referência e versão esperada quando houver edição | Criar/alterar somente campos permitidos; preservar histórico e não conceder poderes técnicos. Criação/entrega de credencial depende de P014, sem senha-padrão inventada |
-| Consultar/manter vínculo | Ator, usuário e estabelecimento, operação pretendida e dados validados | Acesso somente pela autoridade que P002 definir; encerrar preservando o vínculo anterior |
+| Consultar/manter vínculo | Ator, usuário e estabelecimento, operação pretendida e dados validados | Administrador ativo atribui, troca ou encerra. A troca encerra o vínculo anterior na mesma transação. |
 | Consultar equipe/designações | Ator e contexto validado | Dados de fiscalização mínimos autorizados; estabelecimento não obtém gestão de usuários ou deliberação interna |
 | Designar/substituir/encerrar supervisão | Ator, fiscal, contexto, operação, vigência aprovada e referência atual | Validar autoridade P004, elegibilidade, estado e concorrência; conservar registro anterior e autoria |
 | Avaliar acesso ao recurso | Ator, operação do domínio e referência do recurso | Resultado lógico permitido/negado/política não definida, com motivo técnico restrito; não é token reutilizável nem autorização emitida pelo cliente |
@@ -127,7 +127,7 @@ Os services de inspeção/correção/cancelamento devem chamar o controle contex
 
 1. Ator autenticado solicita a gestão; service verifica a concessão administrativa pertinente. A página e o POST repetem o controle.
 2. Form aceita apenas os campos aprovados; perfil possui três opções-base. Flags técnicas, autoria e referências históricas não são editáveis livremente.
-3. Service valida identidade, unicidade conforme modelo e limites de concessão. Autoelevação, combinação de perfis, último administrador e criação de credencial dependem das políticas P002/P014, sem soluções presumidas.
+3. Service valida identidade, unicidade conforme modelo e limites de concessão. A tela gera somente contas comuns inativas. A equipe técnica usa o procedimento de concessão de Administrador para conta dedicada. O canal de entrega de credenciais reais segue em P014.
 4. Alteração aprovada é gravada com contexto histórico pertinente. Inativação ou mudança de perfil deve refletir nas operações seguintes, inclusive na sessão já aberta, sem exigir logout manual.
 5. Não eliminar usuário referenciado por atos oficiais. O mecanismo físico de preservação será escolhido com o schema/auditoria; não trocar o autor de um ato antigo ao atualizar o cadastro.
 
@@ -164,12 +164,12 @@ Namespace candidato `contas` para gestão de identidade; views próprias herdam 
 | `/gestao/usuarios/` — `contas:usuarios` | GET, `UsuariosView(View)` | Gestão autorizada; 200 lista filtrada/paginada, sem credenciais |
 | `/gestao/usuarios/novo/` — `contas:usuario_criar` | GET/POST, `UsuarioCriarView(View)` | Autoridade de gestão; GET form, POST inválido 200, sucesso 302; criação de credencial bloqueada pela política aplicável |
 | `/gestao/usuarios/<usuario_ref>/` — `contas:usuario_editar` | GET/POST, `UsuarioEditarView(View)` | Campos permitidos e alvo no escopo; mesma validação no POST; flags técnicas indisponíveis |
-| `/gestao/vinculos/` — `contas:vinculos` | GET/POST, `VinculosView(View)` | Apenas após P002 definir autoridade/representação; 200 consulta/form, 302 após mutação válida |
-| `/gestao/vinculos/<vinculo_ref>/encerrar/` — `contas:vinculo_encerrar` | POST, `VinculoEncerrarView(View)` | Autoridade aprovada; preservar história; não apagar por GET |
+| `/gestao/usuarios/<id>/vinculo/` — `gestao_contas:vinculo` | GET/POST, `VinculoView` | GET consulta, POST concede, troca ou encerra. 409 se a versão mudou e a operação diverge do vínculo atual. |
+| `/conta/estabelecimento/<id>/` — `contas:estabelecimento` | GET, `MeuEstabelecimentoView` | 200 para unidade ativa do vínculo efetivo. 404 uniforme fora do conjunto acessível. |
 | `/gestao/supervisao/<contexto_ref>/` — `contas:supervisao` | GET/POST, `SupervisaoView(View)` | Consulta/gestão com escopo; mutações somente após P003/P004; sucesso 302 |
 | `/gestao/supervisao/<contexto_ref>/encerrar/` — `contas:supervisao_encerrar` | POST, `SupervisaoEncerrarView(View)` | Autoridade e designação atual validadas; não retirar outra designação por manipulação da referência |
 
-Rotas são propostas para futura implementação, não recursos publicados. Não criar rotas de aprovar correção/cancelamento, reanálise, upload ou PDF nesta entrega. GET/HEAD não alteram estado; OPTIONS, se admitido, só informa métodos. POSTs exigem CSRF, inclusive por chamadas diretas. Sem autenticação, solicitar entrada conforme Spec 0002; nunca reenviar silenciosamente um POST depois do login.
+Rotas de gestão cadastral e vínculo estão implementadas. Rotas de supervisão seguem propostas. Não criar rotas de aprovar correção/cancelamento, reanálise, upload ou PDF nesta entrega. GET/HEAD não alteram estado; OPTIONS, se admitido, só informa métodos. POSTs exigem CSRF, inclusive por chamadas diretas. Sem autenticação, solicitar entrada conforme Spec 0002; nunca reenviar silenciosamente um POST depois do login.
 
 Forms candidatos: gestão de usuário, vínculo e supervisão, com listas filtradas e campos ocultos tratados como entrada não confiável. Validar referência e poder de atuação no service novamente. Limites de texto, filtro/paginação e instante/vigência devem ser os aprovados, sem tamanhos inventados. Não usar `ModelForm.save()` como atalho que ignore histórico/autorização.
 
@@ -214,9 +214,9 @@ Admin e futuras entradas técnicas usam os mesmos services para atos de negócio
 
 Os contratos são revisáveis, mas a implementação integral não está pronta enquanto seus bloqueios aplicáveis permanecerem abertos. Não encerrar todas as pendências pela aprovação de uma matriz de papéis. Propostas de dados não mudam o catálogo nem registram novas decisões confirmadas.
 
-## Critérios de aceite futuros
+## Critérios de aceite
 
-Todos os cenários são planejados e não executados. Usar contas/estabelecimentos/contextos fictícios A e B, datas controladas, sessão real no teste de HTTP e PostgreSQL isolado nas verificações de persistência/concorrência. Políticas escolhidas devem constar da evidência; não criar uma política de produto para conseguir marcar o teste como passado.
+A [entrega da I03](../entrega-i03.md) registra os cenários executados de cadastro, concessão administrativa e vínculos. Nos recortes seguintes, usar dados fictícios, datas controladas, sessão real no teste de HTTP e PostgreSQL isolado nas verificações de persistência e concorrência. Políticas escolhidas devem constar da evidência; não criar uma política de produto para conseguir marcar o teste como passado.
 
 | ID | Cenário | Resultado observável |
 |---|---|---|

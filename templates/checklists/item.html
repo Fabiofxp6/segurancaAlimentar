@@ -1,0 +1,22 @@
+{% extends "gestao/base.html" %}
+
+{% block gestao %}
+<h1 id="titulo-gestao">{{ titulo }}</h1>
+<p class="secundario">{{ checklist.titulo }}</p>
+{% if conflito %}
+<p class="alerta" role="alert">O rascunho mudou. <a href="{{ request_path }}">Reabra o item</a> antes de salvar.</p>
+{% endif %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Salvar item</button>
+</form>
+{% if item and not conflito %}
+<form class="form-remocao" method="post" action="{% url 'checklists:item_remover' checklist.pk item.id %}">
+    {% csrf_token %}
+    <input type="hidden" name="revisao" value="{{ form.revisao.value|default_if_none:checklist.revisao }}">
+    <button class="acao-secundaria" type="submit">Remover do rascunho</button>
+</form>
+{% endif %}
+<p><a href="{% url 'checklists:rascunho' checklist.pk %}">Voltar ao rascunho</a></p>
+{% endblock %}

@@ -4,7 +4,7 @@
 - **Data:** 10/11/2026.
 - **Base:** [PRD 0001](prd/0001-sistema-avaliacao-seguranca-alimentar.md), [decisões confirmadas](decisoes-confirmadas.md), [pendências](pendencias.md) e fontes F003, F005, F007 e F008 do [índice](referencias/README.md).
 
-Este documento define responsabilidades e limites para orientar as specs futuras. A fundação da aplicação alimentar ainda não está implementada; esta entrega altera somente documentação e preserva o `.env`. O blog é referência de organização, sem migração de seu código ou banco.
+Este documento define responsabilidades e limites para orientar as specs futuras. A fundação foi implementada e verificada localmente na [I01](entrega-i01.md). O blog é referência de organização, sem migração de seu código ou banco.
 
 As escolhas já confirmadas permanecem válidas. O detalhamento técnico apresentado aqui e a organização proposta precisam de revisão; sua redação não aprova políticas abertas nem o PRD como um todo.
 
@@ -12,15 +12,15 @@ As escolhas já confirmadas permanecem válidas. O detalhamento técnico apresen
 
 | Tema | Situação | Referência |
 |---|---|---|
-| Python com Django e PostgreSQL | Confirmado; versões pendentes | DC003, P001, ADR 0001 |
+| Python com Django e PostgreSQL | Confirmado para a fundação local | DC003, DC023, ADR 0001 |
 | Web em tablets e celulares; hospedagem remota/nuvem | Confirmado; dispositivos e provedor pendentes | DC004, P015, P019 |
 | MVT, Django Templates, views derivadas diretamente de `View`, services sem HTTP | Confirmado; fronteiras detalhadas abaixo | DC005 e DC006, ADR 0002 |
 | Usuário customizado `AbstractUser`, nome de usuário/senha e sessão Django | Base confirmada; campos e políticas pendentes | DC007, P002, P014, ADR 0003 |
 | Online, confirmação do servidor e retentativa sem duplicidade | Confirmado; mecanismo e prazos pendentes | DC018 e DC019, P020, ADR 0004 |
 | Autorização contextual e supervisão por ação | Confirmado; representação e autoridades pendentes | DC008 a DC013, P002 a P006, ADR 0005 |
 | Checklist, resultados, termos e histórico preservados | Confirmado; política detalhada pendente | DC011 a DC020, P009 a P013, P017, ADR 0006 |
-| Uma aplicação Django organizada por áreas do domínio | Recomendação ainda não aprovada | F007, ADR 0007 |
-| Backend nativo de sessões no servidor com PostgreSQL | Recomendação nova da Etapa 5, ainda não aprovada | Spec 0002, ADR 0008, P014/P015 |
+| Uma aplicação Django organizada por áreas do domínio | Aceito para a fundação | DC025, ADR 0007 |
+| Backend nativo de sessões no servidor com PostgreSQL | Adotado na I02, verificado localmente | Spec 0002, ADR 0008, DC026 |
 | Separação lógica das áreas e coordenação de banco/arquivos | Detalhamento técnico proposto; sem esquema físico aprovado | P002, P003, P016 e seções seguintes |
 
 ## Contexto e componentes
@@ -78,7 +78,7 @@ Proposta para modelos com invariantes críticas: manter edição/exclusão diret
 
 ## Áreas lógicas e propriedade dos dados
 
-As áreas abaixo são uma proposta de responsabilidade. Não correspondem a apps obrigatórios, diretórios criados, tabelas ou relações físicas já aprovadas. A [Spec 0001](specs/0001-fundacao-tecnica.md) detalha a estrutura mínima candidata da fundação, ainda Proposta; as demais áreas serão introduzidas conforme as specs solicitadas.
+As áreas abaixo são uma proposta de responsabilidade. Não correspondem a apps obrigatórios, diretórios criados, tabelas ou relações físicas já aprovadas. A [Spec 0001](specs/0001-fundacao-tecnica.md) registra a estrutura mínima implementada na I01. As demais áreas serão introduzidas conforme as specs solicitadas.
 
 | Área lógica | Dados e responsabilidade principal | Relações que precisam de coordenação |
 |---|---|---|
@@ -103,7 +103,7 @@ Supervisor continua fiscal designado por ação. Participar de uma equipe, inici
 
 O estabelecimento fica limitado aos próprios envios e resultados finais liberados. Anexar documento não libera avaliação interna nem modifica nota. Arquivos precisam da mesma decisão de acesso que os registros aos quais pertencem; não devem ser públicos por conhecer o endereço.
 
-Para a aplicação com sessão, preservar a proteção de requisições do Django e manter consultas de leitura sem efeitos oficiais. A proteção CSRF não substitui a autorização contextual. Referência técnica: [proteção CSRF do Django](https://docs.djangoproject.com/en/stable/ref/csrf/). A [Spec 0002](specs/0002-autenticacao.md) detalha os contratos candidatos de login, logout, redirecionamento e falhas de sessão. O [ADR 0008](adr/0008-sessoes-no-servidor-com-postgresql.md) recomenda backend de sessão no servidor para verificar invalidação após logout; não é decisão confirmada. Configuração de cookies, tentativas, recuperação, revogação global e expiração continuam abertas em P014/P015; a spec não escolhe esses valores.
+Para a aplicação com sessão, preservar a proteção de requisições do Django e manter consultas de leitura sem efeitos oficiais. A proteção CSRF não substitui a autorização contextual. Referência técnica: [proteção CSRF do Django](https://docs.djangoproject.com/en/stable/ref/csrf/). A [Spec 0002](specs/0002-autenticacao.md) detalha login, logout, redirecionamento e falhas de sessão. A [I02](entrega-i02.md) validou a invalidação da sessão corrente no PostgreSQL conforme o [ADR 0008](adr/0008-sessoes-no-servidor-com-postgresql.md). A configuração remota dos cookies, tentativas, recuperação, revogação global e política de expiração permanecem em P014/P015.
 
 ## Estado oficial, aprovação e envio
 
@@ -127,7 +127,7 @@ Referência técnica: o Django oferece transações `atomic`; ações em `on_com
 
 ## Checklist, resultado e histórico
 
-Desde o início, a inspeção mantém o conteúdo e as regras que sustentaram sua avaliação. Nova publicação não altera inspeções iniciadas. A escolha entre referência a versão imutável e cópia dos dados depende de P009; uma referência sem preservação do conteúdo não satisfaz essa regra.
+Desde o início, a inspeção mantém o conteúdo e as regras que sustentaram sua avaliação. Nova publicação não altera inspeções iniciadas. A I04 materializa o conteúdo do rascunho em uma versão imutável com dados próprios. A I05 deve guardar a referência protegida dessa versão no início da inspeção. A regra de elegibilidade para uso oficial depende de P009. [Spec 0005](specs/0005-checklist-e-versoes.md)
 
 Uma correção autorizada registra o anterior, o novo, justificativa, decisão, executor e momento. Quando afetar a avaliação, recalcular automaticamente com as regras originais e preservar os dois resultados. Precisão, Não se aplica, pesos e classificação dependem de P010.
 
@@ -153,7 +153,7 @@ Templates com interação complementar no navegador são compatíveis com o padr
 
 ## Viabilidade, riscos e validação futura
 
-A proposta é tecnicamente viável em princípio com a base escolhida. Não existe implementação ou medição que comprove desempenho, custo operacional ou usabilidade em campo. As principais incertezas são de regras e coordenação de falhas, além da infraestrutura ainda não escolhida.
+A proposta é tecnicamente viável em princípio com a base escolhida. A implementação local chegou à autenticação. Desempenho, custo operacional e usabilidade em campo ainda precisam ser medidos. As principais incertezas são de regras e coordenação de falhas, além da infraestrutura ainda não escolhida.
 
 | Risco ou dúvida | Como reduzir ou verificar | Dependência |
 |---|---|---|
@@ -169,7 +169,7 @@ Essas validações são planejadas, não executadas. Testes futuros devem cobrir
 
 ## Decisões registradas
 
-Todos os ADRs novos estão Propostos como documentos para revisão. Os seis primeiros registram escolhas anteriores confirmadas, sem reabri-las; suas razões técnicas complementares são identificadas como análise. O ADR 0007 apresenta recomendação estrutural ainda não aprovada; o ADR 0008 acrescenta, na Etapa 5, recomendação de backend de sessão também não aprovada.
+Os seis primeiros ADRs registram escolhas anteriores confirmadas. O ADR 0007 foi aceito para a fundação. O ADR 0008 registra o backend de sessão adotado na I02.
 
 | ADR | Tema | Natureza |
 |---|---|---|
@@ -179,9 +179,9 @@ Todos os ADRs novos estão Propostos como documentos para revisão. Os seis prim
 | [0004](adr/0004-operacao-online-e-confirmacao-do-servidor.md) | Online e confirmação oficial | Registro de restrição confirmada |
 | [0005](adr/0005-autorizacao-contextual-por-acao.md) | Autorização contextual | Registro de restrição confirmada |
 | [0006](adr/0006-versoes-e-historico-da-inspecao.md) | Preservação de versões e histórico | Registro de restrição confirmada |
-| [0007](adr/0007-monolito-modular.md) | Aplicação única com organização modular | Recomendação a validar |
-| [0008](adr/0008-sessoes-no-servidor-com-postgresql.md) | Sessões nativas no servidor com PostgreSQL | Recomendação nova a validar |
+| [0007](adr/0007-monolito-modular.md) | Aplicação única com organização modular | Aceito para a fundação |
+| [0008](adr/0008-sessoes-no-servidor-com-postgresql.md) | Sessões nativas no servidor com PostgreSQL | Aceito para a I02 |
 
-A [spec de fundação](specs/0001-fundacao-tecnica.md) foi elaborada na Etapa 4 e a [spec de autenticação](specs/0002-autenticacao.md) na Etapa 5, ambas com contratos candidatos e bloqueios indicados. A [spec de acesso](specs/0003-acesso-vinculos-supervisao.md) e a [matriz completa](matriz-rastreabilidade.md) foram elaboradas na Etapa 6 e permanecem Propostas; representação física, autoridades e políticas não foram aprovadas. Nomes de apps, modelos, campos, rotas, contratos, migrações e cenários detalhados de testes pertencem a essas entregas ou às specs funcionais posteriores. A matriz liga as 58 entradas às fontes, relações, cobertura documental e validação futura, distinguindo contratos parciais de funções futuras.
+A [spec de fundação](specs/0001-fundacao-tecnica.md) foi elaborada na Etapa 4 e a [spec de autenticação](specs/0002-autenticacao.md) na Etapa 5, ambas com contratos candidatos e bloqueios indicados. A [spec de acesso](specs/0003-acesso-vinculos-supervisao.md) e a [matriz completa](matriz-rastreabilidade.md) foram elaboradas na Etapa 6. A [I03](entrega-i03.md) implementou a gestão de contas comuns, a concessão técnica de Administrador, o vínculo por unidade e o app `estabelecimentos` conforme a [Spec 0004](specs/0004-cadastro-estabelecimentos.md). A decisão DC027 registra as regras aplicadas ao recorte local. Nomes de apps, modelos, campos, rotas, contratos, migrações e cenários detalhados de testes pertencem a essas entregas ou às specs funcionais posteriores. A matriz liga as 58 entradas às fontes, relações, cobertura documental e validação futura, distinguindo contratos parciais de funções futuras.
 
 O [estado](state.md), as [etapas](etapas.md) e a [rotina no Trello](acompanhamento-trello.md) registram a continuidade. A elaboração da arquitetura e das specs de fundação/autenticação/acesso não cria software nem aprova a execução da etapa seguinte. As oito etapas documentais foram elaboradas para revisão; [AGENTS](../AGENTS.md), [README](../README.md) e [revisão final](revisao-final-fundacao.md) orientam a continuidade sem resolver políticas abertas por inferência.

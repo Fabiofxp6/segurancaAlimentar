@@ -15,6 +15,12 @@ Orientação do usuário registrada em 10/11/2026: atualizar o Trello em paralel
 - [Etapa 7 — revisão integrada das skills](https://trello.com/c/9Rq9Timr).
 - [Etapa 8 — orientações e revisão final](https://trello.com/c/UcDLoJk1).
 - [Commit e push da fundação documental](https://trello.com/c/kAHJeqGs).
+- [Roteiro de implementação aprovado](https://trello.com/c/Ok3dpbjJ).
+- [I00 — decisões da fundação aceitas](https://trello.com/c/ChWnlfZ8).
+- [I01 — fundação Django verificada](https://trello.com/c/hR9CIEZn).
+- [I02 — autenticação e sessão](https://trello.com/c/DpZG5hth).
+- [I03 — cadastros, perfis e vínculos](https://trello.com/c/di9RwaAR).
+- [I04 — checklist e versões](https://trello.com/c/hRV4arE6).
 - [Curadoria de skills e agentes](https://trello.com/c/1P8kWrmm).
 
 O projeto local fica em `Documents/segurancaAlimentar`. Os cartões registram o acompanhamento; as fontes, o PRD, as decisões e as pendências permanecem nos documentos correspondentes. Citar um arquivo local no cartão não significa que ele foi anexado ao Trello.
@@ -34,6 +40,10 @@ Essa rotina acompanha todas as etapas. Continua válida a execução de uma etap
 ## Versionamento solicitado
 
 O usuário solicitou commit e push da fundação documental em 10/11/2026. O [cartão da publicação](https://trello.com/c/kAHJeqGs) registra andamento, destino, verificações e confirmação do resultado/hash. Versionar os documentos não aprova os contratos Propostos ou inicia implementação.
+
+## Planejamento de implementação — 15/11/2026
+
+O usuário aprovou o [roteiro I00–I14](plano-implementacao.md) em 15/11/2026 e autorizou a I00. A [entrega documental](decisoes-fundacao-i00.md) detalha as propostas de versão, preparação e identidade da fundação. Depois da autorização para seguir, a [I01](entrega-i01.md) aplicou as escolhas aceitas e foi verificada em PostgreSQL local. Após nova autorização, a [I02](entrega-i02.md) entregou autenticação com verificação em PostgreSQL e Chromium. Após autorização, a [I03](entrega-i03.md) entregou a manutenção local de contas e estabelecimentos, o vínculo por unidade e a concessão técnica de Administrador. O cartão está em Concluído. O canal de entrega de credenciais reais segue em P014. A [I04](entrega-i04.md) entregou rascunhos e versões imutáveis de demonstração. As regras de checklist oficial seguem em P009/P010.
 
 ## Situação em 10/11/2026
 

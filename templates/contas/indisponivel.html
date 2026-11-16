@@ -1,0 +1,8 @@
+{% extends "contas/base.html" %}
+{% block titulo %}Acesso indisponível | Segurança Alimentar{% endblock %}
+
+{% block conta %}
+<h1 id="titulo-conta">Acesso indisponível</h1>
+<p>Não foi possível confirmar o acesso agora. Tente novamente.</p>
+<a href="{% url 'contas:acesso' %}">Verificar acesso</a>
+{% endblock %}

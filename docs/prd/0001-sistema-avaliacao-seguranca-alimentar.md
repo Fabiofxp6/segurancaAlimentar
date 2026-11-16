@@ -268,7 +268,7 @@ Permitir ao usuário autorizado manter os itens do checklist, opções de respos
 2. Itens, opções e pesos incompatíveis com as regras validadas não são aceitos como uma avaliação válida.
 3. Manutenção não autorizada ou tentativa de alterar retroativamente versão utilizada é impedida.
 
-**Relações e decisões pendentes:** RF007, RF008, RF013, RF020 e RNF05; P009 e P010.
+**Relações e decisões pendentes:** RF007, RF008, RF013, RF020 e RNF05; P009 e P010. O fluxo local de rascunho e publicação de demonstração está na [Spec 0005](../specs/0005-checklist-e-versoes.md).
 
 ### Execução da inspeção e envio
 

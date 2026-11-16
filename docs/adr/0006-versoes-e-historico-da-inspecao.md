@@ -22,7 +22,7 @@ Nova versão ou retificador se relaciona à emissão anterior sem sobrescrevê-l
 - Usar apenas log técnico como histórico oficial: não garante os vínculos e o acesso exigidos para a decisão.
 - Adotar event sourcing completo: não é necessário nem foi aprovado para cumprir a preservação exigida.
 
-Essas razões são análise técnica. Não há decisão entre cópia de checklist e referência a versão imutável, nem schema de revisões escolhido.
+A I04 cria uma cópia do rascunho no registro de versão publicada e protege esse registro contra alteração ou exclusão. A I05 deverá referenciar a versão ao iniciar uma inspeção. O ADR continua em revisão para os contratos de resultado, termo e correção. [Spec 0005](../specs/0005-checklist-e-versoes.md) · [Evidências da I04](../entrega-i04.md)
 
 ## Consequências
 

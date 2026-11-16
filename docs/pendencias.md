@@ -1,28 +1,26 @@
 # Pendências e propostas
 
-Atualizado em: 10/11/2026. Registro iniciado na Etapa 1, com detalhamentos até a Etapa 6.
+Atualizado em 15/11/2026, com a fundação I01 e as entregas locais I02 a I04.
 
-As pessoas responsáveis nominalmente e os prazos ainda não foram definidos. A coluna de encaminhamento identifica o papel que precisa participar, sem atribuir uma decisão a alguém que não a assumiu. Todas as pendências abaixo estão abertas.
+As pessoas responsáveis nominalmente e os prazos ainda não foram definidos. A coluna de encaminhamento identifica o papel que precisa participar, sem atribuir uma decisão a alguém que não a assumiu. P001 foi resolvida para a fundação local. P002 foi resolvida em parte e as demais pendências seguem abertas.
 
 Elas não impedem preparar o PRD e a arquitetura com o que já está confirmado. Cada uma precisa ser resolvida antes da spec ou implementação indicada, ou continuar explicitamente bloqueada. Pendência não autoriza preencher uma regra por inferência. As [decisões confirmadas](decisoes-confirmadas.md) não serão reabertas por estarem descritas como propostas em fontes antigas.
 
 ## P001 Versões e preparação do ambiente
 
-Escolher versões compatíveis e suportadas de Python, Django e PostgreSQL e a preparação do ambiente. Não herdar as versões do blog. A [Spec 0001](specs/0001-fundacao-tecnica.md) propõe a separação de configuração e os contratos externos; versões, driver e ferramenta de preparação permanecem sem escolha, bloqueando a execução correspondente.
+Resolvida para a I01 em DC023. A entrega fixou as dependências e verificou os ambientes locais. A estratégia operacional segue em P015. [Decisões confirmadas](decisoes-confirmadas.md#dc023-versões-e-preparação-local-da-fundação) · [Entrega I01](entrega-i01.md)
 
 Encaminhamento: Decisão técnica da equipe.
-
-Quando precisa estar resolvida: 4, antes de implementar a fundação.
 
 Origem: F007; contexto técnico. F008; pendências.
 
 ## P002 Identidade e vínculos
 
-Definir campos adicionais, estratégia de identificador, representação dos perfis e vínculos de usuários com estabelecimentos. Não presumir UUID físico ou múltiplos perfis porque aparecem como exemplos. A [Spec 0001](specs/0001-fundacao-tecnica.md) propõe o nome contas.Usuario para a identidade mínima; nome, identificador e campos iniciais devem ser validados antes da primeira migração. A [Spec 0003](specs/0003-acesso-vinculos-supervisao.md) detalha dados, concessões e bloqueios candidatos, sem escolher a persistência. Validar também perfil único/múltiplo, normalização/nome, autoridade de gestão de vínculos, autoelevação e bootstrap administrativo antes da implementação correspondente.
+Definir campos adicionais, estratégia de identificador, representação dos perfis e vínculos de usuários com estabelecimentos. Não presumir UUID físico ou múltiplos perfis porque aparecem como exemplos. DC024 resolveu a primeira migração com `contas.Usuario`, chave interna `BigAutoField` e os campos herdados de `AbstractUser`. A [Spec 0001](specs/0001-fundacao-tecnica.md) registra essa entrega. A I03 adotou um perfil por conta, vínculo aberto de uma unidade por conta de Estabelecimento, gestão de vínculos por Administrador e concessão administrativa pela equipe técnica com autoria registrada. Tipo, máscara, unicidade de documento, regras de contato e procedimento operacional de revogação de Administrador seguem em revisão. [Entrega I03](entrega-i03.md) · [Spec 0004](specs/0004-cadastro-estabelecimentos.md)
 
 Encaminhamento: Equipe, com validação do responsável pelo produto.
 
-Quando precisa estar resolvida: 4 a 6, antes de consolidar modelos e migrações.
+Quando precisa estar resolvida: as regras restantes de cadastro, perfis e vínculos antes dos recortes que dependem delas.
 
 Origem: F003; RF001, RF002 e RF003.
 
@@ -88,11 +86,11 @@ Origem: F003; RF028.
 
 ## P009 Checklist e governança
 
-Escolher referência sanitária, itens, obrigatoriedade, opções de resposta e responsáveis por publicar versões.
+Escolher referência sanitária, itens, obrigatoriedade, opções de resposta e responsáveis por publicar versões oficiais. No ambiente local, a I04 permite ao Administrador editar rascunhos e publicar versões de demonstração com dados fictícios. [Spec 0005](specs/0005-checklist-e-versoes.md) · [Entrega da I04](entrega-i04.md)
 
 Encaminhamento: Equipe e profissionais que validam a avaliação.
 
-Quando precisa estar resolvida: Antes de implementar checklist e aceitar seu conteúdo.
+Quando precisa estar resolvida: Antes de aceitar conteúdo sanitário oficial ou habilitar sua publicação e uso em inspeções reais.
 
 Origem: F001; tópico 1. F003; RF004 e RF007.
 
@@ -138,9 +136,9 @@ Origem: F001; tópico 2. F003; RF025.
 
 ## P014 Políticas complementares de acesso
 
-Definir recuperação de conta, senha, MFA/SSO, limitação de tentativas, expiração, sessões simultâneas e revogação. A base Django de usuário e senha já está confirmada. A [Spec 0002](specs/0002-autenticacao.md) detalha contratos candidatos e 32 cenários futuros, sem encerrar a política.
+Definir recuperação de conta, senha, MFA/SSO, limitação de tentativas, expiração, sessões simultâneas e revogação. A base Django de usuário e senha já está confirmada. O fluxo básico da [Spec 0002](specs/0002-autenticacao.md) foi implementado e verificado localmente na [I02](entrega-i02.md).
 
-Pontos de revisão: validar o backend de sessão em banco recomendado no [ADR 0008](adr/0008-sessoes-no-servidor-com-postgresql.md); escolher duração e renovação por atividade/fechamento do navegador, concorrência, efeitos de mudança de senha e revogação global; validar cookies com a implantação. Definir política de credenciais e medidas contra tentativas abusivas sem inventar números. Decidir também o tratamento de resposta perdida de login/logout e de dados abertos ao sair/expirar/trocar conta, em conjunto com P020. As rotas, o form, o destino inicial e a conferência de sessão sem reenvio silencioso de senha são propostas, não escolhas já aceitas.
+O backend nativo de sessão em PostgreSQL foi adotado na I02 conforme o [ADR 0008](adr/0008-sessoes-no-servidor-com-postgresql.md). Falta escolher duração de produto, renovação por atividade, efeito do fechamento do navegador, concorrência, efeitos de mudança de senha e revogação global. Também permanecem em aberto a criação e a entrega de credenciais, os efeitos da reativação sobre sessões antigas, as medidas contra tentativas abusivas e a validação dos cookies na implantação. A I03 cria contas comuns inativas, com configuração interativa de credencial em etapa separada no ambiente de demonstração. O canal de entrega real segue aberto. O tratamento de resposta perdida e de dados abertos ao sair, expirar ou trocar conta depende de P020.
 
 Encaminhamento: Responsável pelo produto com a equipe técnica.
 
@@ -150,7 +148,7 @@ Origem: F003; RS003 e RS004. F008; autenticação.
 
 ## P015 Hospedagem e operação
 
-Escolher provedor, domínio, ambientes, acompanhamento de falhas e responsáveis operacionais. Para autenticação, validar TLS/proxy, origens, cookies, preparação do backend de sessão escolhido e manutenção dos registros expirados; a Spec 0002 e o ADR 0008 não contratam infraestrutura ou rotina operacional.
+Escolher provedor, domínio, ambientes, acompanhamento de falhas e responsáveis operacionais. Para autenticação, validar TLS, proxy, origens, cookies, preparação do backend PostgreSQL em produção e manutenção dos registros expirados. A configuração da I02 foi verificada no ambiente local.
 
 Encaminhamento: Responsável pelo projeto e equipe técnica.
 
@@ -170,7 +168,7 @@ Origem: F003; RF009, RF015, RS008 e RS010.
 
 ## P017 Proteção e retenção
 
-Definir classificação de dados, retenção, acesso à auditoria, proteção em repouso e eliminação conforme a política aprovada.
+Definir classificação de dados, retenção, acesso à auditoria, proteção em repouso e eliminação conforme a política aprovada. A I03 grava autoria, data e mudanças de cadastro e vínculos na transação do ato. A política operacional e a consulta de histórico seguem em aberto.
 
 Encaminhamento: Responsável pelo processo e equipe técnica.
 
@@ -235,8 +233,8 @@ Origem: F003; prioridades A validar. F005; seções 11 e 12.
 - Representar uma ação como agrupamento de inspeções depende de P003.
 - Exigir autorização para adiamento semelhante ao cancelamento depende de P007.
 - Abrir uma reanálise a partir de documento novo depende de P008; anexo não muda resultado automaticamente.
-- Criar um app para cada área da visão conceitual não foi decidido. As áreas lógicas foram detalhadas como proposta na [arquitetura](arquitetura.md); o [ADR 0007](adr/0007-monolito-modular.md) recomenda monólito modular, ainda sem aprovação. A estrutura física será detalhada nas specs pertinentes.
-- O backend nativo de sessão no servidor com PostgreSQL do [ADR 0008](adr/0008-sessoes-no-servidor-com-postgresql.md) e os contratos da [Spec 0002](specs/0002-autenticacao.md) permanecem Propostos; prazo, tentativas, recuperação e revogação global não foram escolhidos.
+- Criar um app para cada área da visão conceitual não foi decidido. As áreas lógicas foram detalhadas como proposta na [arquitetura](arquitetura.md); o [ADR 0007](adr/0007-monolito-modular.md) foi aceito para a fundação. A estrutura física será detalhada nas specs pertinentes.
+- A retomada assistida da [Spec 0002](specs/0002-autenticacao.md) permanece proposta. Prazo de expiração, tentativas, recuperação e revogação global ainda dependem de decisão.
 - Metas de desempenho, tamanhos, máscaras, fórmulas, identificadores físicos e prazos ainda não aprovados não devem ser tratados como definitivos.
 
 A [matriz de rastreabilidade](matriz-rastreabilidade.md) liga as 58 entradas às fontes, relações e validação futura; não encerra P001 a P022. Os dados/rotas/services da Spec 0003 são Propostos e não implementam acesso.

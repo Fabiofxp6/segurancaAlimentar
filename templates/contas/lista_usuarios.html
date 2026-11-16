@@ -1,0 +1,24 @@
+{% extends "gestao/base.html" %}
+
+{% block titulo %}Usuários | Segurança Alimentar{% endblock %}
+{% block gestao %}
+<h1 id="titulo-gestao">Usuários</h1>
+<a class="acao" href="{% url 'gestao_contas:criar' %}">Novo usuário</a>
+<ul class="registros">
+    {% for usuario in pagina %}
+    <li>
+        <div>
+            <a href="{% url 'gestao_contas:editar' usuario.pk %}">{{ usuario.nome|default:usuario.username }}</a>
+            {% if usuario.nome %}<div>{{ usuario.username }}</div>{% endif %}
+        </div>
+        <div>
+            {% if usuario.perfil %}{{ usuario.get_perfil_display }} · {% else %}Sem perfil · {% endif %}
+            {% if usuario.is_active %}Ativa{% else %}Inativa{% endif %}
+        </div>
+    </li>
+    {% empty %}
+    <li>Nenhum usuário disponível para gestão.</li>
+    {% endfor %}
+</ul>
+{% include "gestao/paginacao.html" %}
+{% endblock %}

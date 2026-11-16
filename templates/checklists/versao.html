@@ -1,0 +1,31 @@
+{% extends "gestao/base.html" %}
+
+{% block gestao %}
+<h1 id="titulo-gestao">{{ versao.titulo }}</h1>
+<p><strong>Versão {{ versao.numero }} · {{ versao.get_finalidade_display }}</strong></p>
+<p>Publicada por {{ versao.publicado_por.get_username }} em
+    <time datetime="{{ versao.publicado_em|date:'c' }}">{{ versao.publicado_em|date:"d/m/Y H:i T" }}</time>.
+</p>
+{% if versao.referencia %}
+<h2>Referência</h2>
+{{ versao.referencia|linebreaks }}
+{% endif %}
+{% if versao.regras %}
+<h2>Regras e orientações</h2>
+{{ versao.regras|linebreaks }}
+{% endif %}
+<h2>Itens da versão</h2>
+<ul class="itens-checklist">
+    {% for item in versao.itens %}
+    <li>
+        <h3>{{ item.ordem }}. {{ item.enunciado }}</h3>
+        <p>{% if item.obrigatorio %}Resposta obrigatória{% else %}Resposta opcional{% endif %}
+        {% if item.peso is not None %} · Peso {{ item.peso }}{% endif %}</p>
+        <ul>
+            {% for opcao in item.opcoes %}<li>{{ opcao }}</li>{% endfor %}
+        </ul>
+    </li>
+    {% endfor %}
+</ul>
+<p><a href="{% url 'checklists:rascunho' versao.checklist_id %}">Voltar ao rascunho</a></p>
+{% endblock %}

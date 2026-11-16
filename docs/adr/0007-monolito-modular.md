@@ -1,8 +1,8 @@
 # ADR 0007: Proposta de monólito modular
 
-- **Status:** Proposto.
+- **Status:** Aceito para a fundação I01 em 15/11/2026.
 - **Data:** 2026-11-10.
-- **Natureza:** recomendação nova, ainda não aprovada.
+- **Natureza:** decisão estrutural aceita ao autorizar a I01. [DC025](../decisoes-confirmadas.md#dc025-monólito-modular-na-fundação)
 - **Origem:** proposta em F007 no [índice de fontes](../referencias/README.md), analisada a partir de DC003 a DC006 e do [PRD](../prd/0001-sistema-avaliacao-seguranca-alimentar.md).
 
 ## Contexto
@@ -31,6 +31,6 @@ Se a carga ou organização da equipe exigir separação futura, será necessár
 
 ## Pendências e verificação futura
 
-Aguardar revisão desta recomendação antes de tratá-la como decisão aprovada. P002 e P003 interferem nos vínculos; P015, P016 e P018 na implantação e capacidade. A Etapa 4 poderá detalhar a estrutura da fundação conforme as escolhas validadas, sem criar apps vazios por antecipação.
+A I01 implementou a estrutura mínima de configuração, contas e templates. As decisões restantes de P002 e P003 interferem nos vínculos. P015, P016 e P018 tratam de implantação e capacidade. [Entrega da I01](../entrega-i01.md)
 
-Verificar futuramente dependências entre áreas, preparação de ambiente e cenários de carga representativos quando houver metas. Nesta etapa não há aplicação, prova de conceito, implantação ou benchmark.
+A preparação local foi verificada na I01. Dependências entre áreas e cenários de carga serão verificados quando as funções e suas metas estiverem definidas.

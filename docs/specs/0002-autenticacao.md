@@ -1,35 +1,35 @@
 # Spec 0002: Autenticação e sessão
 
-- **Status:** Proposto; elaboração documental para revisão, sem implementação.
+- **Status:** Fluxo básico implementado e verificado localmente na I02. Políticas complementares em revisão.
 - **Data:** 10/11/2026.
-- **Etapa:** 5, somente autenticação.
+- **Etapa:** 5 (especificação) e I02 (implementação local). [Evidências e limites](../entrega-i02.md).
 - **Produto:** [PRD 0001](../prd/0001-sistema-avaliacao-seguranca-alimentar.md), principalmente RF001, RS003 e RS004.
 - **Base:** [arquitetura](../arquitetura.md), [decisões confirmadas](../decisoes-confirmadas.md), [ADR 0003](../adr/0003-usuario-customizado-e-sessao-django.md) e fontes F003/F008 no [índice](../referencias/README.md).
-- **Depende de:** [Spec 0001 de fundação](0001-fundacao-tecnica.md), ainda Proposta, e das decisões aplicáveis de P001, P002, P014, P015, P017, P019 e P020 nas [pendências](../pendencias.md).
-- **Nova recomendação:** [ADR 0008](../adr/0008-sessoes-no-servidor-com-postgresql.md), sessões no servidor com PostgreSQL; não aprovada.
+- **Depende de:** [Spec 0001 de fundação](0001-fundacao-tecnica.md), implementada na I01. P014, P015, P017, P019 e P020 mantêm decisões aplicáveis nas [pendências](../pendencias.md).
+- **Backend da sessão:** PostgreSQL com o backend nativo do Django. [ADR 0008](../adr/0008-sessoes-no-servidor-com-postgresql.md) · [DC026](../decisoes-confirmadas.md#dc026-sessão-no-servidor-na-i02).
 
 ## Objetivo e resultado esperado
 
 Detalhar como uma conta ativa entra com nome de usuário e senha, mantém uma identidade reconhecida pelo servidor e encerra a sessão correspondente. O acesso protegido deve recusar identidade ausente, expirada ou inválida. O documento transforma o RF001 em contratos verificáveis de entrada, tela, HTTP, sessão e falha, preservando as políticas ainda abertas.
 
-Esta entrega não cria aplicação, dependências, ambiente, tabelas, migrações ou testes executáveis. A autorização para elaborar a Etapa 5 não aceita automaticamente suas propostas nem inicia a Etapa 6. Todos os caminhos, nomes, mensagens e comportamentos técnicos novos abaixo são propostas para revisão, salvo quando identificados como base confirmada.
+A I02 implementou as três rotas, os formulários e a sessão em banco, usando a fundação da I01. O [registro da I02](../entrega-i02.md) documenta o que foi exercitado e identifica os controles que dependem de política, implantação ou homologação.
 
 ## Confirmado, proposto e aberto
 
 | Tema | Situação | Consequência para esta spec |
 |---|---|---|
-| Python/Django e PostgreSQL | Confirmado, DC003; versões em P001 | Usar mecanismos do framework; não fixar versão ou driver por exemplo |
+| Python/Django e PostgreSQL | Confirmado, DC003 e DC023 | Usar a base local da I01 |
 | `AbstractUser` customizado, nome de usuário/senha e sessão Django | Confirmado, DC007 | Não substituir por JWT, login por e-mail ou provedor externo por inferência |
 | Views próprias com herança direta de `View`; login/logout na camada HTTP | Confirmado, DC005/DC006 | Forms e autenticação nativos são admitidos; services não recebem `request` |
 | Conta ativa, erro de credenciais genérico e logout que invalida a sessão | RF001 e RS003/RS004 no PRD Proposto; sem regra conflitante posterior | Preservar o comportamento e detalhar sua verificação |
-| Nome `contas.Usuario`, identificador e campos iniciais | Candidatos da Spec 0001; P002 aberta | Não escolher UUID físico nem criar outro usuário paralelo |
-| Backend de autenticação `ModelBackend` e form baseado em `AuthenticationForm` | Recomendação desta spec | Aproveitar validação nativa, normalizando a mensagem pública |
-| Backend de sessão em banco, `django.contrib.sessions.backends.db` | Recomendação nova, ADR 0008 | Permitir invalidar a sessão no servidor, sem depender apenas de apagar cookie |
-| Rotas, classes, templates, mensagens e destino inicial | Contratos candidatos desta spec | Revisar antes da implementação; não são telas implementadas |
+| Nome `contas.Usuario`, identificador e campos iniciais | Confirmados para a migração inicial em DC024 | Reutilizar o usuário da I01 |
+| Backend de autenticação `ModelBackend` e form baseado em `AuthenticationForm` | Adotados na I02 | Aproveitar validação nativa, normalizando a mensagem pública |
+| Backend de sessão em banco, `django.contrib.sessions.backends.db` | Adotado na I02, ADR 0008 | Invalidar no servidor a sessão correspondente |
+| Rotas, classes, templates, mensagens e destino inicial | Fluxo básico verificado na I02 | Consultar o registro da etapa para cobertura e condições de homologação |
 | Recuperação, política de senha, tentativas, MFA/SSO, duração e concorrência de sessões | P014 aberta | Não ativar fluxos nem inventar limites; resolver o que afetar a parte implementada |
 | Tratamento de senha quando a resposta se perde | Proposta específica, P014/P020 | Validar a reconciliação descrita abaixo antes de implementar a recuperação |
 
-A consulta à documentação oficial apoia o desenho, mas não seleciona a versão do projeto. As APIs, o comportamento nativo e as configurações deverão ser reconferidos na versão escolhida em P001.
+A I02 foi conferida com a versão instalada a partir das dependências travadas da I01. O registro da fundação identifica as versões e o preparo local.
 
 ## Escopo e limites
 
@@ -43,12 +43,10 @@ Recuperação/troca de senha, cadastro público, confirmação de e-mail, MFA, S
 
 | Parte futura | Condição necessária | Limite enquanto estiver aberta |
 |---|---|---|
-| Preparar autenticação executável | Resolver versões e preparação P001; validar a fundação e os nomes aplicáveis | Não criar ambiente ou presumir APIs de uma versão |
-| Criar usuário e primeira migração | Resolver nome, chave e campos estruturais P002 conforme Spec 0001 | Não cristalizar UUID ou vínculos por conveniência |
-| Persistir e invalidar sessão | Validar backend proposto no ADR 0008, integração e configuração aplicável P014/P015 | Não afirmar que qualquer backend atende à reutilização após logout |
+| Persistir e invalidar sessão em produção | Preparar PostgreSQL, migrações e configuração remota conforme P015 | O backend da I02 foi validado em PostgreSQL local |
 | Definir validade e controle de acesso de conta | Resolver política de duração, tentativas, concorrência e revogação pertinente P014 | Defaults técnicos não viram política aprovada do produto |
 | Recuperar login/logout após perda da resposta | Validar tratamento de credenciais e de outras abas, P014/P020 | Não implementar reenvio automático de senha por suposição |
-| Aceitar interface e operar remotamente | Homologar P019 e definir HTTPS, proxy, cookies, logs e responsabilidades P015/P017 | Sem evidência de compatibilidade ou prontidão operacional |
+| Aceitar interface e operar remotamente | Homologar P019 e definir HTTPS, proxy, cookies, logs e responsabilidades P015/P017 | A I02 verificou Chromium em viewport estreito. A homologação e a prontidão operacional seguem pendentes. |
 
 P003 a P005 impedem fechar supervisão e autoridades na Etapa 6; não são motivo para inventar um vínculo no login. Campos e regras de negócio continuam nos recortes próprios. A spec pode ser revisada enquanto as pendências permanecem abertas; implementação integral e operação não estão liberadas por sua redação.
 
@@ -56,7 +54,7 @@ P003 a P005 impedem fechar supervisão e autoridades na Etapa 6; não são motiv
 
 ### Correspondência com as fontes
 
-| Referência do PRD/F003 | Tipo de referência | Correspondência técnica candidata | Regra |
+| Referência do PRD/F003 | Tipo de referência | Correspondência técnica | Regra |
 |---|---|---|---|
 | RF001 `login`; RS003 `identificador` | `str` | Campo de formulário `username`, rótulo Usuário | Mesmo nome de usuário da identidade customizada; não é CPF ou e-mail por inferência |
 | RF001/RS003 `senha` | `str` transitória | Campo `password` | Recebido por POST; nunca gravado ou devolvido como texto legível |
@@ -73,26 +71,26 @@ Os mecanismos nativos de senha armazenam uma representação codificada e realiz
 | Campo | Tipo e presença | Máscara, normalização e limites | Validação e retorno |
 |---|---|---|---|
 | `username` | `str`, obrigatório, origem no usuário | Texto sem máscara de documento; limite e validadores alinhados ao `USERNAME_FIELD` do modelo escolhido. Conferir normalização e remoção de espaços externos do form nativo na versão selecionada | Vazio ou composto só de espaços falha como obrigatório. Excesso do limite aprovado falha no servidor. Não converter automaticamente para minúsculas ou admitir identificador alternativo |
-| `password` | `str` sensível, obrigatório, origem no usuário | Entrada visualmente ocultada; sem máscara de conteúdo. Preservar caracteres e espaços de uma senha não vazia, com `strip=False` | Proposta para a regra de obrigatório da fonte: recusar vazio/somente espaços sem aparar outra senha. Não reaplicar política de criação de senha no login. Não preencher novamente o campo na resposta HTML |
+| `password` | `str` sensível, obrigatório, origem no usuário | Entrada visualmente ocultada; sem máscara de conteúdo. Preservar caracteres e espaços de uma senha não vazia, com `strip=False` | Recusar vazio ou somente espaços e preservar os espaços de qualquer senha que contenha outros caracteres. Não reaplicar política de criação de senha no login. Não preencher novamente o campo na resposta HTML |
 | `next` | `str` opcional; recebido por GET e, se usado, transportado no POST | Destino de navegação; sem significado de permissão. Sem tamanho numérico inventado; limite de transporte/validação depende da configuração aprovada | Validar novamente antes de cada redirecionamento. Ausente, inválido ou inadequado usa destino interno fixo. Campo oculto não é confiável |
 | `csrfmiddlewaretoken` | Token de transporte do framework nos formulários POST | Gerado e conferido pelo mecanismo CSRF; não é campo de negócio | Falha de proteção impede a operação e não é tratada como senha incorreta |
 
 `usuarioId`, perfil, `is_active`, `is_staff`, `is_superuser`, Supervisor e permissões não integram a entrada autenticadora. Valores extras com esses nomes não mudam o ator nem a autoridade. Senha, chave de sessão e token CSRF nunca compõem query string ou parâmetro de destino.
 
-Comprimento mínimo/máximo de senha, política de criação e alteração, normalização do identificador, limites de requisição e medidas contra tentativas abusivas precisam de definição aplicável antes da implementação. Não assumir números por aparecerem em exemplos antigos. O form nativo distingue o tratamento de usuário e senha; a adaptação proposta deve preservar essa diferença. [Código oficial dos formulários de autenticação](https://github.com/django/django/blob/main/django/contrib/auth/forms.py).
+Política de criação e alteração de senha, regras adicionais do identificador, limites de requisição e medidas contra tentativas abusivas continuam em P014. O formulário implementado preserva o tratamento nativo de usuário e senha e aplica a validação de campos descrita acima. [Código oficial dos formulários de autenticação](https://github.com/django/django/blob/main/django/contrib/auth/forms.py).
 
-## Organização candidata e responsabilidades
+## Organização e responsabilidades
 
-Os caminhos abaixo complementam a estrutura proposta da Spec 0001. São nomes de contrato para futura implementação, sem arquivos de aplicação criados agora.
+Os caminhos abaixo registram a estrutura da autenticação sobre a fundação da I01.
 
-| Local candidato | Conteúdo e responsabilidade | Restrição |
+| Local | Conteúdo e responsabilidade | Restrição |
 |---|---|---|
 | `contas/forms.py` | `EntradaForm`, derivado de `AuthenticationForm`; campos e mensagens de entrada | Não salva perfil, inspeção ou autoridade; normaliza erros públicos de credenciais |
 | `contas/views.py` | `EntrarView(View)`, `SairView(View)` e `AcessoView(View)` | Herança direta de `View`; mixins de acesso admitidos; sem consultas explícitas de negócio ao ORM |
-| `contas/urls.py` | Namespace candidato `contas`, três nomes de rota abaixo | Não publicar rotas de funcionalidades futuras |
+| `contas/urls.py` | Namespace `contas`, três nomes de rota abaixo | Não publicar rotas de funcionalidades futuras |
 | `templates/contas/entrar.html` | Formulário de credenciais e mensagens | Campo de senha não repopulado; sem dados internos de erro |
 | `templates/contas/acesso.html` | Destino mínimo para confirmar identidade reconhecida e oferecer saída | Sem painel, indicadores, lista de inspeções ou seleção de perfil antecipados |
-| `contas/tests/` | Cenários futuros de formulário, HTTP e sessão | Ferramenta de testes conforme fundação aprovada; PostgreSQL isolado onde houver persistência |
+| `contas/tests/` | Testes de formulário, HTTP e sessão | Ferramenta de testes conforme fundação aprovada; PostgreSQL isolado onde houver persistência |
 
 O `AuthenticationForm` nativo recebe `request` e usa a autenticação do framework. Essa é a exceção de infraestrutura já admitida na arquitetura; não autoriza services a receber HTTP. A view valida o form, obtém seu usuário validado e chama `login(request, usuario)` ou `logout(request)`. Não criar um `AuthService` apenas para contornar essa exceção nem reimplementar o mecanismo de senha. [Uso da autenticação Django](https://docs.djangoproject.com/en/stable/topics/auth/default/).
 
@@ -103,16 +101,16 @@ Views próprias não serão subclasses de `LoginView`, `LogoutView` ou `FormView
 | Componente | Dados consumidos nesta spec | Limite estrutural |
 |---|---|---|
 | Usuário customizado da fundação | Chave aprovada, `username`, representação codificada de `password` e `is_active`; demais campos técnicos herdados não concedem perfil de negócio | Não criar segundo cadastro de identidade; referenciar o modelo configurado, sem importar uma classe de usuário padrão fixa |
-| Sessão nativa em banco, se o ADR 0008 for aceito | Chave, conteúdo codificado e vencimento mantidos pelo framework; nomes nativos de referência `session_key`, `session_data`, `expire_date` | Conferir estrutura/migrações na versão escolhida; não criar uma entidade de sessão da aplicação nem persistir senha ou cópia de inspeção nela |
+| Sessão nativa no PostgreSQL conforme o ADR 0008 | Chave, conteúdo codificado e vencimento mantidos pelo framework; nomes nativos de referência `session_key`, `session_data`, `expire_date` | Conferir estrutura/migrações na versão escolhida; não criar uma entidade de sessão da aplicação nem persistir senha ou cópia de inspeção nela |
 | Configuração e diagnóstico | Backend e opções aprovadas; contexto mínimo de falha operacional | Não são cadastros editáveis do produto; sem valor de segredo em tabelas de negócio ou registros de teste |
 
 Datas de sessão são conceitos técnicos, distintos das datas oficiais de visita, emissão ou auditoria. Nenhuma chave estrangeira de fiscalização, tabela de aprovação ou vínculo com estabelecimento é introduzido pela autenticação.
 
-## Contrato HTTP candidato
+## Contrato HTTP
 
 Respostas de erro são páginas HTML; esta spec não cria API JSON. Os códigos abaixo descrevem a resposta da aplicação, antes de eventuais falhas de transporte. Métodos de leitura não executam login, logout ou alteração de negócio.
 
-| Rota e nome | Método e condição | Resultado proposto |
+| Rota e nome | Método e condição | Resultado |
 |---|---|---|
 | `/conta/entrar/` — `contas:entrar` | GET anônimo | 200, formulário vazio, token CSRF e destino tratado como entrada não confiável |
 | Mesma rota | POST anônimo, campos e credenciais válidos, conta ativa | Sessão estabelecida pelo Django; 302 para destino permitido ou `contas:acesso` |
@@ -127,11 +125,11 @@ Respostas de erro são páginas HTML; esta spec não cria API JSON. Os códigos 
 
 HEAD acompanha GET sem corpo nas rotas de entrada/acesso. OPTIONS pode responder metadados nativos sem executar ação. Demais métodos não previstos retornam 405 quando chegam ao despacho da view. Middleware de segurança, CSRF e verificação de acesso podem rejeitar ou redirecionar antes disso; não prometer 405 como substituto desses controles.
 
-Proposta: usar 302 no sucesso de POST, com a navegação seguinte por GET. Não reenviar corpo de credenciais por 307/308. O destino mínimo não é o painel definitivo do sistema; a distribuição por perfil depende da Etapa 6 e da interface futura.
+No sucesso do POST, a resposta 302 direciona a navegação seguinte por GET. A distribuição por perfil depende do recorte de acesso.
 
 ### Destino de retorno `next`
 
-1. Tratar o valor recebido tanto no GET quanto no POST como não confiável. Proposta: no POST, usar o valor desse formulário; não aproveitar um GET anterior sem nova validação.
+1. Tratar o valor recebido tanto no GET quanto no POST como não confiável. A view valida o destino recebido na própria requisição antes de usá-lo.
 2. Aceitar apenas destino relativo interno ou URL de mesmo host permitido, com esquema admissível; em requisição segura, exigir HTTPS. A origem de comparação é o host validado por `ALLOWED_HOSTS`, obtido pelo framework, sem lista liberada por parâmetro do cliente.
 3. Usar a validação nativa `url_has_allowed_host_and_scheme` e a construção de resposta/URI do framework. Rejeitar domínio externo, esquema indevido, destino que provoque ciclo entre entrada/saída e redução indevida de HTTPS para HTTP.
 4. Na ausência ou recusa, usar o nome fixo `contas:acesso`. Não devolver URL suspeita como link clicável nem incluí-la em mensagem/log sem tratamento.
@@ -139,9 +137,9 @@ Proposta: usar 302 no sucesso de POST, com a navegação seguinte por GET. Não 
 
 O helper nativo é parte da proteção; sozinho não prova codificação adequada da URI nem autorização do recurso de destino. [Validação de destinos no código oficial do Django](https://github.com/django/django/blob/main/django/utils/http.py).
 
-## Telas e mensagens propostas
+## Telas e mensagens
 
-Não é criado novo protótipo visual nesta etapa. Os contratos abaixo orientarão o desenho e a implementação futuros, preservando a revisão de protótipos em P021.
+A I02 usou estes estados na interface básica. A revisão dos protótipos continua em P021.
 
 | Tela ou estado | Conteúdo e interação | Validação observável |
 |---|---|---|
@@ -154,7 +152,7 @@ Não é criado novo protótipo visual nesta etapa. Os contratos abaixo orientar�
 | Saída confirmada | Formulário de entrada e indicação simples de encerramento, se adotada | Confirmação somente após resposta do servidor; não basta apagar cookie na interface |
 | Proteção CSRF recusada | Orientação legível para atualizar a página/retomar entrada com segurança | Não reaproveitar automaticamente o POST sensível nem mostrar token bruto |
 
-Proposta de atributos: identificador com finalidade `username` e senha com finalidade `current-password`, respeitando o funcionamento do navegador. Não prometer controle sobre gerenciadores de senha do usuário. Recursos de mostrar senha, textos finais e critérios formais de acessibilidade deverão ser validados; não impor confirmação extra ou fluxo de recuperação não aprovado.
+A interface usa `autocomplete="username"` para o identificador e `autocomplete="current-password"` para a senha. Recursos adicionais da interface e critérios formais de acessibilidade seguem para revisão e homologação.
 
 ## Fluxos e condições
 
@@ -162,14 +160,14 @@ Proposta de atributos: identificador com finalidade `username` e senha com final
 
 1. O usuário anônimo abre a entrada por HTTPS no ambiente operacional validado. O servidor apresenta formulário e proteção CSRF; `next` permanece não confiável.
 2. O usuário informa nome e senha e envia POST. O servidor valida transporte, presença, limites aplicáveis e credenciais pelo mecanismo nativo.
-3. Conta inexistente, credencial incorreta ou conta inativa não abrem sessão. O form apresenta a mensagem genérica proposta; a interface não repõe senha na resposta.
+3. Conta inexistente, credencial incorreta ou conta inativa não abrem sessão. O form apresenta a mensagem genérica; a interface não repõe senha na resposta.
 4. Com identidade válida e ativa, a view chama o login nativo. O mecanismo de sessão mantém a identidade; não recebe papel/autoridade do formulário.
 5. O servidor valida o destino e responde com redirecionamento. A página protegida verifica novamente a identidade na requisição seguinte; retorno da função de login isoladamente não é confirmação de sessão persistida.
 6. Se a resposta se perder, usar o tratamento de ambiguidade abaixo. Não afirmar sucesso ou falha de credenciais apenas por timeout.
 
 ### Acesso com sessão existente
 
-1. O middleware lê a sessão e recupera a identidade pelo backend configurado. Proposta: backend nativo `ModelBackend`, que não admite conta inativa.
+1. O middleware lê a sessão e recupera a identidade pelo backend configurado. O backend nativo `ModelBackend` recusa conta inativa.
 2. Sessão reconhecida e conta ativa permitem o destino mínimo. A verificação não se resume a um atributo `is_authenticated` isolado de qualquer validação de conta.
 3. Ausência, expiração ou invalidação exigem nova entrada. Inativação ocorrida depois do login deve impedir o próximo acesso protegido; não desfaz uma requisição já autorizada e em execução.
 4. Uma mudança de perfil/vínculo exige revalidação de autorização no caso de uso de negócio. Não copiar Supervisor ou permissões para o cookie como autoridade permanente.
@@ -177,27 +175,27 @@ Proposta de atributos: identificador com finalidade `username` e senha com final
 ### Encerramento
 
 1. A ação Sair envia POST protegido para a rota correspondente. GET, pré-carregamento de link ou visita de robô não encerram sessão.
-2. A view chama o logout nativo, que limpa a sessão corrente. Com o backend em banco proposto no ADR 0008, a sessão antiga deixa de ser reconhecida no servidor.
+2. A view chama o logout nativo, que limpa a sessão corrente. O backend em banco do ADR 0008 invalida no servidor a chave da sessão encerrada.
 3. O servidor redireciona para entrada. Repetir uma requisição protegida com a chave anterior não recupera acesso. Repetir a saída válida, já sem identidade, continua sem autenticar ninguém.
 4. Encerrar sessão corrente não promete encerrar todos os dispositivos. Troca de senha, revogação global, painel de sessões, autorizações de suporte e tratamento de requisições concorrentes dependem de P014.
 
 ## Sessão, cookies e expiração
 
-Recomenda-se sessão Django no servidor com o backend de banco e PostgreSQL, conforme ADR 0008. O navegador mantém o identificador opaco; não transporta uma cópia de perfil, senha ou inspeção como fonte de autoridade. O backend e as migrações nativas serão configurados apenas na implementação autorizada, depois da validação da proposta.
+A I02 usa o backend de sessão em banco com PostgreSQL. O navegador mantém o identificador opaco em cookie. A tabela de sessão é gerenciada pelas migrações nativas já verificadas na I01.
 
 O login nativo trata a renovação da chave para reduzir fixação de sessão; o logout limpa a sessão corrente. Backend de cookies assinados tem propriedades de revogação diferentes e não deve ser considerado equivalente para impedir a reutilização de uma cópia anterior após logout. [Sessões Django](https://docs.djangoproject.com/en/stable/topics/http/sessions/).
 
-| Configuração ou controle | Contrato proposto | O que continua aberto |
+| Configuração ou controle | Comportamento local | O que continua aberto |
 |---|---|---|
-| Backend | `django.contrib.sessions.backends.db`, no PostgreSQL aprovado para a aplicação | Aceite do ADR 0008 e preparação P001/P015 |
-| HTTPS e cookies | Propor cookies de sessão/CSRF com `Secure` no ambiente HTTPS; sessão com `HttpOnly`; escopo restrito | Domínio, caminho, `SameSite`, origens confiáveis e proxy/TLS em P014/P015; conferir compatibilidade antes de aplicar |
+| Backend | `django.contrib.sessions.backends.db`, no PostgreSQL aprovado para a aplicação | Preparação e validação remota em P015 |
+| HTTPS e cookies | Perfil de produção com `Secure` no cookie de sessão e de CSRF. Sessão com `HttpOnly`. | Domínio, caminho, `SameSite`, origens confiáveis e proxy/TLS em P014/P015; conferir compatibilidade antes de aplicar |
 | Duração | Expiração efetivamente aplicada no servidor; sessão expirada não autoriza novo acesso | Valores de `SESSION_COOKIE_AGE`, expiração ao fechar navegador e atualização por atividade; não assumir horas/minutos |
 | Concorrência | Nenhum limite de aparelhos aprovado; testar o comportamento que vier a ser escolhido | Quantidade, substituição da sessão anterior e aviso ao usuário em P014 |
-| Revogação | Logout da sessão corrente; recusa de conta inativa pelo backend candidato | Revogar todas as sessões, efeitos de alteração de senha/permissões e procedimentos administrativos em P014 |
-| Cache | Propor `Cache-Control: no-store` em respostas sensíveis, inclusive entrada preenchida e página protegida | Conferência de navegador/proxy e comportamento em múltiplas abas, P019/P020 |
+| Revogação | Logout da sessão corrente; recusa de conta inativa pelo backend nativo | Revogar todas as sessões, efeitos de alteração de senha/permissões e procedimentos administrativos em P014 |
+| Cache | `Cache-Control: no-store` nas respostas das rotas de conta | Conferência de navegador/proxy e comportamento em múltiplas abas, P019/P020 |
 | Limpeza | Não persistir credenciais ou tokens em `localStorage`, `sessionStorage`, serviço offline ou cache próprio da aplicação | Política de dados de inspeção ainda abertos ao sair/expirar/trocar conta, P014/P020 |
 
-Nomes de settings nesta tabela são referências técnicas, não arquivos configurados nem valores aceitos. Configurações relacionadas devem ser avaliadas em conjunto; `HttpOnly` não dispensa CSRF, e cabeçalhos de cache não garantem apagar uma página já exibida, a memória de outra aba ou o histórico de um aparelho compartilhado.
+A I02 combina a proteção CSRF com o cookie de sessão `HttpOnly`. Os cabeçalhos de cache orientam o armazenamento da resposta. P019 e P020 abrangem páginas já exibidas, outras abas e aparelhos compartilhados.
 
 O ciclo de expiração é nativo do backend, mas a política de produto ainda precisa ser escolhida. A manutenção dos registros expirados, sua frequência e responsáveis operacionais dependem de P015/P017. Não criar campos `revogada` e `criadaEm` só para imitar a tabela de referência do RS004.
 
@@ -234,7 +232,7 @@ A senha não é repopulada em HTML retornado pelo servidor. Preservar um campo a
 
 ## Falhas e consistência
 
-| Condição | Resposta observável proposta | Efeito e diagnóstico |
+| Condição | Resposta observável | Efeito e diagnóstico |
 |---|---|---|
 | Campo obrigatório/limite recusado | 200 com erro no formulário | Não tentar login com dados inválidos; não refletir senha |
 | Conta inexistente, inativa ou senha errada | 200 com mesma mensagem pública genérica | Sem nova sessão autenticada; não distinguir a conta na interface |
@@ -254,7 +252,7 @@ Não prometer transação única entre toda atualização auxiliar nativa, como 
 
 Esta tabela delimita a contribuição da autenticação. A [matriz completa de fontes, RF/RNF/RS e validação](../matriz-rastreabilidade.md) foi elaborada na Etapa 6 e continua Proposta. Documento redigido não significa requisito implementado.
 
-| Origem ou requisito | Parte detalhada aqui | Validação futura relacionada |
+| Origem ou requisito | Parte detalhada aqui | Validação relacionada |
 |---|---|---|
 | F003/RF001; F008/DC007 | Entrada por usuário/senha, conta ativa e saída; base Django confirmada | AU01 a AU08, AU11/AU12 e AU19 a AU22 |
 | F003/RS003 | Credenciais transitórias, validação nativa e mensagem genérica | AU04 a AU08, AU23 e AU29 |
@@ -268,9 +266,9 @@ Esta tabela delimita a contribuição da autenticação. A [matriz completa de f
 
 RS013 não é satisfeito apenas pelo redirecionamento ou pela possibilidade de repetir logout: deduplicação dos atos de inspeção/arquivo/PDF continua no escopo funcional correspondente. O controle de dados abertos em aparelho compartilhado permanece parcialmente aberto em RS014.
 
-## Critérios de aceite da implementação futura
+## Critérios de aceite e verificação
 
-Todos os cenários abaixo estão **planejados, não executados**. Usar contas/dados fictícios, proteção CSRF efetiva e PostgreSQL isolado quando houver persistência. Registrar versões, configuração sem segredos, pré-condição, ação, resposta HTTP, estado da sessão e acesso seguinte quando aplicáveis. A simulação deve observar o comportamento real, não apenas comparar textos constantes.
+O [registro da I02](../entrega-i02.md) relaciona os cenários verificados, parciais e pendentes. Usar contas/dados fictícios, proteção CSRF efetiva e PostgreSQL isolado quando houver persistência. Registrar versões, configuração sem segredos, pré-condição, ação, resposta HTTP, estado da sessão e acesso seguinte quando aplicáveis. A simulação deve observar o comportamento real, não apenas comparar textos constantes.
 
 | ID | Pré-condição e ação | Resultado verificável |
 |---|---|---|
@@ -305,18 +303,17 @@ Todos os cenários abaixo estão **planejados, não executados**. Usar contas/da
 | AU29 | Provocar erros de entrada, CSRF, sessão e banco; inspecionar HTML, URL e registros autorizados | Nenhuma senha/hash/segredo ou cópia indevida de chave/token; CSRF somente no transporte nativo necessário, sem exposição em mensagens/URL/logs ou detalhes internos |
 | AU30 | Executar entrada/erro/saída com teclado, leitura assistida e dispositivos homologados | Rótulos e foco utilizáveis, estados compreensíveis e campos/ações acessíveis nos critérios aprovados em P019 |
 | AU31 | Exercitar métodos previstos e não previstos, HEAD/OPTIONS e rejeição anterior por middleware | Sem efeitos em leitura; respostas compatíveis com a ordem dos controles documentada |
-| AU32 | Revisar entrega futura e migrações efetivas | Usuário/ORM/sessão nativos e views diretas respeitados; sem tabela de sessão duplicada, serviços com HTTP ou modelos de negócio antecipados |
+| AU32 | Revisar código e migrações efetivas | Usuário/ORM/sessão nativos e views diretas respeitados; sem tabela de sessão duplicada, serviços com HTTP ou modelos de negócio antecipados |
 
-- [ ] Contratos novos e decisões bloqueantes da parte implementada revisados, com origem registrada.
-- [ ] Cenários aplicáveis executados com evidências e falhas/limitações reais documentadas.
+- [x] Decisões técnicas do fluxo básico registradas na I02.
+- [x] Evidências locais e limites registrados por cenário.
 - [ ] Políticas de sessão, credenciais, tentativa e recuperação pertinentes definidas antes da operação.
 - [ ] Nenhuma função de negócio ou etapa posterior marcada como entregue por existir login.
 
 ## Questões de revisão e continuidade
 
-1. Validar o backend de sessões no servidor proposto no ADR 0008 e os nomes/rotas/forms candidatos, preservando a base já confirmada.
-2. Resolver P001 e a parte estrutural de P002 antes de criar ambiente/modelo/migração. Escolher políticas de P014 e as proteções operacionais aplicáveis; não fechar a pendência inteira pela aprovação do form.
-3. Validar em P014/P020 o tratamento de resposta perdida sem reenvio silencioso de senha e a proteção de dados ainda abertos ao sair/expirar/trocar conta.
-4. Revisar esta spec. A [Spec 0003 de acesso](0003-acesso-vinculos-supervisao.md) e a [matriz completa](../matriz-rastreabilidade.md) foram elaboradas na Etapa 6 e permanecem Propostas, sem implementação. As Etapas 7 e 8 foram elaboradas para revisão; [skills](../revisao-skills-tecnicas.md), [revisão final](../revisao-final-fundacao.md) e [estado](../state.md) registram a continuidade, sem iniciar implementação.
+1. Decidir as políticas de P014, as proteções operacionais de P015/P017 e a homologação de P019.
+2. Validar em P014/P020 o tratamento de resposta perdida e a proteção de dados que continuem abertos ao sair, expirar ou trocar conta.
+3. Preservar os requisitos da [Spec 0003 de acesso](0003-acesso-vinculos-supervisao.md) para a I03 e os recortes de supervisão, conforme o [roteiro](../plano-implementacao.md).
 
-O [estado](../state.md), as [etapas](../etapas.md) e o [acompanhamento no Trello](../acompanhamento-trello.md) registram a entrega. O resultado desta etapa é documental e permanece Proposto.
+O [estado](../state.md), as [etapas](../etapas.md) e o [acompanhamento no Trello](../acompanhamento-trello.md) registram a entrega. A evidência de implementação local está na [entrega da I02](../entrega-i02.md).

@@ -1,0 +1,8 @@
+{% extends "contas/base.html" %}
+
+{% block titulo %}Meu estabelecimento | Segurança Alimentar{% endblock %}
+{% block conta %}
+<h1 id="titulo-conta">Meu estabelecimento</h1>
+<p class="usuario">{{ estabelecimento.nome }}</p>
+<p><a href="{% url 'contas:acesso' %}">Voltar à área de acesso</a></p>
+{% endblock %}

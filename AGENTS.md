@@ -24,10 +24,10 @@ Leia os trechos pertinentes; não carregue todo o acervo para uma tarefa pontual
 
 ## Base do sistema
 
-- Python com Django e PostgreSQL; web em navegador para tablets/celulares e hospedagem remota. Versões, provedor e preparação continuam em aberto.
+- Python com Django e PostgreSQL; web em navegador para tablets/celulares e hospedagem remota. As versões e o preparo local estão em DC023 e no [README](README.md#preparo-local). O provedor segue em aberto.
 - MVT e Django Templates. Views próprias herdam diretamente de `View`; services fazem regra e ORM explícito sem `request`/`HttpResponse`. Forms validam entrada; templates apresentam.
 - Consultas internas de autenticação, sessão, permissões, ModelForm, Admin e migrações são exceções nativas admitidas. Login/logout de sessão ficam na view; o recebimento de `request` pelo AuthenticationForm candidato não autoriza HTTP em services.
-- Usuário customizado `AbstractUser`, nome de usuário/senha e sessão Django confirmados. Chave física/campos e políticas adicionais não estão escolhidos. Monólito modular e backend de sessão em banco continuam recomendações dos ADRs 0007/0008, sem aceite registrado.
+- Usuário customizado `AbstractUser`, nome de usuário/senha e sessão Django confirmados. DC024 fixa a chave física e os campos da migração inicial. O monólito modular do ADR 0007 foi aceito. A I02 usa o backend nativo de sessão no PostgreSQL conforme o ADR 0008. As políticas complementares seguem em P014/P015/P020.
 - Três perfis-base: Fiscalização, Administrador e Estabelecimento. Supervisor é fiscal designado por ação. Flags técnicas, participação na equipe ou início direto de inspeção não concedem supervisão/aprovação. Autoridades, autoaprovação e relação ação/inspeção continuam abertas.
 - Conferir perfil, vínculo, vigência, estado e escopo no servidor e no caso de uso que efetiva a operação, inclusive consultas/downloads e após revogação na sessão atual. O estabelecimento acessa próprios envios e resultados/documentos finais liberados, sem avaliação interna.
 - Online, com preservação do preenchimento na página aberta e bloqueio temporário das ações dependentes do servidor na queda de comunicação. Tentar recuperar após reconexão, sem considerar salvo antes da confirmação ou duplicar o efeito. Mecanismo, persistência no navegador e tratamento específico de credenciais permanecem nas specs/pendências.

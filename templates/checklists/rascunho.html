@@ -1,0 +1,45 @@
+{% extends "gestao/base.html" %}
+
+{% block titulo %}{{ checklist.titulo }} | Checklist{% endblock %}
+{% block gestao %}
+<h1 id="titulo-gestao">{{ checklist.titulo }}</h1>
+{% if erro %}
+<p class="alerta" role="alert">{{ erro }} <a href="{% url 'checklists:rascunho' checklist.pk %}">Reabrir rascunho</a></p>
+{% endif %}
+<h2>Rascunho</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Salvar rascunho</button>
+</form>
+
+<h2>Itens</h2>
+<a class="acao" href="{% url 'checklists:item_novo' checklist.pk %}">Adicionar item</a>
+<ul class="registros">
+    {% for item in checklist.itens %}
+    <li><a href="{% url 'checklists:item_editar' checklist.pk item.id %}">{{ item.ordem }}. {{ item.enunciado }}</a></li>
+    {% empty %}
+    <li>Adicione pelo menos um item para publicar.</li>
+    {% endfor %}
+</ul>
+
+<h2>Versões publicadas</h2>
+{% if checklist.itens %}
+<form method="post" action="{% url 'checklists:publicar' checklist.pk %}">
+    {% csrf_token %}
+    <input type="hidden" name="revisao" value="{{ checklist.revisao }}">
+    <button type="submit">Publicar versão de demonstração</button>
+    <p class="secundario">A publicação usa os dados já salvos no rascunho.</p>
+</form>
+{% endif %}
+<ul class="registros">
+    {% for versao in versoes %}
+    <li>
+        <a href="{% url 'checklists:versao' checklist.pk versao.pk %}">Versão {{ versao.numero }}</a>
+        <time datetime="{{ versao.publicado_em|date:'c' }}">{{ versao.publicado_em|date:"d/m/Y H:i T" }}</time>
+    </li>
+    {% empty %}
+    <li>Nenhuma versão publicada.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

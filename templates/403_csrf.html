@@ -1,0 +1,8 @@
+{% extends "contas/base.html" %}
+{% block titulo %}Envio não confirmado | Segurança Alimentar{% endblock %}
+
+{% block conta %}
+<h1 id="titulo-conta">Envio não confirmado</h1>
+<p>Abra uma página atualizada para continuar com segurança.</p>
+<a href="{% url 'contas:acesso' %}">Verificar acesso</a>
+{% endblock %}

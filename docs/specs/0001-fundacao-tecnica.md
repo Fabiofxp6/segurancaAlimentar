@@ -1,21 +1,19 @@
 # Spec 0001: Fundação técnica
 
-- **Status:** Proposto; elaboração documental, sem implementação.
+- **Status:** Implementada e verificada localmente na I01. [Evidências](../entrega-i01.md)
 - **Data:** 10/11/2026.
 - **Etapa:** 4, fundação técnica e skill de specs.
 - **Produto:** [PRD 0001](../prd/0001-sistema-avaliacao-seguranca-alimentar.md).
 - **Arquitetura:** [responsabilidades e limites](../arquitetura.md).
-- **Decisões:** [ADR 0001](../adr/0001-python-django-postgresql.md), [ADR 0002](../adr/0002-mvt-com-services-e-templates.md) e [ADR 0003](../adr/0003-usuario-customizado-e-sessao-django.md); [ADR 0007](../adr/0007-monolito-modular.md) permanece recomendação.
+- **Decisões:** [ADR 0001](../adr/0001-python-django-postgresql.md), [ADR 0002](../adr/0002-mvt-com-services-e-templates.md) e [ADR 0003](../adr/0003-usuario-customizado-e-sessao-django.md); [ADR 0007](../adr/0007-monolito-modular.md) foi aceito para a fundação.
 - **Fontes:** F003, F007 e F008 no [índice](../referencias/README.md), [decisões confirmadas](../decisoes-confirmadas.md) e [pendências](../pendencias.md).
 - **Depende de:** nenhuma spec anterior. As decisões abertas e seus pontos de bloqueio estão abaixo.
 
 ## Objetivo e limite da entrega
 
-Especificar a base sobre a qual serão construídos autenticação, acesso e os fluxos de fiscalização: configuração reproduzível, PostgreSQL, identidade inicial, organização e verificações da fundação. Esta entrega cria apenas documentos. Estruturas, configurações, comandos e testes descritos são contratos ou propostas para execução futura autorizada.
+Especificar a base sobre a qual serão construídos autenticação, acesso e os fluxos de fiscalização: configuração reproduzível, PostgreSQL, identidade inicial, organização e verificações da fundação. A I01 implementou a estrutura local, os perfis de configuração, a identidade inicial e as verificações descritas no [relatório](../entrega-i01.md).
 
-A base confirmada é Python/Django, PostgreSQL, MVT, Templates, views próprias derivadas diretamente de `View`, services independentes de HTTP e usuário customizado `AbstractUser` com sessão Django. O desenho físico abaixo é uma proposta para revisão; continuar a etapa não aprova automaticamente o ADR 0007 ou os contratos novos.
-
-Não há versões selecionadas, ambiente instalado ou primeira migração pronta. Esta spec ainda não está pronta para implementação integral: os bloqueios estão identificados por parte da execução, sem impedir sua revisão documental.
+A base confirmada é Python/Django, PostgreSQL, MVT, Templates, views próprias derivadas diretamente de `View`, services independentes de HTTP e usuário customizado `AbstractUser` com sessão Django. O desenho inicial segue DC023–DC025. A I02 trata as políticas de autenticação e sessão.
 
 ## Escopo
 
@@ -27,9 +25,9 @@ Não inclui os fluxos de login/logout, recuperação ou gestão de sessão, cujo
 
 | Parte futura | O que precisa estar decidido | Situação atual |
 |---|---|---|
-| Preparar ambiente e dependências | Versões compatíveis de Python, Django, PostgreSQL e driver; ferramenta de preparação e arquivo de versões | P001 aberta; não copiar o blog nem usar uma versão implícita |
-| Criar estrutura física | Validar a recomendação de aplicação única e os nomes candidatos desta spec | ADR 0007 e contratos abaixo propostos |
-| Gerar/aplicar a primeira migração de identidade | Escolher identificador e campos iniciais que alterem o schema; confirmar rótulo do usuário customizado | P002 aberta; `contas.Usuario` é candidato |
+| Preparar ambiente e dependências | Versões compatíveis de Python, Django, PostgreSQL e driver; ferramenta de preparação e arquivo de versões | P001 resolvida para a fundação local em DC023 |
+| Criar estrutura física | Validar a recomendação de aplicação única e os nomes candidatos desta spec | Fundação implementada conforme ADR 0007 e DC025 |
+| Gerar/aplicar a primeira migração de identidade | Escolher identificador e campos iniciais que alterem o schema; confirmar rótulo do usuário customizado | Parte estrutural de P002 resolvida em DC024 |
 | Executar testes com banco | Definir PostgreSQL e credenciais exclusivos de teste, com isolamento verificável | P001; detalhes de ambiente em P015, sem usar credenciais reais de operação |
 | Colocar em operação | Definir hospedagem, HTTPS, segredos, arquivos, logs, backup e metas pertinentes | P014 a P019; esta spec não aprova a operação real |
 
@@ -37,7 +35,7 @@ P003 a P006 não impedem descrever a identidade mínima, mas impedem fechar seus
 
 ## Estrutura candidata
 
-Proposta de nomes e responsabilidades; os caminhos abaixo ainda não existem como aplicação. O exemplo pressupõe validação do ADR 0007.
+A I01 criou a estrutura abaixo, com os auxiliares de configuração, teste e banco descritos no [README](../../README.md#preparo-local).
 
 ```text
 manage.py
@@ -64,7 +62,7 @@ templates/
 
 Os pacotes Python terão os arquivos de inicialização necessários quando forem implementados. `config` reúne configuração e entradas do framework. `contas` começa somente com a identidade mínima aprovada. Não criar services, forms, views ou módulos comuns vazios para simular uma funcionalidade inexistente. Adicioná-los quando o primeiro contrato correspondente for implementado.
 
-Dependências serão declaradas em arquivo próprio com versões reproduzíveis conforme P001. Um arquivo de exemplo de ambiente poderá listar apenas chaves e valores fictícios; o `.env` existente permanece preservado. Exclusão de segredos e artefatos locais deverá ser prevista no controle de versão futuro, sem inicializar Git nesta fase.
+As dependências são declaradas em `pyproject.toml` e resolvidas em `uv.lock`. O `example.env` contém valores fictícios e o `.gitignore` exclui os arquivos locais de configuração e o ambiente virtual.
 
 ## Configuração por ambiente
 
@@ -117,11 +115,11 @@ Não criar esquema para fiscalização, checklist ou documentos nesta fundação
 
 ## Base do usuário customizado
 
-Proposta de nome físico: `contas.Usuario`, derivado de `AbstractUser`, com `AUTH_USER_MODEL` apontando para esse modelo antes das migrações. A derivação e o uso de sessão estão confirmados; nome de app/classe, identificador e campos adicionais continuam sujeitos à revisão. Referências futuras ao usuário devem respeitar o modelo configurado, sem depender diretamente do `User` padrão como se fosse o modelo do projeto.
+A primeira migração cria `contas.Usuario`, derivado de `AbstractUser`, com `AUTH_USER_MODEL` configurado desde o início. O modelo usa chave interna de 64 bits e os campos herdados conforme DC024. Referências futuras ao usuário devem respeitar o modelo configurado, sem depender diretamente do `User` padrão como se fosse o modelo do projeto.
 
 | Elemento | Tipo/representação | Contrato e limite |
 |---|---|---|
-| Identificador primário | A decidir em P002 | Não escolher UUID ou inteiro a partir de exemplo; bloqueia a primeira migração |
+| Identificador primário | `BigAutoField` | Chave interna aprovada em DC024 e criada na primeira migração |
 | `username` | `str`, campo herdado | Nome de acesso confirmado; regras e limites da versão escolhida serão registrados na spec de autenticação, sem máscara nova nesta fundação |
 | `password` | `str` com codificação de senha do Django | Usar mecanismos nativos de criação/verificação; não guardar senha legível nem atribuir entrada bruta ao campo |
 | `is_active` | `bool` herdado | Situação técnica da conta; aplicação no fluxo de entrada será detalhada na Etapa 5 |
@@ -175,7 +173,7 @@ Logs técnicos não são trilha oficial de auditoria. Formato, destino, retenç�
 
 ## Relação com os requisitos
 
-Esta é uma relação local da fundação, complementar à [matriz completa elaborada na Etapa 6](../matriz-rastreabilidade.md). Indica contribuição futura parcial; nenhum requisito fica implementado por esta entrega.
+Esta é uma relação local da fundação, complementar à [matriz completa elaborada na Etapa 6](../matriz-rastreabilidade.md). A I01 implementa a contribuição de fundação. Os requisitos que exigem funções de usuário ou operação permanecem com cobertura parcial ou futura.
 
 | Requisitos existentes | Contribuição da fundação | Verificação futura |
 |---|---|---|
@@ -192,7 +190,7 @@ Não se reivindica nesta spec atendimento a salvamento de resposta, autorizaçã
 
 ## Critérios de aceite da implementação futura
 
-Todos os cenários estão planejados e não executados. A evidência deve identificar configuração utilizada sem seus segredos, versões, preparação, passos e resultado. Usar PostgreSQL isolado nos cenários de persistência; verificar o destino antes de executar. O mecanismo de banco de teste do Django não dispensa a configuração correta do ambiente. [Banco de teste no Django](https://docs.djangoproject.com/en/stable/topics/testing/overview/#the-test-database).
+Os resultados para o recorte local de VF01–VF12 estão no [registro da I01](../entrega-i01.md). A evidência deve identificar configuração utilizada sem seus segredos, versões, preparação, passos e resultado. Usar PostgreSQL isolado nos cenários de persistência; verificar o destino antes de executar. O mecanismo de banco de teste do Django não dispensa a configuração correta do ambiente. [Banco de teste no Django](https://docs.djangoproject.com/en/stable/topics/testing/overview/#the-test-database).
 
 | Cenário | Verificação observável |
 |---|---|
@@ -215,6 +213,6 @@ Todos os cenários estão planejados e não executados. A evidência deve identi
 
 ## Continuidade
 
-A [spec de autenticação](0002-autenticacao.md) foi elaborada na Etapa 5 e permanece Proposta. Seu [ADR 0008](../adr/0008-sessoes-no-servidor-com-postgresql.md) recomenda backend de sessões em banco, ainda não aprovado; não modifica a configuração real da fundação. A [Spec 0003 de acesso](0003-acesso-vinculos-supervisao.md) e a [matriz completa](../matriz-rastreabilidade.md) foram elaboradas na Etapa 6, também Propostas; não resolvem por si as escolhas físicas de P002. As Etapas 7 e 8 foram elaboradas para revisão; a [revisão final](../revisao-final-fundacao.md) e o [estado](../state.md) registram a passagem à próxima atividade que o usuário solicitar, sem início automático de implementação. Esta spec será revisada conforme as decisões de ambiente e identidade forem efetivamente tomadas; não avançará para Implementado por aprovação do texto.
+A [spec de autenticação](0002-autenticacao.md) foi elaborada na Etapa 5 e permanece Proposta. Seu [ADR 0008](../adr/0008-sessoes-no-servidor-com-postgresql.md) recomenda backend de sessões em banco, ainda não aprovado; não modifica a configuração real da fundação. A [Spec 0003 de acesso](0003-acesso-vinculos-supervisao.md) e a [matriz completa](../matriz-rastreabilidade.md) foram elaboradas na Etapa 6, também Propostas; não resolvem por si as escolhas físicas de P002. A [I01](../entrega-i01.md) concluiu a fundação local. A I02 é o próximo recorte do [roteiro](../plano-implementacao.md).
 
-O [estado](../state.md), as [etapas](../etapas.md) e o [acompanhamento no Trello](../acompanhamento-trello.md) indicam o ponto de retomada. Nesta entrega nenhum código, ambiente, dependência, banco, migração ou configuração real foi criado ou alterado.
+O [estado](../state.md), as [etapas](../etapas.md) e o [acompanhamento no Trello](../acompanhamento-trello.md) indicam o ponto de retomada. As verificações da I01 foram realizadas com PostgreSQL isolado e dados fictícios.

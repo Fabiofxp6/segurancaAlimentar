@@ -1,6 +1,6 @@
 # Decisões confirmadas
 
-Atualizado em: 10/11/2026. Etapa 1: organização das fontes.
+Atualizado em 15/11/2026, com o aceite das escolhas aplicadas na I01.
 
 Este registro consolida decisões já expressas; não constitui PRD, ADR ou implementação. Os documentos futuros serão elaborados nas etapas acordadas. As políticas ainda abertas estão em [pendências](pendencias.md).
 
@@ -137,6 +137,44 @@ Origem: F003; identificação dos requisitos. F008; plano aprovado. Etapas relac
 Atualizar o quadro Gestão de Projetos em paralelo a todas as atividades deste projeto: análise, planejamento, documentação, decisões, desenvolvimento, testes e correções. Registrar entregas, verificações, pendências, bloqueios e próximo passo com situação real. A rotina está em [acompanhamento no Trello](acompanhamento-trello.md); não altera a execução de uma etapa por vez.
 
 Origem: solicitação direta do usuário em 10/11/2026, após a entrega da Etapa 2. Etapas relacionadas: Todas.
+
+## DC023 Versões e preparação local da fundação
+
+A base aprovada para desenvolvimento e testes é Python 3.14, Django 5.2 LTS, PostgreSQL 17 e Psycopg 3.3 binário. O uv mantém dependências reproduzíveis. Django roda no host e o PostgreSQL usa instâncias Docker Compose separadas para desenvolvimento e testes. O perfil de produção depende de configuração externa. A hospedagem permanece em P015.
+
+Origem: proposta da I00 e autorização do usuário para seguir com a I01 em 15/11/2026. [I00](decisoes-fundacao-i00.md) · [Verificação da I01](entrega-i01.md)
+
+## DC024 Identidade da primeira migração
+
+O modelo é `contas.Usuario`, baseado em `AbstractUser`, com chave interna `BigAutoField` e campos herdados na primeira migração. `AUTH_USER_MODEL` referencia esse modelo desde o início. O identificador técnico é inteiro, e a referência lógica `usuarioId` continua no catálogo. Perfis, campos de cadastro de negócio, vínculos e autoridades seguem para os recortes correspondentes.
+
+Origem: proposta da I00 e autorização do usuário para seguir com a I01 em 15/11/2026. [I00](decisoes-fundacao-i00.md) · [Spec 0001](specs/0001-fundacao-tecnica.md)
+
+## DC025 Monólito modular na fundação
+
+Uma aplicação Django começa com configuração, identidade e templates. A organização de novas áreas será detalhada à medida que suas specs forem aprovadas.
+
+Origem: proposta da I00 e autorização do usuário para seguir com a I01 em 15/11/2026. [ADR 0007](adr/0007-monolito-modular.md)
+
+## DC026 Sessão no servidor na I02
+
+O backend nativo de sessões do Django usa PostgreSQL. A saída invalida no servidor a sessão corrente. No ambiente local, a I02 usa o prazo e a renovação padrão do framework como configuração técnica. As políticas de expiração, revogação global, segurança das credenciais e operação remota seguem em P014/P015.
+
+Origem da escolha técnica na I02 autorizada pelo usuário em 15/11/2026. [ADR 0008](adr/0008-sessoes-no-servidor-com-postgresql.md) · [Entrega da I02](entrega-i02.md)
+
+## DC027 Perfis e vínculos na I03
+
+A I03 adota um perfil-base por conta. Cada conta de Estabelecimento pode ter um vínculo aberto com uma unidade. Uma unidade pode ter várias contas. Administrador ativo mantém vínculos pelo sistema. O acesso do Estabelecimento é recalculado na sessão atual e exige conta e unidade ativas e vínculo aberto.
+
+A concessão do perfil Administrador é restrita ao procedimento técnico registrado, para uma conta ativa, dedicada, com credencial configurada e sem perfil prévio. Contas abertas pela gestão web começam inativas e recebem credencial em passo separado. O canal de entrega de credenciais reais permanece em P014.
+
+Origem: escolhas conservadoras adotadas no recorte local após autorização do usuário para retomar e concluir a I03 em 15/11/2026. [Entrega da I03](entrega-i03.md)
+
+## DC028 Rascunhos e versões de checklist na I04
+
+O Administrador mantém o checklist e publica versões para demonstração. O servidor copia o conteúdo do rascunho para uma versão com número, autor, data e finalidade identificada. As versões publicadas ficam imutáveis no PostgreSQL. A futura inspeção deve preservar a referência à versão usada.
+
+Origem: escolhas técnicas adotadas na I04 autorizada em 15/11/2026. A governança e o conteúdo oficiais seguem em P009, e a fórmula em P010. [Spec 0005](specs/0005-checklist-e-versoes.md) · [Entrega da I04](entrega-i04.md)
 
 ## Regras antigas que deixaram de valer
 

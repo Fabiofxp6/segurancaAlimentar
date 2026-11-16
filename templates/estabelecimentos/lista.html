@@ -1,0 +1,17 @@
+{% extends "gestao/base.html" %}
+
+{% block gestao %}
+<h1 id="titulo-gestao">Estabelecimentos</h1>
+<a class="acao" href="{% url 'estabelecimentos:criar' %}">Novo estabelecimento</a>
+<ul class="registros">
+    {% for cadastro in pagina %}
+        <li>
+            <a href="{% url 'estabelecimentos:editar' cadastro.pk %}">{{ cadastro.nome }}</a>
+            <span>{% if cadastro.ativo %}Ativo{% else %}Inativo{% endif %}</span>
+        </li>
+    {% empty %}
+        <li>Nenhum estabelecimento cadastrado.</li>
+    {% endfor %}
+</ul>
+{% include "gestao/paginacao.html" %}
+{% endblock %}

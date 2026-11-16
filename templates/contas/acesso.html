@@ -1,0 +1,19 @@
+{% extends "contas/base.html" %}
+{% block titulo %}Acesso | Segurança Alimentar{% endblock %}
+
+{% block conta %}
+<h1 id="titulo-conta">Área de acesso</h1>
+<p class="usuario">Usuário conectado: <strong>{{ usuario }}</strong></p>
+{% if administracao %}
+<p><a href="{% url 'gestao_contas:lista' %}">Gerir usuários</a></p>
+<p><a href="{% url 'estabelecimentos:lista' %}">Gerir estabelecimentos</a></p>
+<p><a href="{% url 'checklists:lista' %}">Gerir checklists</a></p>
+{% endif %}
+{% if unidade_id %}
+<p><a href="{% url 'contas:estabelecimento' unidade_id %}">Meu estabelecimento</a></p>
+{% endif %}
+<form method="post" action="{% url 'contas:sair' %}">
+    {% csrf_token %}
+    <button type="submit">Sair</button>
+</form>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "gestao/base.html" %}
+
+{% block gestao %}
+<h1 id="titulo-gestao">{{ titulo }}</h1>
+{% if identificador %}<p>Nome de usuário <strong>{{ identificador }}</strong></p>{% endif %}
+{% if orientacao %}<p>{{ orientacao }}</p>{% endif %}
+{% if conta_estabelecimento %}
+<p><a href="{% url 'gestao_contas:vinculo' conta_estabelecimento %}">Gerir vínculo</a></p>
+{% endif %}
+{% if conflito %}
+<p class="alerta" role="alert">Este cadastro mudou desde que você abriu o formulário. <a href="{{ request_path }}">Reabra o cadastro</a> para conferir os dados atuais antes de editar.</p>
+{% endif %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Salvar</button>
+</form>
+<p><a href="{% url retorno %}">Voltar à lista</a></p>
+{% endblock %}
