@@ -66,4 +66,4 @@ Esta nota não altera as origens, os descartes ou as verificações históricas 
 
 ## Consolidação posterior: Etapa 8
 
-As orientações antes previstas foram elaboradas em [AGENTS](../AGENTS.md), [CLAUDE](../CLAUDE.md) e [README da raiz](../README.md), com [revisão final](revisao-final-fundacao.md). Indicações anteriores de etapas pendentes nesta curadoria registram o momento histórico; o [estado](state.md) é a referência vigente. O manifesto e as fontes originais da curadoria foram preservados, sem reescrever a procedência ou afirmar execução dos perfis.
+As orientações antes previstas foram elaboradas em [AGENTS](../AGENTS.md), `CLAUDE.md` e [README da raiz](../README.md), com [revisão final](revisao-final-fundacao.md). Indicações anteriores de etapas pendentes nesta curadoria registram o momento histórico; o [estado](state.md) é a referência vigente. O manifesto e as fontes originais da curadoria foram preservados, sem reescrever a procedência ou afirmar execução dos perfis.

@@ -108,7 +108,7 @@ O pedido de avançar autorizou somente a Etapa 6. Não criou software, migraçõ
 ## Entrega da Etapa 8
 
 - [AGENTS](../AGENTS.md) com retomada seletiva, fontes, limites, invariantes, skills/agentes, preservação e rotina do Trello.
-- [CLAUDE](../CLAUDE.md) como entrada que aponta para AGENTS e estado, sem uma segunda cópia das regras.
+- `CLAUDE.md` como entrada que aponta para AGENTS e estado, sem uma segunda cópia das regras.
 - [README da raiz](../README.md) com visão do sistema, situação real, mapa documental e decisões necessárias antes da execução.
 - [Revisão final](revisao-final-fundacao.md): coerência do conjunto, pontos de retomada atualizados, links/IDs/formatos e integridade. Requisitos, dados, critérios e políticas preservados.
 - Estado, índices e Trello atualizados. Sem código, dependência, ambiente, banco/migração, implantação ou teste de aplicação; Graphify continua pendente e perfis não executados.

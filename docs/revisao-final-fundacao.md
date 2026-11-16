@@ -6,7 +6,7 @@
 
 ## Resultado da consolidação
 
-Foram preparados [AGENTS](../AGENTS.md), [CLAUDE](../CLAUDE.md) e [README da raiz](../README.md). AGENTS concentra retomada, fontes, escopo, invariantes e uso seletivo de skills; CLAUDE aponta para a mesma orientação, evitando uma segunda versão das regras; README apresenta o sistema, a situação real e o mapa dos documentos.
+Foram preparados [AGENTS](../AGENTS.md), `CLAUDE.md` e [README da raiz](../README.md). AGENTS concentra retomada, fontes, escopo, invariantes e uso seletivo de skills; CLAUDE aponta para a mesma orientação, evitando uma segunda versão das regras; README apresenta o sistema, a situação real e o mapa dos documentos.
 
 Os pontos atuais de continuidade no PRD, arquitetura, specs, matriz, catálogo e skills documentais foram atualizados. Referências que ainda anunciavam as Etapas 7 ou 8 como próximas passaram a apontar ao estado final das entregas. Notas históricas de cada etapa foram preservadas e identificadas; não são substitutas do [estado vigente](state.md).
 
