@@ -66,7 +66,7 @@ Origem: F003; RF018 e RF022.
 
 ## P007 Adiamento
 
-Validar condições, justificativa, eventual aprovação, data, estado da inspeção e retomada. Aprovação semelhante ao cancelamento ainda é proposta.
+DC038 resolve o adiamento da demonstração para inspeção Atribuída, com justificativa, data proposta e autoridade por ação. A política de operação real continua em aberto. [Spec 0014](specs/0014-adiamento.md)
 
 Encaminhamento: Responsável pelo produto e pelo processo.
 
@@ -76,7 +76,7 @@ Origem: F003; RF027.
 
 ## P008 Reanálise documental
 
-Decidir quando documento novo exige reanálise, quem analisa/aprova, prazos e necessidade de nova visita.
+DC038 define envio de complemento após a conclusão e parecer por fiscal da equipe. Eventual correção segue a I11, sem nova visita no recorte acadêmico. Prazos, obrigatoriedade e política de operação real continuam em aberto. [Spec 0015](specs/0015-reanalise-documental.md)
 
 Encaminhamento: Responsável pelo produto e pelo processo.
 
@@ -148,7 +148,7 @@ Origem: F003; RS003 e RS004. F008; autenticação.
 
 ## P015 Hospedagem e operação
 
-Escolher provedor, domínio, ambientes, acompanhamento de falhas e responsáveis operacionais. Para autenticação, validar TLS, proxy, origens, cookies, preparação do backend PostgreSQL em produção e manutenção dos registros expirados. A configuração da I02 foi verificada no ambiente local.
+Escolher provedor, domínio, ambientes, acompanhamento de falhas e responsáveis operacionais. Para autenticação, validar TLS, proxy, origens, cookies, preparação do backend PostgreSQL em produção e manutenção dos registros expirados. A I02 verificou a configuração local. A I13 ensaiou HTTPS local. DC037 define que a entrega da faculdade roda localmente. Hospedagem, domínio, HTTPS externo e responsáveis ficam para a operação futura. [Roteiro da I13](entrega-i13.md)
 
 Encaminhamento: Responsável pelo projeto e equipe técnica.
 
@@ -178,7 +178,7 @@ Origem: F003; RS006, RS007 e RS012.
 
 ## P018 Metas e recuperação
 
-Levantar usuários, carga, volume de arquivos, disponibilidade, tempos, backup, perda máxima de dados e tempo de recuperação. Não inventar metas numéricas.
+Levantar usuários, carga, volume de arquivos, disponibilidade, tempos, backup, perda máxima de dados e tempo de recuperação. A I13 restaurou o PostgreSQL com anexos e termos fictícios em outro banco. Os tempos desse ensaio descrevem apenas essa base. Frequência, retenção operacional e metas do piloto seguem abertas. [Evidências da I13](entrega-i13.md#evidências-locais)
 
 Encaminhamento: Responsável pelo produto e equipe técnica.
 
@@ -188,7 +188,7 @@ Origem: F003; RNF02, RNF03, RNF06 e RNF11.
 
 ## P019 Compatibilidade e acessibilidade
 
-Homologar navegadores, versões, dispositivos e critérios de acessibilidade; definir captura de foto e alternativa por arquivo.
+Homologar navegadores, versões, dispositivos, critérios de acessibilidade, captura de foto e alternativa por arquivo. O ensaio da I13 usou Chromium nas larguras de 360 e 820 px. A homologação em dispositivos físicos continua prevista. [Evidências da I13](entrega-i13.md#evidências-locais)
 
 Encaminhamento: Usuários representativos com a equipe técnica.
 
@@ -231,8 +231,7 @@ Origem: F003; prioridades A validar. F005; seções 11 e 12.
 ## Propostas preservadas como propostas
 
 - O agrupamento por ação foi definido em DC029. O escopo operacional de aprovação e ausências segue em P005.
-- Exigir autorização para adiamento semelhante ao cancelamento depende de P007.
-- Abrir uma reanálise a partir de documento novo depende de P008; anexo não muda resultado automaticamente.
+- A política de adiamento e reanálise para operação real depende de P007 e P008. A demonstração segue DC038.
 - Criar um app para cada área da visão conceitual não foi decidido. As áreas lógicas foram detalhadas como proposta na [arquitetura](arquitetura.md); o [ADR 0007](adr/0007-monolito-modular.md) foi aceito para a fundação. A estrutura física será detalhada nas specs pertinentes.
 - A retomada assistida da [Spec 0002](specs/0002-autenticacao.md) permanece proposta. Prazo de expiração, tentativas, recuperação e revogação global ainda dependem de decisão.
 - Metas de desempenho, tamanhos, máscaras, fórmulas, identificadores físicos e prazos ainda não aprovados não devem ser tratados como definitivos.

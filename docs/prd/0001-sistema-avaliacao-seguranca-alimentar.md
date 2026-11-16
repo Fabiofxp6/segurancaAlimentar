@@ -27,7 +27,7 @@ Existem três perfis-base. Supervisor não é um quarto perfil nem um cargo perm
 
 ## Restrições técnicas confirmadas
 
-O projeto usará Python com Django e PostgreSQL, em sistema web com hospedagem remota ou em nuvem. Estão confirmados MVT, páginas com Django Templates e views baseadas diretamente em `View`; regras e consultas explícitas da aplicação ficam em services, separados da camada HTTP. A base de autenticação será um usuário customizado a partir de `AbstractUser`, com nome de usuário, senha e sessão Django.
+O projeto usa Python com Django e PostgreSQL em sistema web. A entrega acadêmica roda localmente e a hospedagem remota fica para uma fase futura. [DC037](../decisoes-confirmadas.md#dc037-demonstração-acadêmica-local) Estão confirmados MVT, páginas com Django Templates e views baseadas diretamente em `View`; regras e consultas explícitas da aplicação ficam em services, separados da camada HTTP. A base de autenticação será um usuário customizado a partir de `AbstractUser`, com nome de usuário, senha e sessão Django.
 
 Essas escolhas seguem DC003 a DC007. Versões, provedor, armazenamento e biblioteca de PDF continuam pendentes. A arquitetura e as specs detalharão as fronteiras e os contratos nas etapas próprias.
 
@@ -45,7 +45,7 @@ O escopo do produto inclui cadastros, acesso, checklists versionados, inspeçõe
 
 Os IDs RF001 a RF028, RNF01 a RNF14 e RS001 a RS016 foram preservados, totalizando 58 entradas. O texto apresenta o comportamento de produto de F003 e incorpora as confirmações posteriores registradas em F008 e nas decisões confirmadas. Este PRD preserva os dados, tipos e formatos apresentados em F003 para permitir a leitura completa dos requisitos. São referências e sugestões da fonte: não definem por si só schema, chave primária, coluna, mecanismo de arquivo ou contrato técnico aprovado. As specs detalharão e validarão a implementação.
 
-Cada aceite descrito é uma verificação futura, não um teste executado. Quando há detalhamento pendente, o comportamento central está registrado, mas a política indicada precisa ser resolvida para completar sua especificação ou aceite. RF027 tem fluxo a validar e RF028 permanece proposta. O status global Proposto não desfaz decisões já confirmadas nem aprova as propostas remanescentes.
+Cada aceite descrito é uma verificação futura, não um teste executado. Quando há detalhamento pendente, o comportamento central está registrado, mas a política indicada precisa ser resolvida para completar sua especificação ou aceite. DC038 define os fluxos de RF027 e RF028 para a demonstração. A política de operação real segue em P007/P008. O status global Proposto não desfaz decisões já confirmadas nem aprova as propostas remanescentes.
 
 As prioridades permanecem **A validar**, conforme P022. Metas, limites e prazos numéricos não aprovados continuam abertos.
 
@@ -80,7 +80,7 @@ Não foram completados por suposição limites de texto/arquivo, máscara de doc
 | Pedido de autorização | Pendente, Aprovada e Rejeitada | Pedido não produz o efeito oficial por si só; aplicar somente o escopo autorizado |
 | Envio na página | Pendente, Enviando, Salva e Falha | Salva exige confirmação; resposta e arquivo podem ter situações diferentes |
 
-Adiamento e reanálise permanecem a validar. Uma correção autorizada conserva a avaliação anterior e não reabre automaticamente a inspeção para edição livre. Conclusão, geração de termo e liberação do resultado são operações distintas.
+O adiamento e a reanálise da demonstração seguem DC038. A operação real segue em P007/P008. Uma correção autorizada conserva a avaliação anterior e não reabre automaticamente a inspeção para edição livre. Conclusão, geração de termo e liberação do resultado são operações distintas.
 
 ## Requisitos funcionais
 
@@ -1289,7 +1289,9 @@ Apresentar a usuários autorizados indicadores de inspeções, resultados dos es
 
 #### RF027 Solicitar adiamento da fiscalização
 
-**Situação:** possibilidade identificada, com fluxo pendente de validação em P007. Prever o registro do motivo e das datas do adiamento sem apagar a fiscalização já realizada. Os passos e critérios abaixo só se tornam aplicáveis após a aprovação da política.
+**Demonstração local.** No recorte acadêmico, o fiscal da equipe pede adiamento de inspeção Atribuída, com justificativa e nova data. Outro supervisor ativo da ação decide ou, na ausência de elegível, o Administrador. A aprovação mantém Atribuída com a data aprovada e a inspeção começa pela tela atual. [Spec I14](../specs/0014-adiamento.md)
+
+Os dados e as alternativas a seguir preservam F003 como referência para a operação real, que ainda depende de validação.
 
 **Participantes:** Proposta: solicitante interno e eventual autoridade conforme a política futura.
 
@@ -1342,7 +1344,9 @@ Apresentar a usuários autorizados indicadores de inspeções, resultados dos es
 
 #### RF028 Reanalisar documentos após a conclusão
 
-**Situação:** proposta a validar em P008, não aprovada. Avaliar documentos novos que possam motivar correção autorizada de inspeção concluída. Os passos e critérios abaixo não autorizam sua execução antes dessa validação.
+**Demonstração local.** No recorte acadêmico, a unidade pode enviar complemento após conclusão. Fiscal da equipe registra parecer vinculado à revisão. Se houver correção, segue a autorização da I11. A unidade recebe o novo termo somente após liberação própria, quando houver retificação. [Spec I14](../specs/0015-reanalise-documental.md)
+
+Os dados e as alternativas a seguir preservam F003 como referência para a operação real, que ainda depende de validação.
 
 **Participantes:** Proposta: equipe de análise e autoridade a definir; estabelecimento fornece seus documentos sem alterar o resultado.
 
@@ -2104,7 +2108,7 @@ MFA, SSO, recuperação de conta e armazenamento persistente no navegador são d
 
 A elaboração inicial da Etapa 2 e esta revisão consolidam o produto, sem definir um cronograma de implementação. P022 continua aberta para escolher a primeira versão, priorizar o catálogo e estimar prazo e custo. Não há classificação de todos os requisitos como essenciais nem data de entrega assumida.
 
-Antes de implementar acesso e supervisão, resolver os aspectos aplicáveis de P002 a P005 e P014. Antes do checklist e cálculo, resolver P009 e P010. Documentos, assinatura e publicação dependem de P011 a P013 e P016. Metas de operação e aceite dependem de P015, P017 a P020. RF027 e RF028 não podem ser tratados como fluxos prontos enquanto P007 e P008 estiverem abertas.
+Antes de implementar acesso e supervisão, resolver os aspectos aplicáveis de P002 a P005 e P014. Antes do checklist e cálculo, resolver P009 e P010. Documentos, assinatura e publicação dependem de P011 a P013 e P016. Metas de operação e aceite dependem de P015, P017 a P020. A adoção oficial de RF027 e RF028 depende de P007 e P008. O recorte da demonstração segue as specs da I14.
 
 As validações de conclusão de RF014 precisam de detalhamento, incluindo a proposta de bloqueio com obrigatórios vazios ou envios pendentes. Essa pergunta será tratada junto de P009, P012 e P020, sem assumir uma decisão adicional nesta etapa. P021 mantém a revisão dos protótipos necessária antes de usá-los como especificação.
 
@@ -2121,7 +2125,7 @@ As validações de conclusão de RF014 precisam de detalhamento, incluindo a pro
 | Após o recorte inicial, por solicitação | Participação do estabelecimento | RF016 e RF017 |
 | Após o recorte inicial, por solicitação | Autorizações e auditoria | RF018, RF019, RF022 e RF023 |
 | Após o recorte inicial, por solicitação | Consultas e indicadores | RF024 e RF026 |
-| Somente após validar a proposta e solicitar o trabalho | Adiamento e reanálise | RF027 e RF028 |
+| Demonstração local na I14 e política oficial a validar | Adiamento e reanálise | RF027 e RF028 |
 
 Os grupos posteriores organizam o trabalho futuro; não fixam número de arquivos, contratos ou ordem definitiva de implementação. RNF e RS acompanham as áreas em que se aplicam. A [matriz completa](../matriz-rastreabilidade.md) foi elaborada na Etapa 6, com cobertura documental e validações futuras, sem evidência de implementação. As specs de fundação, autenticação e acesso estão Propostas; demais specs serão elaboradas nos recortes correspondentes.
 
@@ -2138,7 +2142,7 @@ São cenários de validação para a versão de software que incorporar as área
 7. Pedido de alteração ou cancelamento pendente, rejeitado ou fora do escopo não é efetivado; pedido aprovado produz o efeito autorizado e deixa histórico.
 8. Correção que afeta a avaliação recalcula pelas regras originais e preserva resultado e termo anteriores, com emissão posterior quando necessária.
 9. Indicadores e consultas usam dados autorizados, e as verificações de qualidade, segurança e recuperação atendem aos critérios e metas aprovados para a versão.
-10. Adiamento e reanálise só passam a ter critérios de conclusão da versão após a aprovação dos respectivos fluxos, sem presumir sua inclusão atual.
+10. Na demonstração, validar adiamento e reanálise conforme as specs da I14. A política oficial segue em P007 e P008.
 
 ## Situação desta entrega
 

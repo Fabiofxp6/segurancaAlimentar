@@ -1,0 +1,46 @@
+{% extends "inspecoes/base.html" %}
+
+{% block inspecoes %}
+<h1 id="titulo-gestao">Reanálise documental · Inspeção #{{ inspecao.pk }}</h1>
+<h2>{{ documento.nome }}</h2>
+{% if fiscal %}
+<p><a href="{% url 'inspecoes:documentos_baixar' inspecao.pk documento.pk %}">Baixar documento</a></p>
+{% endif %}
+{% if documento.descricao %}{{ documento.descricao|linebreaks }}{% endif %}
+{% if form %}
+<section id="reanalise" data-contexto="{{ contexto }}" data-conexao="{% url 'inspecoes:reanalise_conexao' inspecao.pk %}">
+    <p>Resultado de referência: revisão {{ base.revisao }}.</p>
+    <p data-estado-conexao role="status" hidden></p>
+    <noscript><p>Ative JavaScript para acompanhar a confirmação.</p></noscript>
+    <form method="post" action="{% url 'inspecoes:reanalise_registrar' inspecao.pk documento.pk %}" data-envio>
+        {% csrf_token %}
+        <fieldset data-campos>{{ form.as_div }}</fieldset>
+        <button type="submit" disabled>Registrar parecer</button>
+        <p data-status role="status"></p>
+    </form>
+</section>
+{% include "correcoes/envio.html" with painel="reanalise" %}
+{% elif reanalise %}
+<h2>Parecer registrado</h2>
+<p>{{ reanalise.autor.get_username }} · {{ reanalise.registrada_em|date:"d/m/Y H:i T" }} · Revisão {{ reanalise.base.revisao }}</p>
+{{ reanalise.parecer|linebreaks }}
+{% if reanalise.indica_correcao %}
+<p>Encaminhamento: indicar correção.</p>
+{% if itens %}
+<h3>Escolher o item para solicitar correção</h3>
+<ul>
+    {% for item in itens %}
+    <li><a href="{% url 'inspecoes:correcao_item' inspecao.pk item.id %}?reanalise={{ reanalise.pk }}">{{ item.enunciado }}</a></li>
+    {% endfor %}
+</ul>
+{% elif base.pk != reanalise.base_id %}
+<p>O parecer pertence a uma revisão anterior.</p>
+{% endif %}
+{% else %}
+<p>Encaminhamento: manter resultado.</p>
+{% endif %}
+{% else %}
+<p>Aguardando parecer da equipe da inspeção.</p>
+{% endif %}
+<p><a href="{% url 'inspecoes:reanalises' inspecao.pk %}">Voltar aos documentos para reanálise</a></p>
+{% endblock %}

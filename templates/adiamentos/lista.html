@@ -1,0 +1,15 @@
+{% extends "inspecoes/base.html" %}
+
+{% load tz %}
+
+{% block inspecoes %}
+<h1 id="titulo-gestao">Pedidos de adiamento</h1>
+<ul class="registros">
+    {% for pedido in pagina %}
+    <li><a href="{% url 'inspecoes:adiamento' pedido.inspecao_id %}">Inspeção #{{ pedido.inspecao_id }}</a>
+        <span>{{ pedido.get_situacao_display }} · {{ pedido.data_proposta|timezone:"America/Maceio"|date:"d/m/Y H:i T" }}</span>
+    </li>
+    {% empty %}<li>Nenhum pedido acessível.</li>{% endfor %}
+</ul>
+{% include "gestao/paginacao.html" %}
+{% endblock %}

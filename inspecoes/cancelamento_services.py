@@ -4,10 +4,10 @@ from django.db import transaction
 from django.db.models import Q
 from django.utils import timezone
 
-from contas.models import Perfil, Usuario
+from contas.models import Perfil
 
-from .models import AcaoFiscalizacao, DesignacaoSupervisor, HistoricoInspecao, Inspecao, PedidoCancelamento
-from .services import _acessiveis, _ator, _equipe_acao, acoes_supervisionadas
+from .models import AcaoFiscalizacao, HistoricoInspecao, Inspecao, PedidoCancelamento
+from .services import _acessiveis, _ator, acoes_supervisionadas, autoridade_decisao, supervisores_elegiveis
 
 
 class CancelamentoDesatualizado(Exception):
@@ -36,19 +36,10 @@ def _equipe_da_inspecao(inspecao, ator_id):
     return inspecao.responsavel_id == ator_id or inspecao.participantes.filter(pk=ator_id).exists()
 
 
-def _designacoes(acao_id, solicitante_id):
-    return DesignacaoSupervisor.objects.filter(acao_id=acao_id, fim__isnull=True).exclude(fiscal_id=solicitante_id)
-
-
-def _elegiveis(pedido):
-    acao_id = pedido.inspecao.acao_id
-    return _designacoes(acao_id, pedido.solicitante_id).filter(fiscal__in=_equipe_acao(acao_id))
-
-
 def _pode_decidir(ator, pedido):
     if ator.pk == pedido.solicitante_id or pedido.situacao != PedidoCancelamento.Situacao.PENDENTE:
         return False
-    elegiveis = _elegiveis(pedido)
+    elegiveis = supervisores_elegiveis(pedido.inspecao.acao_id, pedido.solicitante_id)
     if ator.perfil == Perfil.ADMINISTRADOR:
         return not elegiveis.exists()
     return elegiveis.filter(fiscal=ator).exists()
@@ -117,21 +108,6 @@ def solicitar(ator_id, pk, *, justificativa, operacao_id):
     return pedido
 
 
-def _autoridade(ator, pedido):
-    if ator.pk == pedido.solicitante_id:
-        raise PermissionDenied
-    if ator.perfil == Perfil.ADMINISTRADOR:
-        candidatos = _designacoes(pedido.inspecao.acao_id, pedido.solicitante_id).values("fiscal_id")
-        list(Usuario.objects.select_for_update().filter(pk__in=candidatos).order_by("pk").values_list("pk", flat=True))
-        if _elegiveis(pedido).exists():
-            raise PermissionDenied
-        return None
-    designacao = _elegiveis(pedido).filter(fiscal=ator).first()
-    if designacao is None:
-        raise PermissionDenied
-    return designacao
-
-
 def _efetivar(pedido, ator):
     inspecao = pedido.inspecao
     estado_anterior = inspecao.estado
@@ -167,7 +143,7 @@ def decidir(ator_id, pk, pedido_id, *, decisao, motivo_decisao, operacao_id):
     if inspecao.estado != Inspecao.Estado.EM_ANDAMENTO or pedido.situacao != PedidoCancelamento.Situacao.PENDENTE:
         raise CancelamentoDesatualizado("O pedido não está mais disponível para decisão.")
 
-    designacao = _autoridade(ator, pedido)
+    designacao = autoridade_decisao(ator, inspecao, pedido.solicitante_id)
     pedido.decidido_por = ator
     pedido.decidida_em = timezone.now()
     pedido.operacao_decisao = operacao_id

@@ -16,7 +16,7 @@ Atualizado em 16/11/2026.
 
 ## Próximo passo
 
-Aguardar autorização para a I13. Definir escopo do piloto, ambiente e metas em P015 a P019 e P022. [Plano](plano-implementacao.md) · [Pendências](pendencias.md)
+[I13 concluída no recorte local](entrega-i13.md) e [I14 entregue para demonstração](entrega-i14.md). Usar o [preparo local](../README.md#preparo-local) para a apresentação. As condições de operação real seguem em [pendências](pendencias.md).
 
 ## Contexto para retomada
 

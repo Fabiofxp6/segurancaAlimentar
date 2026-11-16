@@ -1,0 +1,53 @@
+{% extends "inspecoes/base.html" %}
+
+{% load tz %}
+
+{% block inspecoes %}
+<h1 id="titulo-gestao">Adiamento · Inspeção #{{ inspecao.pk }}</h1>
+{% if inspecao.agendada_em %}<p>Data agendada: {{ inspecao.agendada_em|timezone:"America/Maceio"|date:"d/m/Y H:i T" }}</p>{% endif %}
+<section id="adiamento" data-contexto="{{ contexto }}" data-conexao="{% url 'inspecoes:adiamento_conexao' inspecao.pk %}">
+    {% if solicitar or decidir %}
+    <p data-estado-conexao role="status" hidden></p>
+    <noscript><p>Ative JavaScript para acompanhar a confirmação.</p></noscript>
+    {% endif %}
+    {% if solicitar %}
+    <form method="post" action="{% url 'inspecoes:adiamento_solicitar' inspecao.pk %}" data-envio>
+        {% csrf_token %}
+        <fieldset data-campos>
+            <legend>Solicitar adiamento</legend>
+            {{ solicitar.as_div }}
+        </fieldset>
+        <button type="submit" disabled>Solicitar adiamento</button>
+        <p data-status role="status"></p>
+    </form>
+    {% endif %}
+    {% if decidir %}
+    <form method="post" action="{% url 'inspecoes:adiamento_decidir' inspecao.pk decidivel.pk %}" data-envio>
+        {% csrf_token %}
+        <fieldset data-campos>
+            <legend>Decidir o pedido #{{ decidivel.pk }}</legend>
+            {{ decidir.as_div }}
+        </fieldset>
+        <button type="submit" disabled>Registrar decisão</button>
+        <p data-status role="status"></p>
+    </form>
+    {% endif %}
+</section>
+<h2>Histórico de pedidos</h2>
+<ul class="registros">
+    {% for pedido in pedidos %}
+    <li><div>
+        <strong>Pedido #{{ pedido.pk }} · {{ pedido.get_situacao_display }}</strong>
+        <p>{{ pedido.solicitante.get_username }} · {{ pedido.solicitada_em|date:"d/m/Y H:i T" }}</p>
+        <p>Nova data proposta: {{ pedido.data_proposta|timezone:"America/Maceio"|date:"d/m/Y H:i T" }}</p>
+        {{ pedido.justificativa|linebreaks }}
+        {% if pedido.decidida_em %}
+        <p>Decisão de {{ pedido.decidido_por.get_username }} · {{ pedido.decidida_em|date:"d/m/Y H:i T" }}</p>
+        {{ pedido.motivo_decisao|linebreaks }}
+        {% endif %}
+    </div></li>
+    {% empty %}<li>Nenhum pedido registrado.</li>{% endfor %}
+</ul>
+<p><a href="{% url 'inspecoes:adiamentos' %}">Ver todos os pedidos acessíveis</a></p>
+{% if solicitar or decidir %}{% include "correcoes/envio.html" with painel="adiamento" %}{% endif %}
+{% endblock %}

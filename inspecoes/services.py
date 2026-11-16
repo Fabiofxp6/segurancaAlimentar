@@ -8,7 +8,7 @@ from checklists.models import Checklist, VersaoChecklist
 from contas.models import Perfil, Usuario
 from estabelecimentos.models import Estabelecimento
 
-from .models import AcaoFiscalizacao, DesignacaoSupervisor, HistoricoInspecao, Inspecao
+from .models import AcaoFiscalizacao, DesignacaoSupervisor, HistoricoInspecao, Inspecao, PedidoAdiamento
 
 
 class InspecaoDesatualizada(Exception):
@@ -73,6 +73,14 @@ def opcoes_criacao(ator_id, perfil):
     return opcoes
 
 
+def bloqueio_inicio(inspecao):
+    if inspecao.pedidos_adiamento.filter(situacao=PedidoAdiamento.Situacao.PENDENTE).exists():
+        return "Aguarde a decisão do pedido de adiamento."
+    if inspecao.agendada_em and inspecao.agendada_em > timezone.now():
+        return "A inspeção poderá ser iniciada a partir da data agendada."
+    return ""
+
+
 def consultar(ator_id, pk):
     ator = _ator(ator_id, Perfil.ADMINISTRADOR, Perfil.FISCALIZACAO)
     inspecao = _acessiveis(ator).select_related(
@@ -113,6 +121,31 @@ def supervisor_ativo(acao_id, fiscal_id):
     return settings.INSPECOES_DEMONSTRACAO and DesignacaoSupervisor.objects.filter(
         acao_id=acao_id, fiscal_id=fiscal_id, fim__isnull=True, fiscal__in=_equipe_acao(acao_id),
     ).exists()
+
+
+def _outras_designacoes(acao_id, solicitante_id):
+    return DesignacaoSupervisor.objects.filter(acao_id=acao_id, fim__isnull=True).exclude(fiscal_id=solicitante_id)
+
+
+def supervisores_elegiveis(acao_id, solicitante_id):
+    return _outras_designacoes(acao_id, solicitante_id).filter(fiscal__in=_equipe_acao(acao_id))
+
+
+def autoridade_decisao(ator, inspecao, solicitante_id):
+    if ator.pk == solicitante_id:
+        raise PermissionDenied
+    acao_id = inspecao.acao_id
+    elegiveis = supervisores_elegiveis(acao_id, solicitante_id)
+    if ator.perfil == Perfil.ADMINISTRADOR:
+        candidatos = _outras_designacoes(acao_id, solicitante_id).values("fiscal_id")
+        list(Usuario.objects.select_for_update().filter(pk__in=candidatos).order_by("pk").values_list("pk", flat=True))
+        if elegiveis.exists():
+            raise PermissionDenied
+        return None
+    designacao = elegiveis.filter(fiscal=ator).first()
+    if designacao is None:
+        raise PermissionDenied
+    return designacao
 
 
 def _estabelecimento(estabelecimento_id):
@@ -220,6 +253,8 @@ def iniciar_atribuida(ator_id, pk, *, checklist_id):
         raise InspecaoDesatualizada
     if inspecao.estado != Inspecao.Estado.ATRIBUIDA:
         raise InspecaoDesatualizada
+    if motivo := bloqueio_inicio(inspecao):
+        raise ValidationError(motivo)
     estabelecimento = _estabelecimento(inspecao.estabelecimento_id)
     versao = _versao(checklist_id)
     dados = _dados_inicio(fiscal, estabelecimento, versao)

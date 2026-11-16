@@ -17,7 +17,7 @@ from contas.models import Perfil, Usuario
 from . import conclusao_services, pontuacao
 from .cancelamento_services import CancelamentoDesatualizado, solicitar
 from .campo_services import CampoDesatualizado, salvar_resposta
-from .models import HistoricoInspecao, Inspecao, ResultadoInspecao
+from .models import DocumentoEstabelecimento, HistoricoInspecao, Inspecao, ResultadoInspecao
 from .services import iniciar_atribuida
 from .test_documentos import pdf, preparar_documentos
 
@@ -139,7 +139,9 @@ class ConclusaoTests(TestCase):
         self.assertContains(self.sessao(self.admin).get(self.url("conclusao")), "Satisfatória")
         cliente = self.sessao(self.cliente)
         self.assertEqual(cliente.get(self.url("conclusao")).status_code, 403)
-        self.assertEqual(cliente.get(self.url("documentos_inspecao")).status_code, 404)
+        documentos = cliente.get(self.url("documentos_inspecao"))
+        self.assertContains(documentos, "Enviar documento")
+        self.assertNotContains(documentos, "Satisfatória")
         self.assertContains(self.http.get(self.url("auditoria")), "Conclusão confirmada")
         self.assertEqual(self.inspecao.historico.filter(ato=HistoricoInspecao.Ato.CONCLUSAO).count(), 1)
 
@@ -167,7 +169,7 @@ class ConclusaoTests(TestCase):
         with self.assertRaises(CancelamentoDesatualizado):
             solicitar(self.fiscal.pk, self.inspecao.pk, justificativa="Fora do estado", operacao_id=uuid4())
 
-    def test_documento_existente_permanece_e_janela_se_fecha(self):
+    def test_documento_existente_e_recibo_permanecem_apos_conclusao(self):
         cliente = self.sessao(self.cliente)
         pagina = cliente.get(self.url("documentos_inspecao"))
 
@@ -182,10 +184,12 @@ class ConclusaoTests(TestCase):
         self.assertEqual(recibo.status_code, 200)
         self.responder_obrigatorios()
         self.assertEqual(self.confirmar().status_code, 200)
-        self.assertContains(cliente.get(self.url("documentos_inspecao")), "janela de envio desta inspeção está encerrada")
+        self.assertContains(cliente.get(self.url("documentos_inspecao")), "Complemento para reanálise")
         self.assertEqual(cliente.get(recibo.json()["url"]).status_code, 200)
         self.assertEqual(enviar(chave).json(), recibo.json())
-        self.assertEqual(enviar(uuid4()).status_code, 400)
+        self.assertFalse(DocumentoEstabelecimento.objects.get(operacao_id=chave).complemento)
+        self.assertEqual(enviar(uuid4()).status_code, 200)
+        self.assertEqual(DocumentoEstabelecimento.objects.filter(complemento=True).count(), 1)
 
     def test_conclusao_exige_csrf_escopo_e_revisao_atual(self):
         self.responder_obrigatorios()

@@ -58,8 +58,10 @@ class IndicadoresView(InspecaoMixin, View):
 class InspecaoView(InspecaoMixin, View):
     def get(self, request, pk):
         inspecao, perfil, pode_iniciar, designacoes, supervisor = services.consultar(request.user.pk, pk)
+        bloqueio = services.bloqueio_inicio(inspecao) if pode_iniciar else ""
         return render(request, "inspecoes/detalhe.html", {
-            "inspecao": inspecao, "admin": perfil == Perfil.ADMINISTRADOR, "pode_iniciar": pode_iniciar,
+            "bloqueio_inicio": bloqueio,
+            "inspecao": inspecao, "admin": perfil == Perfil.ADMINISTRADOR, "pode_iniciar": pode_iniciar and not bloqueio,
             "designacoes": designacoes, "supervisor": supervisor,
             "pode_ver_documentos": perfil == Perfil.FISCALIZACAO,
             "pode_consultar_campo": perfil == Perfil.FISCALIZACAO
@@ -121,6 +123,8 @@ class InicioView(InspecaoMixin, View):
     def get(self, request, pk):
         inspecao, checklists = services.opcoes_inicio(request.user.pk, pk)
         if inspecao.estado != Inspecao.Estado.ATRIBUIDA:
+            return redirect("inspecoes:detalhe", pk=pk)
+        if services.bloqueio_inicio(inspecao):
             return redirect("inspecoes:detalhe", pk=pk)
         return self.formulario(request, InicioForm(opcoes={"checklist_id": checklists}), "Iniciar inspeção")
 

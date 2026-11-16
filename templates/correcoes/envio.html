@@ -1,6 +1,6 @@
 <script>
 (() => {
     {% include "envios/controle.html" %}
-    iniciarEnvios(document.getElementById("correcao"), (_form, dados) => window.location.assign(dados.url));
+    iniciarEnvios(document.getElementById("{{ painel|default:'correcao'|escapejs }}"), (_form, dados) => window.location.assign(dados.url));
 })();
 </script>

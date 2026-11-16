@@ -13,7 +13,7 @@ As escolhas já confirmadas permanecem válidas. O detalhamento técnico apresen
 | Tema | Situação | Referência |
 |---|---|---|
 | Python com Django e PostgreSQL | Confirmado para a fundação local | DC003, DC023, ADR 0001 |
-| Web em tablets e celulares; hospedagem remota/nuvem | Confirmado; dispositivos e provedor pendentes | DC004, P015, P019 |
+| Web em navegador, com demonstração local | Entrega acadêmica local. Dispositivos e eventual hospedagem remota ficam para uma fase futura. | DC004, DC037, P015, P019 |
 | MVT, Django Templates, views derivadas diretamente de `View`, services sem HTTP | Confirmado; fronteiras detalhadas abaixo | DC005 e DC006, ADR 0002 |
 | Usuário customizado `AbstractUser`, nome de usuário/senha e sessão Django | Base confirmada; campos e políticas pendentes | DC007, P002, P014, ADR 0003 |
 | Online, confirmação do servidor e retentativa sem duplicidade | Confirmado; mecanismo e prazos pendentes | DC018 e DC019, P020, ADR 0004 |
@@ -111,7 +111,7 @@ Tratar separadamente três dimensões: situação oficial da inspeção, situaç
 
 O fluxo confirmado admite atribuição administrativa ou início direto, execução e conclusão confirmada. Cancelamento em andamento é uma operação autorizada com justificativa e histórico. Correção posterior à conclusão cria uma revisão rastreável; não reabre automaticamente a inspeção para edição livre. Geração de termo e liberação do resultado são etapas distintas da conclusão.
 
-Na I08, a pendência mantém a inspeção em andamento e bloqueia novas respostas, fotos e documentos. A rejeição libera essas operações. A aprovação registrada e a efetivação automática são gravadas na mesma transação como eventos distintos. A trilha por inspeção integra esses eventos. Adiamento, reanálise e seus efeitos seguem em P006 a P008. [Spec 0009](specs/0009-cancelamento-e-auditoria.md) Na I09, o servidor bloqueia a conclusão com resposta obrigatória ausente ou cancelamento pendente. A tela bloqueia com envio de campo pendente ou falho na aba. O mesmo ato grava o resultado pela regra da versão original, o estado Concluída e o evento de auditoria. O resultado interno é preservado para emissão e liberação em etapa própria. [Spec 0010](specs/0010-pontuacao-e-conclusao.md)
+Na I08, a pendência mantém a inspeção em andamento e bloqueia novas respostas, fotos e documentos. A rejeição libera essas operações. A aprovação registrada e a efetivação automática são gravadas na mesma transação como eventos distintos. A trilha por inspeção integra esses eventos. Na I14 local, o adiamento aprovado conserva o estado Atribuída e guarda a data agendada. A reanálise vincula o documento complementar ao parecer e à revisão examinada. Mudança na avaliação segue a correção da I11. [Adiamento](specs/0014-adiamento.md) · [Reanálise](specs/0015-reanalise-documental.md) [Spec 0009](specs/0009-cancelamento-e-auditoria.md) Na I09, o servidor bloqueia a conclusão com resposta obrigatória ausente ou cancelamento pendente. A tela bloqueia com envio de campo pendente ou falho na aba. O mesmo ato grava o resultado pela regra da versão original, o estado Concluída e o evento de auditoria. O resultado interno é preservado para emissão e liberação em etapa própria. [Spec 0010](specs/0010-pontuacao-e-conclusao.md)
 
 ## Transações, concorrência e confirmação
 
@@ -151,7 +151,7 @@ A I12 reutiliza o escopo de inspeções da I05 antes de aplicar os filtros. A li
 
 Recomenda-se separar configuração por ambiente, manter segredos fora do conteúdo distribuído e permitir investigação com contexto da operação sem credenciais ou dados sensíveis desnecessários. Banco e armazenamento precisam de controle de acesso e recuperação coerente. Restaurar só o banco não prova a recuperação das evidências e termos.
 
-Provedor, domínio, execução, implantação, monitoração, retenção, backup, RPO/RTO e responsáveis permanecem em P015, P017 e P018. Nenhum valor de disponibilidade, capacidade ou tempo de resposta foi assumido. A documentação consultada do Django apoia conceitos; não seleciona a versão do projeto.
+Provedor, domínio, execução, implantação, monitoração, retenção, backup, RPO/RTO e responsáveis permanecem em P015, P017 e P018. A I13 ensaiou HTTPS local e restauração do banco com os arquivos da demonstração. A demonstração acadêmica usa Django e PostgreSQL no computador local. As opções de hospedagem e metas ficam registradas para uma fase futura. [Roteiro e evidências da I13](entrega-i13.md)
 
 Templates com interação complementar no navegador são compatíveis com o padrão confirmado. A estratégia precisa ser validada em formulário extenso, câmera/seleção de arquivo e perda de comunicação; biblioteca de interface e padrão de requisições ainda não foram escolhidos. Homologação e acessibilidade dependem de P019.
 

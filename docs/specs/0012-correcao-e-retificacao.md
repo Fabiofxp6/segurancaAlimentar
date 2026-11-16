@@ -11,7 +11,7 @@ I11 de demonstração. Abrange RF018 a RF021 e RF023, com RNF04, RS002, RS007, R
 | Aplicar | Fiscal solicitante ativo na equipe ou Administrador. O servidor aplica somente os valores aprovados à revisão indicada e recusa base desatualizada. |
 | Consultar | Administrador e fiscais da equipe consultam revisões e pedidos. Supervisores elegíveis de outras inspeções da ação podem acessar pedidos no escopo da ação. |
 
-A escolha de um item por solicitação serve à demonstração. Correção documental, novos anexos, reanálise, mudanças em andamento e política sanitária oficial seguem nos seus recortes. A inspeção permanece Concluída. Os registros de campo originais e seus arquivos continuam associados às respostas coletadas em campo.
+A escolha de um item por solicitação serve à demonstração. A I14 permite vincular à solicitação o parecer de reanálise de um documento complementar. Mudanças em andamento e política sanitária oficial seguem nos seus recortes. [Spec 0015](0015-reanalise-documental.md) A inspeção permanece Concluída. Os registros de campo originais e seus arquivos continuam associados às respostas coletadas em campo.
 
 ## Revisões e documentos
 

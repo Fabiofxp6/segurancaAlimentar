@@ -4,7 +4,7 @@ Sistema web para organizar inspeções de segurança alimentar: checklist, respo
 
 ## Situação atual
 
-As oito etapas de documentação foram elaboradas e conferidas para revisão do usuário. O catálogo contém **28 RF, 14 RNF e 16 RS**, preservando os 58 IDs. Há treze specs e oito ADRs, além da matriz, das skills e dos perfis de agentes.
+As oito etapas de documentação foram elaboradas e conferidas para revisão do usuário. O catálogo contém **28 RF, 14 RNF e 16 RS**, preservando os 58 IDs. Há quinze specs e oito ADRs, além da matriz, das skills e dos perfis de agentes.
 
 A I01 entregou a fundação Django local com configuração por perfil, PostgreSQL isolado e primeira migração de `contas.Usuario`. Os resultados estão no [registro da I01](docs/entrega-i01.md). A [I02](docs/entrega-i02.md) entregou entrada, saída e acesso protegido local, com sessão no PostgreSQL conforme o ADR 0008. A [I03](docs/entrega-i03.md) entrega cadastros, perfis, vínculos e o procedimento de concessão de Administrador. A [I04](docs/entrega-i04.md) entrega rascunhos e versões imutáveis de demonstração. A [I05](docs/entrega-i05.md) entrega atribuição, início, equipes e supervisão por ação em ambiente de demonstração. A [I06](docs/entrega-i06.md) entrega preenchimento em campo com evidências privadas e recuperação de envio. A [I07](docs/entrega-i07.md) entrega envio e consulta de documentos por unidade. A [I08](docs/entrega-i08.md) entrega cancelamento autorizado e auditoria por inspeção. A [I09](docs/entrega-i09.md) entrega pontuação ponderada, classificação e conclusão da inspeção em demonstração. A [I10](docs/entrega-i10.md) entrega emissão do termo em PDF e liberação ao estabelecimento. A [I11](docs/entrega-i11.md) entrega correção em revisão, recálculo e retificador. A [I12](docs/entrega-i12.md) entrega lista filtrada e painel administrativo de demonstração. O [estado](docs/state.md) informa a retomada e as [pendências](docs/pendencias.md) delimitam as decisões que faltam.
 
@@ -13,7 +13,7 @@ A I01 entregou a fundação Django local com configuração por perfil, PostgreS
 | Tema | Escolha ou regra |
 |---|---|
 | Tecnologias | Python 3.14, Django 5.2 LTS, PostgreSQL 17 e Psycopg 3.3. uv e Docker Compose no ambiente local. |
-| Interface e operação | Navegador em tablets/celulares, hospedagem remota e operação somente online |
+| Interface e operação | Navegador e servidor local para a entrega acadêmica. As telas dependem da conexão com o servidor. |
 | Arquitetura | MVT/Django Templates; views próprias diretamente de View; regra/ORM explícito em services sem HTTP, com exceções nativas documentadas |
 | Identidade | Usuário customizado AbstractUser, nome de usuário/senha e sessão Django; políticas complementares abertas |
 | Perfis | Fiscalização, Administrador e Estabelecimento; Supervisor é fiscal designado por ação, sem quarto perfil |
@@ -46,6 +46,8 @@ Os contratos completos e as decisões abertas estão nos documentos abaixo. Fór
 | [Spec 0011 — termo e liberação](docs/specs/0011-termo-e-liberacao.md) | Emissão, versão, auditoria e download por unidade |
 | [Spec 0012 — correção e retificação](docs/specs/0012-correcao-e-retificacao.md) | Pedido, decisão, aplicação, revisão e nova liberação |
 | [Spec 0013 — consultas e indicadores](docs/specs/0013-consultas-e-indicadores.md) | Escopo da lista, filtros, paginação e métricas por versão |
+| [I13 — homologação local](docs/entrega-i13.md) | Ensaios e restauração para a demonstração acadêmica |
+| [I14 — adiamento e reanálise](docs/entrega-i14.md) | Roteiro local, permissões, testes e limites dos dois fluxos |
 | [Matriz de rastreabilidade](docs/matriz-rastreabilidade.md) | Fontes, relações e cobertura documental das 58 entradas; 58 validações VR futuras |
 | [Skills e agentes](.agents/README.md) | Onze skills locais e seis perfis, com escopo de uso |
 | [Revisão das skills](docs/revisao-skills-tecnicas.md) | Conferência integrada de Python, Django e segurança |

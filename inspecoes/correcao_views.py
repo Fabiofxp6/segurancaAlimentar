@@ -8,6 +8,7 @@ from django.views import View
 from django.views.decorators.cache import never_cache
 
 from . import correcao_services as services
+from .documentos_views import resposta_documento
 from .envio_views import ContextoEnvioMixin, contexto_envio
 from .models import PedidoCorrecao, ResultadoInspecao
 from .termo_services import FalhaGeracaoTermo, TermoDesatualizado
@@ -20,6 +21,7 @@ class OperacaoCorrecaoForm(forms.Form):
 
 class SolicitarCorrecaoForm(OperacaoCorrecaoForm):
     base_id = forms.IntegerField(min_value=1, widget=forms.HiddenInput)
+    reanalise_id = forms.IntegerField(required=False, min_value=1, widget=forms.HiddenInput)
     justificativa = forms.CharField(label="Justificativa", max_length=2000, widget=forms.Textarea(attrs={"rows": 3}))
     opcao = forms.ChoiceField(label="Resposta proposta")
     observacao = forms.CharField(
@@ -72,6 +74,11 @@ class PedidoCorrecaoView(CorrecaoMixin, View):
         })
 
 
+class DocumentoDaCorrecaoView(CorrecaoMixin, View):
+    def get(self, request, pk, pedido_id):
+        return resposta_documento(services.documento_do_pedido(request.user.pk, pk, pedido_id))
+
+
 class CorrecaoConexaoView(ContextoEnvioMixin, CorrecaoMixin, View):
     def get(self, request, pk):
         services.verificar_acesso(request.user.pk, pk)
@@ -91,8 +98,14 @@ def _erros_formulario(form):
 
 class PrepararCorrecaoView(CorrecaoMixin, View):
     def get(self, request, pk, item_id):
-        inspecao, base, item, antes = services.consultar_item(request.user.pk, pk, item_id)
-        form = SolicitarCorrecaoForm(opcoes=item["opcoes"], initial={"base_id": base.pk, **(antes or {})})
+        try:
+            reanalise_id = SolicitarCorrecaoForm.base_fields["reanalise_id"].clean(request.GET.get("reanalise"))
+        except ValidationError:
+            raise Http404 from None
+        inspecao, base, item, antes = services.consultar_item(request.user.pk, pk, item_id, reanalise_id=reanalise_id)
+        form = SolicitarCorrecaoForm(
+            opcoes=item["opcoes"], initial={"base_id": base.pk, "reanalise_id": reanalise_id, **(antes or {})},
+        )
         return render(request, "correcoes/solicitar.html", {
             "inspecao": inspecao, "base": base, "item": item, "antes": antes,
             "contexto": contexto_envio(request), "form": form,

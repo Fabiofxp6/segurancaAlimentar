@@ -12,7 +12,7 @@ from .models import DocumentoEstabelecimento, Inspecao
 from .services import _acessiveis, _ator
 
 
-JANELA_ENVIO = (Inspecao.Estado.ATRIBUIDA, Inspecao.Estado.EM_ANDAMENTO)
+JANELA_ENVIO = (Inspecao.Estado.ATRIBUIDA, Inspecao.Estado.EM_ANDAMENTO, Inspecao.Estado.CONCLUIDA)
 
 
 class DocumentoDesatualizado(Exception):
@@ -86,5 +86,5 @@ def salvar(ator_id, pk, *, operacao_id, descricao, metadados, conteudo):
         raise DocumentoDesatualizado("O envio de documentos está temporariamente bloqueado.")
     return DocumentoEstabelecimento.objects.create(
         inspecao=inspecao, autor=autor, operacao_id=operacao_id, descricao=descricao, conteudo=conteudo,
-        **metadados,
+        complemento=inspecao.estado == Inspecao.Estado.CONCLUIDA, **metadados,
     )

@@ -1,0 +1,15 @@
+{% extends "inspecoes/base.html" %}
+
+{% block inspecoes %}
+<h1 id="titulo-gestao">Reanálise documental · Inspeção #{{ inspecao.pk }}</h1>
+<p>Documentos enviados após a conclusão.</p>
+<ul class="registros">
+    {% for documento in pagina %}
+    <li><a href="{% url 'inspecoes:reanalise_documento' inspecao.pk documento.pk %}">{{ documento.nome }}</a>
+        <span>{% if documento.reanalise %}Parecer registrado{% else %}Aguardando parecer{% endif %}</span>
+    </li>
+    {% empty %}<li>Nenhum documento complementar recebido.</li>{% endfor %}
+</ul>
+{% include "gestao/paginacao.html" %}
+<p><a href="{% url 'inspecoes:detalhe' inspecao.pk %}">Voltar à inspeção</a></p>
+{% endblock %}

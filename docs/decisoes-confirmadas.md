@@ -228,6 +228,20 @@ O painel de demonstração é exclusivo do Administrador. Ele apresenta totais p
 
 Origem: respostas do usuário em 16/11/2026 sobre acesso e indicadores. [Spec 0013](specs/0013-consultas-e-indicadores.md)
 
+## DC037 Demonstração acadêmica local
+
+A entrega da faculdade roda localmente com navegador, Django e PostgreSQL. A I13 encerra o recorte acadêmico com dados fictícios. A homologação remota e a escolha de provedor ficam para uma fase futura.
+
+Origem: orientação do usuário em 16/11/2026 para rodar somente localmente e prosseguir à próxima etapa. [I13](entrega-i13.md) · [Preparo local](../README.md#preparo-local)
+
+## DC038 Adiamento e reanálise na I14
+
+Na demonstração, o fiscal da equipe pode pedir adiamento justificando e propondo nova data, enquanto a inspeção está Atribuída. Outro supervisor ativo e elegível da ação decide. Na ausência de outro elegível, decide o Administrador. A inspeção continua Atribuída após a aprovação, com a nova data e a tela atual de início.
+
+Depois da conclusão, o Estabelecimento pode enviar documento complementar. O fiscal da equipe abre a reanálise e registra o parecer. Se houver correção, aplicar o fluxo de autorização da I11. O recorte não prevê nova visita.
+
+Origem: respostas do usuário em 16/11/2026 sobre autoridade, momento do adiamento e fluxo documental. [Adiamento](specs/0014-adiamento.md) · [Reanálise](specs/0015-reanalise-documental.md)
+
 ## Regras antigas que deixaram de valer
 
 | Informação anterior | Situação atual | Referência |
@@ -242,4 +256,4 @@ Origem: respostas do usuário em 16/11/2026 sobre acesso e indicadores. [Spec 00
 
 ## Temas que não são decisões confirmadas
 
-O fluxo de adiamento, a reanálise após anexos novos e os detalhes de autorização não foram aprovados integralmente. Sua presença no catálogo ou em um protótipo não resolve as perguntas registradas em pendências. Limites e máscaras de exemplo não se tornam regras apenas por aparecerem em uma tela.
+DC038 define adiamento e reanálise para demonstração. A aplicação desses fluxos a inspeções reais, incluindo prazos e nova visita, depende da política operacional. Sua presença no catálogo ou em um protótipo não resolve as perguntas registradas em pendências. Limites e máscaras de exemplo não se tornam regras apenas por aparecerem em uma tela.

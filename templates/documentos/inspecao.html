@@ -13,7 +13,7 @@
     <form method="post" enctype="multipart/form-data" action="{% url 'inspecoes:documentos_enviar' inspecao.pk %}" data-envio="documento">
         {% csrf_token %}
         <fieldset data-campos style="min-width:0;border:0;padding:0;margin:0">
-            <legend>Documento comprobatório</legend>
+            <legend>{% if inspecao.estado == "concluida" %}Complemento para reanálise{% else %}Documento comprobatório{% endif %}</legend>
             {{ form.as_p }}
         </fieldset>
         <button type="submit" disabled>Enviar documento</button>

@@ -1,11 +1,15 @@
 {% extends "inspecoes/base.html" %}
 
+{% load tz %}
+
 {% block inspecoes %}
 <h1 id="titulo-gestao">Inspeção #{{ inspecao.pk }}</h1>
 <p><strong>{{ inspecao.get_estado_display }}</strong> · Demonstração</p>
 <p>Unidade: {% firstof inspecao.identificacao_estabelecimento.nome inspecao.estabelecimento.nome %}</p>
 <p>Ação #{{ inspecao.acao_id }} · {{ inspecao.get_origem_display }}</p>
 {% if supervisor %}<p><strong>Você é supervisor nesta ação.</strong></p>{% endif %}
+{% if inspecao.agendada_em %}<p>Data agendada: {{ inspecao.agendada_em|timezone:"America/Maceio"|date:"d/m/Y H:i T" }}</p>{% endif %}
+{% if bloqueio_inicio %}<p>{{ bloqueio_inicio }}</p>{% endif %}
 {% if pode_iniciar %}
 <p><a class="acao" href="{% url 'inspecoes:inicio' inspecao.pk %}">Iniciar inspeção</a></p>
 {% endif %}
@@ -30,6 +34,7 @@
 {% if tem_resultado %}
 <p><a class="acao" href="{% url 'inspecoes:conclusao' inspecao.pk %}">Ver resultado interno</a></p>
 <p><a href="{% url 'inspecoes:termo' inspecao.pk %}">Termo e liberação</a></p>
+<p><a href="{% url 'inspecoes:reanalises' inspecao.pk %}">Reanálise documental</a></p>
 <p><a href="{% url 'inspecoes:revisoes' inspecao.pk %}">Correções e revisões</a></p>
 {% elif pode_revisar %}
 <p><a href="{% url 'inspecoes:conclusao' inspecao.pk %}">Revisar para concluir</a></p>
@@ -37,6 +42,7 @@
 {% if pode_consultar_campo %}
 <p><a class="acao" href="{% url 'inspecoes:campo' inspecao.pk %}">{% if pode_preencher %}Preencher{% else %}Consultar{% endif %} checklist</a></p>
 {% endif %}
+<p><a href="{% url 'inspecoes:adiamento' inspecao.pk %}">Adiamento</a></p>
 <p><a href="{% url 'inspecoes:cancelamento' inspecao.pk %}">Pedidos de cancelamento</a></p>
 <p><a href="{% url 'inspecoes:auditoria' inspecao.pk %}">Ver auditoria da inspeção</a></p>
 {% if inspecao.versao_checklist %}

@@ -68,8 +68,12 @@ class DocumentosBaixarView(InspecaoMixin, View):
             documento = services.baixar(request.user.pk, pk, documento_id)
         except DocumentoEstabelecimento.DoesNotExist:
             raise Http404 from None
-        resposta = FileResponse(
-            BytesIO(documento.conteudo), as_attachment=True, filename=documento.nome, content_type=documento.mime,
-        )
-        resposta["X-Content-Type-Options"] = "nosniff"
-        return resposta
+        return resposta_documento(documento)
+
+
+def resposta_documento(documento):
+    resposta = FileResponse(
+        BytesIO(documento.conteudo), as_attachment=True, filename=documento.nome, content_type=documento.mime,
+    )
+    resposta["X-Content-Type-Options"] = "nosniff"
+    return resposta

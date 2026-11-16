@@ -4,9 +4,11 @@ I07, com RF017, RF010–RF012, RS008, RS010 e RS013–RS014. O estabelecimento e
 
 | Ator | Consulta | Envio |
 |---|---|---|
-| Conta ativa vinculada à unidade ativa | Lista as inspeções da unidade disponíveis para envio e as que já têm documentos. Consulta a área de documentos. | Da atribuição ao fim do andamento. |
+| Conta ativa vinculada à unidade ativa | Lista as inspeções da unidade disponíveis para envio e as que já têm documentos. Consulta a área de documentos. | Da atribuição ao fim do andamento na I07. A I14 inclui complemento após a conclusão. |
 | Fiscal ativo responsável ou participante da inspeção | Consulta os documentos recebidos pelo detalhe fiscal. | O envio desta área é exclusivo de Estabelecimento. |
 | Outra unidade ou conta desvinculada | A referência direta é recusada. | A referência direta é recusada. |
+
+O fluxo de complemento e parecer depois da conclusão está na [Spec 0015](0015-reanalise-documental.md).
 
 Um documento recebido pode ser consultado enquanto houver vínculo válido. Todas as contas ativas vinculadas à mesma unidade podem consultá-lo. O servidor revalida vínculo, perfil e estado. Uma retentativa de operação confirmada pode recuperar o recibo após o fechamento da janela, enquanto o acesso continuar válido.
 

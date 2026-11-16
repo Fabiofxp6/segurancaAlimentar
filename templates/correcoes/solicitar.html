@@ -4,6 +4,7 @@
 <h1 id="titulo-gestao">Solicitar correção · Inspeção #{{ inspecao.pk }}</h1>
 <h2>{{ item.ordem }}. {{ item.enunciado }}</h2>
 <p>Revisão {{ base.revisao }}</p>
+{% if form.reanalise_id.value %}<p>Pedido vinculado à reanálise documental #{{ form.reanalise_id.value }}.</p>{% endif %}
 <h3>Registro atual</h3>
 {% include "correcoes/resposta.html" with resposta=antes only %}
 <section id="correcao" data-contexto="{{ contexto }}" data-conexao="{% url 'inspecoes:correcao_conexao' inspecao.pk %}">

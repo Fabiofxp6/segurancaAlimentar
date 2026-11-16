@@ -3,6 +3,14 @@
 {% block inspecoes %}
 <h1 id="titulo-gestao">Pedido de correção #{{ pedido.pk }}</h1>
 <p>Inspeção #{{ inspecao.pk }} · Revisão {{ pedido.base.revisao }} · <strong>{{ pedido.situacao }}</strong></p>
+{% if pedido.reanalise %}
+<section aria-labelledby="titulo-parecer">
+    <h2 id="titulo-parecer">Parecer documental</h2>
+    <p>{{ pedido.reanalise.autor.get_username }} · {{ pedido.reanalise.registrada_em|date:"d/m/Y H:i T" }}</p>
+    {{ pedido.reanalise.parecer|linebreaks }}
+    <p><a href="{% url 'inspecoes:correcao_documento' inspecao.pk pedido.pk %}">Baixar documento analisado</a></p>
+</section>
+{% endif %}
 <p>Solicitado por {{ pedido.solicitante.username }} em {{ pedido.solicitada_em|date:"d/m/Y H:i T" }}.</p>
 <p>Justificativa: {{ pedido.justificativa|linebreaksbr }}</p>
 <h2>{{ item.ordem }}. {{ item.enunciado }}</h2>

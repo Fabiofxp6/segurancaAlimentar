@@ -1,5 +1,8 @@
 from django.urls import path
 
+from .adiamento_views import (
+    AdiamentoConexaoView, AdiamentoView, AdiamentosView, DecidirAdiamentoView, SolicitarAdiamentoView,
+)
 from .cancelamento_views import (
     AuditoriaInspecaoView, CancelamentoConexaoView, CancelamentoView, DecidirCancelamentoView,
     PedidosCancelamentoView, SolicitarCancelamentoView,
@@ -9,12 +12,14 @@ from .campo_views import (
 )
 from .conclusao_views import ConcluirView, ConclusaoConexaoView, ConclusaoView
 from .correcao_views import (
-    AplicarCorrecaoView, CorrecaoConexaoView, DecidirCorrecaoView, PedidoCorrecaoView, PedidosCorrecaoView,
+    AplicarCorrecaoView, CorrecaoConexaoView, DecidirCorrecaoView, DocumentoDaCorrecaoView,
+    PedidoCorrecaoView, PedidosCorrecaoView,
     PrepararCorrecaoView, RevisoesInspecaoView, SolicitarCorrecaoView,
 )
 from .documentos_views import (
     DocumentosBaixarView, DocumentosConexaoView, DocumentosEnviarView, DocumentosInspecaoView, DocumentosListaView,
 )
+from .reanalise_views import ReanaliseConexaoView, ReanaliseView, ReanalisesView, RegistrarReanaliseView
 from .termo_views import (
     ResultadoLiberadoView, ResultadoPdfView, ResultadosLiberadosView, TermoConexaoView, TermoEmitirView,
     TermoLiberarView, TermoPdfView, TermoView, TermosEmitidosView,
@@ -35,6 +40,7 @@ urlpatterns = [
     path("<int:pk>/correcoes/item/<uuid:item_id>/", PrepararCorrecaoView.as_view(), name="correcao_item"),
     path("<int:pk>/correcoes/item/<uuid:item_id>/solicitar/", SolicitarCorrecaoView.as_view(), name="correcao_solicitar"),
     path("<int:pk>/correcoes/<int:pedido_id>/", PedidoCorrecaoView.as_view(), name="correcao"),
+    path("<int:pk>/correcoes/<int:pedido_id>/documento/", DocumentoDaCorrecaoView.as_view(), name="correcao_documento"),
     path("<int:pk>/correcoes/<int:pedido_id>/decidir/", DecidirCorrecaoView.as_view(), name="correcao_decidir"),
     path("<int:pk>/correcoes/<int:pedido_id>/aplicar/", AplicarCorrecaoView.as_view(), name="correcao_aplicar"),
     path("termos/", TermosEmitidosView.as_view(), name="termos"),
@@ -56,6 +62,15 @@ urlpatterns = [
     path("<int:pk>/", InspecaoView.as_view(), name="detalhe"),
     path("<int:pk>/iniciar/", InicioView.as_view(), name="inicio"),
     path("<int:pk>/equipe/", EquipeView.as_view(), name="equipe"),
+    path("adiamentos/", AdiamentosView.as_view(), name="adiamentos"),
+    path("<int:pk>/adiamento/", AdiamentoView.as_view(), name="adiamento"),
+    path("<int:pk>/adiamento/conexao/", AdiamentoConexaoView.as_view(), name="adiamento_conexao"),
+    path("<int:pk>/adiamento/solicitar/", SolicitarAdiamentoView.as_view(), name="adiamento_solicitar"),
+    path("<int:pk>/adiamento/<int:pedido_id>/decidir/", DecidirAdiamentoView.as_view(), name="adiamento_decidir"),
+    path("<int:pk>/reanalise/", ReanalisesView.as_view(), name="reanalises"),
+    path("<int:pk>/reanalise/conexao/", ReanaliseConexaoView.as_view(), name="reanalise_conexao"),
+    path("<int:pk>/reanalise/<int:documento_id>/", ReanaliseView.as_view(), name="reanalise_documento"),
+    path("<int:pk>/reanalise/<int:documento_id>/registrar/", RegistrarReanaliseView.as_view(), name="reanalise_registrar"),
     path("cancelamentos/", PedidosCancelamentoView.as_view(), name="cancelamentos"),
     path("<int:pk>/cancelamento/", CancelamentoView.as_view(), name="cancelamento"),
     path("<int:pk>/cancelamento/conexao/", CancelamentoConexaoView.as_view(), name="cancelamento_conexao"),

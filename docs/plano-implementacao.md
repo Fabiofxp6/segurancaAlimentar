@@ -1,7 +1,7 @@
 # Plano de implementação — Sistema de Avaliação de Segurança Alimentar
 
 - **Data:** 15/11/2026.
-- **Status:** Roteiro aprovado em 15/11/2026. I00 aceita. I01 a I12 concluídas no ambiente local. I13 aguarda autorização.
+- **Status:** Roteiro aprovado em 15/11/2026. I00 aceita. I01 a I14 concluídas no recorte acadêmico local. A homologação remota fica para uma fase futura.
 - **Base:** [PRD](prd/0001-sistema-avaliacao-seguranca-alimentar.md), [matriz de rastreabilidade](matriz-rastreabilidade.md), [arquitetura e ADRs](arquitetura.md), [decisões confirmadas](decisoes-confirmadas.md) e [pendências](pendencias.md).
 - **Fundação:** [decisões da I00](decisoes-fundacao-i00.md) e [verificações da I01](entrega-i01.md).
 - **Acompanhamento:** [Plano no Trello](https://trello.com/c/Ok3dpbjJ), [rotina do quadro](acompanhamento-trello.md) e [estado](state.md).
@@ -33,8 +33,8 @@ A fundação tem execução registrada na I01. A I02 verificou o fluxo básico d
 | [I10](entrega-i10.md) | Emissão de termo, publicação e consulta do estabelecimento | I09 e políticas de documentos/publicação |
 | [I11](entrega-i11.md) | Correção autorizada, recálculo e retificação | I08–I10 e políticas de revisão/versões |
 | [I12](entrega-i12.md) | Consultas, indicadores e relatórios | Inspeções e resultados no recorte autorizado |
-| I13 | Homologação, recuperação e piloto | Fluxos aprovados para o piloto, com segurança e metas verificadas |
-| I14 | Adiamento e reanálise, se aprovados | P007/P008, specs próprias e autorização específica |
+| [I13](entrega-i13.md) | Homologação local e recuperação | Fluxo local com dados fictícios e restauração conferida |
+| [I14](entrega-i14.md) | Adiamento e reanálise no recorte acadêmico | DC038, specs próprias e testes no PostgreSQL local |
 
 ## I00 — Decisões de partida · sem código
 
@@ -162,19 +162,15 @@ A fundação tem execução registrada na I01. A I02 verificou o fluxo básico d
 
 ## I13 — Homologação e piloto controlado
 
-**Entrega:** ambiente remoto de homologação e roteiro de piloto, com dados autorizados, fluxo completo do recorte escolhido, plano de restauração e critérios de reversão. Segurança, testes, logs e responsividade acompanham cada etapa; aqui são verificados de ponta a ponta. Implantação ou abertura para uso real exige autorização própria quando o escopo e destino estiverem definidos.
+**Recorte acadêmico confirmado.** DC037 estabelece demonstração local. A verificação com dados fictícios cobriu 116 testes, Chromium sob HTTPS, retentativa sem duplicação e restauração com anexos e termos.
 
-**Antes de executar:** aprovar o escopo do piloto em P022, fechar políticas relevantes do recorte, P015–P019 para operação/hospedagem, arquivos, retenção, metas e dispositivos. Sem usar documentos ou credenciais reais em teste por conveniência. P007/P008 não bloqueiam piloto se esses fluxos ficarem fora do recorte aprovado.
+**Operação futura.** A homologação remota depende de ambiente, escopo e condições de P015 a P019 e P022. O procedimento de recuperação e as opções de hospedagem ficam no [roteiro da I13](entrega-i13.md).
 
-**Aceite:** demonstrar o fluxo autorizado em celular/tablet, isolamento, recuperação de rede, HTTPS, ausência de segredos nos registros, restauração do banco com arquivos e procedimento de incidente. Testar integridade e migrações em ambiente isolado; registrar falhas, riscos residuais e decisão de seguir ou corrigir, sem aprovar operação real por automatismo.
+## I14 — Adiamento e reanálise · RF027/RF028
 
-## I14 — Adiamento e reanálise, condicionados · RF027/RF028
+**Entrega.** DC038 confirma os dois recortes de demonstração. A inspeção Atribuída pode ser reagendada por decisão autorizada. O documento complementar enviado após conclusão pode receber parecer e motivar correção pela I11. [Spec 0014](specs/0014-adiamento.md) · [Spec 0015](specs/0015-reanalise-documental.md)
 
-**Entrega:** dois recortes independentes, somente quando aprovados: reagendamento com história e reanálise de documento novo com parecer/relação ao pedido de correção. Elaborar specs antes do código.
-
-**Antes de executar:** P007 para estados/data/retomada e eventual autorização; P008 para gatilho, autoridade e eventual nova visita. Usar controles de I08/I11 no que se aplicar. A numeração não obriga a incluir os fluxos na primeira versão nem os considera aprovados.
-
-**Aceite:** adiamento preserva contexto e não simula cancelamento/conclusão; reanálise não substitui resultado automaticamente e preserva versões quando houver correção aprovada.
+**Aceite local.** O reagendamento preserva estado, autoria e datas. A reanálise preserva o resultado até a aplicação da correção autorizada. Permissões, histórico, retentativa e retificação foram verificados no recorte da [entrega I14](entrega-i14.md). P007 e P008 continuam abertas para operação real.
 
 ## Qualidade e segurança ao longo das etapas
 
@@ -194,6 +190,6 @@ Esta tabela indica as etapas em que cada grupo será exercitado, sem substituir 
 
 Em cada etapa autorizada, registrar requisitos cobertos total/parcialmente, arquivos afetados, decisões tomadas, cenários executados e evidência sanitizada. Preferir testes de service e banco para invariantes; HTTP e navegador para permissões, sessão e rede. Reproduzir cenários com dados fictícios em PostgreSQL isolado. Nenhuma mudança de schema deve depender de apagar dados operacionais; antes de migrar fora de testes, validar estratégia para restaurar ou avançar com correção, considerando arquivos persistidos junto ao banco.
 
-## Próxima autorização sugerida
+## Apresentação acadêmica
 
-A I13 é o próximo recorte e aguarda autorização. Ambiente, metas de operação e escopo do piloto dependem de P015 a P019 e P022. [Entrega da I12](entrega-i12.md) · [Pendências](pendencias.md)
+Executar a aplicação pelo [preparo local](../README.md#preparo-local). O [roteiro da I14](entrega-i14.md) descreve os dois fluxos finais. A operação remota fica para uma fase futura.

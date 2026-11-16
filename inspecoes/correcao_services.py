@@ -9,6 +9,7 @@ from contas.models import Perfil, Usuario
 from . import pontuacao
 from .conclusao_services import _revisao
 from .models import AcaoFiscalizacao, DecisaoCorrecao, HistoricoInspecao, Inspecao, PedidoCorrecao, ResultadoInspecao
+from .reanalise_services import referencia_correcao
 from .resultados import RespostasConfirmadasIndisponiveis, atual, respostas_confirmadas
 from .services import _acessiveis, _ator, _equipe_acao, acoes_supervisionadas
 from .termo_services import retificar_se_necessario
@@ -81,10 +82,12 @@ def consultar_inspecao(ator_id, pk, pagina):
     }
 
 
-def consultar_item(ator_id, pk, item_id):
+def consultar_item(ator_id, pk, item_id, *, reanalise_id=None):
     ator = _ator(ator_id, Perfil.FISCALIZACAO)
     inspecao = _inspecao_da_equipe(ator, pk)
     base = atual(inspecao)
+    if reanalise_id is not None:
+        referencia_correcao(inspecao, base, reanalise_id)
     return inspecao, base, _item(base, item_id), _respostas(base).get(str(item_id))
 
 
@@ -108,6 +111,12 @@ def consultar_pedido(ator_id, pk, pedido_id):
     }
 
 
+def documento_do_pedido(ator_id, pk, pedido_id):
+    ator = _ator(ator_id, Perfil.ADMINISTRADOR, Perfil.FISCALIZACAO)
+    pedido = _pedidos(ator).get(pk=pedido_id, base__inspecao_id=pk, reanalise__isnull=False)
+    return pedido.reanalise.documento
+
+
 def verificar_acesso(ator_id, pk):
     ator = _ator(ator_id, Perfil.ADMINISTRADOR, Perfil.FISCALIZACAO)
     if not _acessiveis(ator).filter(pk=pk, estado=Inspecao.Estado.CONCLUIDA).exists() and not _pedidos(ator).filter(
@@ -128,7 +137,10 @@ def _resposta_corrigida(antes, proposto):
 
 
 @transaction.atomic
-def solicitar(ator_id, pk, item_id, *, base_id, operacao_id, justificativa, opcao, observacao, descricao_irregularidade):
+def solicitar(
+    ator_id, pk, item_id, *, base_id, operacao_id, justificativa, opcao,
+    observacao, descricao_irregularidade, reanalise_id=None,
+):
     ator = _ator(ator_id, Perfil.FISCALIZACAO)
     inspecao = _inspecao_da_equipe(ator, pk, bloquear=True)
     ator = _ator(ator_id, Perfil.FISCALIZACAO, bloquear=True)
@@ -137,6 +149,7 @@ def solicitar(ator_id, pk, item_id, *, base_id, operacao_id, justificativa, opca
 
     base = inspecao.resultados.get(pk=base_id)
     item = _item(base, item_id)
+    reanalise = referencia_correcao(inspecao, base, reanalise_id) if reanalise_id is not None else None
     justificativa = justificativa.strip()
     if (not justificativa or opcao not in item["opcoes"]
             or opcao.casefold() not in pontuacao.OPCOES_DEMONSTRACAO_1):
@@ -145,7 +158,8 @@ def solicitar(ator_id, pk, item_id, *, base_id, operacao_id, justificativa, opca
     existente = base.pedidos_correcao.filter(operacao_id=operacao_id).first()
     if existente:
         if (existente.solicitante_id == ator.pk and existente.item_id == item_id
-                and existente.proposto == proposto and existente.justificativa == justificativa):
+                and existente.proposto == proposto and existente.justificativa == justificativa
+                and existente.reanalise_id == reanalise_id):
             return existente
         raise CorrecaoDesatualizada("Esta operação já foi usada com outros dados.")
     if atual(inspecao).pk != base.pk:
@@ -160,9 +174,12 @@ def solicitar(ator_id, pk, item_id, *, base_id, operacao_id, justificativa, opca
     pontuacao.calcular(base.versao_checklist, respostas)
     pedido = PedidoCorrecao.objects.create(
         base=base, item_id=item_id, antes=antes, proposto=proposto, justificativa=justificativa,
-        solicitante=ator, operacao_id=operacao_id,
+        solicitante=ator, operacao_id=operacao_id, reanalise=reanalise,
     )
-    _auditar(pedido, ator, HistoricoInspecao.Ato.CORRECAO_PEDIDA, base=base.revisao, item=chave)
+    _auditar(
+        pedido, ator, HistoricoInspecao.Ato.CORRECAO_PEDIDA, base=base.revisao, item=chave,
+        reanalise=reanalise_id,
+    )
     return pedido
 
 

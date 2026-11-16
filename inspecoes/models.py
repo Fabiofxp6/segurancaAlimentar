@@ -40,6 +40,7 @@ class Inspecao(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, related_name="inspecoes_iniciadas",
     )
     iniciada_em = models.DateTimeField(null=True)
+    agendada_em = models.DateTimeField(null=True)
     cancelada_em = models.DateTimeField(null=True)
     versao_checklist = models.ForeignKey("checklists.VersaoChecklist", on_delete=models.PROTECT, null=True)
     identificacao_estabelecimento = models.JSONField(null=True)
@@ -88,6 +89,9 @@ class HistoricoInspecao(models.Model):
         CORRECAO_PEDIDA = "correcao_pedido", "Correção solicitada"
         CORRECAO_DECIDIDA = "correcao_decisao", "Decisão de correção"
         CORRECAO_APLICADA = "correcao_aplic", "Correção aplicada"
+        ADIAMENTO_PEDIDO = "adiamento_pedido", "Adiamento solicitado"
+        ADIAMENTO_DECISAO = "adiamento_dec", "Decisão de adiamento"
+        REANALISE = "reanalise", "Reanálise documental registrada"
 
     inspecao = models.ForeignKey(Inspecao, on_delete=models.PROTECT, related_name="historico")
     autor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
@@ -203,6 +207,7 @@ class DocumentoEstabelecimento(models.Model):
     sha256 = models.CharField(max_length=64)
     conteudo = models.BinaryField(editable=False)
     recebido_em = models.DateTimeField(auto_now_add=True)
+    complemento = models.BooleanField(default=False)
 
     class Meta:
         constraints = [
@@ -355,6 +360,7 @@ class LiberacaoTermo(models.Model):
 
 
 class PedidoCorrecao(models.Model):
+    reanalise = models.ForeignKey("ReanaliseDocumento", null=True, on_delete=models.PROTECT)
     base = models.ForeignKey(ResultadoInspecao, on_delete=models.PROTECT, related_name="pedidos_correcao")
     item_id = models.UUIDField()
     antes = models.JSONField(null=True)
@@ -387,3 +393,62 @@ class DecisaoCorrecao(models.Model):
     designacao = models.ForeignKey(DesignacaoSupervisor, on_delete=models.PROTECT, null=True)
     decidida_em = models.DateTimeField(auto_now_add=True)
     operacao_id = models.UUIDField()
+
+
+class PedidoAdiamento(models.Model):
+    class Situacao(models.TextChoices):
+        PENDENTE = "pendente", "Pendente"
+        APROVADO = "aprovado", "Aprovado"
+        REJEITADO = "rejeitado", "Rejeitado"
+
+    inspecao = models.ForeignKey(Inspecao, on_delete=models.PROTECT, related_name="pedidos_adiamento")
+    solicitante = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="adiamentos_solicitados",
+    )
+    solicitada_em = models.DateTimeField(auto_now_add=True)
+    operacao_id = models.UUIDField()
+    data_proposta = models.DateTimeField()
+    justificativa = models.CharField(max_length=2000)
+    situacao = models.CharField(max_length=10, choices=Situacao, default=Situacao.PENDENTE)
+    decidido_por = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, on_delete=models.PROTECT, related_name="adiamentos_decididos",
+    )
+    designacao = models.ForeignKey(DesignacaoSupervisor, null=True, on_delete=models.PROTECT)
+    decidida_em = models.DateTimeField(null=True)
+    operacao_decisao = models.UUIDField(null=True)
+    motivo_decisao = models.CharField(max_length=2000, blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["inspecao", "operacao_id"], name="adiamento_operacao_unica"),
+            models.UniqueConstraint(
+                fields=["inspecao"], condition=models.Q(situacao="pendente"), name="adiamento_pendente_unico",
+            ),
+            models.CheckConstraint(
+                condition=(
+                    models.Q(
+                        situacao="pendente", decidido_por__isnull=True, decidida_em__isnull=True,
+                        operacao_decisao__isnull=True, designacao__isnull=True, motivo_decisao="",
+                    )
+                    | (
+                        models.Q(
+                            situacao__in=["aprovado", "rejeitado"], decidido_por__isnull=False,
+                            decidida_em__isnull=False, operacao_decisao__isnull=False,
+                        )
+                        & ~models.Q(decidido_por=models.F("solicitante"))
+                        & ~models.Q(motivo_decisao="")
+                    )
+                ),
+                name="adiamento_decisao_coerente",
+            ),
+        ]
+
+
+class ReanaliseDocumento(models.Model):
+    documento = models.OneToOneField(DocumentoEstabelecimento, on_delete=models.PROTECT, related_name="reanalise")
+    base = models.ForeignKey(ResultadoInspecao, on_delete=models.PROTECT)
+    autor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    registrada_em = models.DateTimeField(auto_now_add=True)
+    operacao_id = models.UUIDField()
+    parecer = models.CharField(max_length=2000)
+    indica_correcao = models.BooleanField()
