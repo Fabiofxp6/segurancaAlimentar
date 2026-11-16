@@ -1,0 +1,16 @@
+{% extends "termos/portal.html" %}
+
+{% block resultados %}
+<h1 id="titulo-gestao">Resultado final · Inspeção #{{ resultado.inspecao_id }}</h1>
+<p>{{ resultado.inspecao.identificacao_estabelecimento.nome }} · Demonstração</p>
+<dl>
+    <dt>Classificação</dt><dd>{{ resultado.get_classificacao_display }}</dd>
+    {% if resultado.pontuacao is not None %}
+    <dt>Pontuação</dt><dd>{{ resultado.pontuacao|floatformat:2 }}%</dd>
+    {% endif %}
+    <dt>Termo</dt><dd>{{ termo.codigo }} · Versão {{ termo.versao }}</dd>
+    <dt>Situação</dt><dd>{% if termo.versao_anterior %}Versão anterior{% else %}Versão mais recente liberada{% endif %}</dd>
+    <dt>Liberação</dt><dd>{{ termo.liberacao.liberado_em|date:"d/m/Y H:i T" }}</dd>
+</dl>
+<p><a class="acao" href="{% url 'inspecoes:resultado_pdf' termo.pk %}">Baixar termo em PDF</a></p>
+{% endblock %}

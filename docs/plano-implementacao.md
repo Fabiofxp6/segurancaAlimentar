@@ -1,7 +1,7 @@
 # Plano de implementação — Sistema de Avaliação de Segurança Alimentar
 
 - **Data:** 15/11/2026.
-- **Status:** Roteiro aprovado em 15/11/2026. I00 aceita. I01 a I09 concluídas no ambiente local. I10 aguarda autorização.
+- **Status:** Roteiro aprovado em 15/11/2026. I00 aceita. I01 a I12 concluídas no ambiente local. I13 aguarda autorização.
 - **Base:** [PRD](prd/0001-sistema-avaliacao-seguranca-alimentar.md), [matriz de rastreabilidade](matriz-rastreabilidade.md), [arquitetura e ADRs](arquitetura.md), [decisões confirmadas](decisoes-confirmadas.md) e [pendências](pendencias.md).
 - **Fundação:** [decisões da I00](decisoes-fundacao-i00.md) e [verificações da I01](entrega-i01.md).
 - **Acompanhamento:** [Plano no Trello](https://trello.com/c/Ok3dpbjJ), [rotina do quadro](acompanhamento-trello.md) e [estado](state.md).
@@ -30,9 +30,9 @@ A fundação tem execução registrada na I01. A I02 verificou o fluxo básico d
 | [I07](entrega-i07.md) | Envio de documentos pelo estabelecimento | I03/I05 e contrato de recebimento de I06 |
 | [I08](entrega-i08.md) | Cancelamento autorizado e auditoria do ciclo | I05, P005/P006 e registros dos atos anteriores |
 | [I09](entrega-i09.md) | Pontuação, classificação e conclusão | I06 e regras de cálculo/conclusão; validar I07/I08 quando aplicáveis ao fluxo |
-| I10 | Emissão de termo, publicação e consulta do estabelecimento | I09 e políticas de documentos/publicação |
-| I11 | Correção autorizada, recálculo e retificação | I08–I10 e políticas de revisão/versões |
-| I12 | Consultas, indicadores e relatórios | Inspeções e resultados no recorte autorizado |
+| [I10](entrega-i10.md) | Emissão de termo, publicação e consulta do estabelecimento | I09 e políticas de documentos/publicação |
+| [I11](entrega-i11.md) | Correção autorizada, recálculo e retificação | I08–I10 e políticas de revisão/versões |
+| [I12](entrega-i12.md) | Consultas, indicadores e relatórios | Inspeções e resultados no recorte autorizado |
 | I13 | Homologação, recuperação e piloto | Fluxos aprovados para o piloto, com segurança e metas verificadas |
 | I14 | Adiamento e reanálise, se aprovados | P007/P008, specs próprias e autorização específica |
 
@@ -138,6 +138,8 @@ A fundação tem execução registrada na I01. A I02 verificou o fluxo básico d
 
 **Aceite:** PDF corresponde à versão confirmada, é legível e não sobrescreve emissão anterior; falha na geração não desfaz conclusão ou cria nova emissão indevida. Apenas o estabelecimento vinculado obtém o final liberado e o arquivo autorizado, inclusive por acesso direto. Usar **AC08–AC11** e verificações de RNF13/RS010.
 
+**Resultado:** a I10 verificou emissão e liberação separadas conforme DC034, com PDF preservado e download após autorização da unidade. Assinatura e ciência seguem em P013. [Spec 0011](specs/0011-termo-e-liberacao.md) · [Entrega da I10](entrega-i10.md)
+
 ## I11 — Correção, recálculo e retificação · RF018–RF021, RF023
 
 **Entrega:** pedido com justificativa e escopo, decisão e aplicação em operações distintas; histórico com anterior/novo, autoria e datas; recálculo automático com checklist/regras originais quando a avaliação mudar; nova versão/termo retificador quando necessário. Não reabrir inspeção concluída para edição livre.
@@ -146,6 +148,8 @@ A fundação tem execução registrada na I01. A I02 verificou o fluxo básico d
 
 **Aceite:** aprovação pendente, rejeitada, de outra inspeção ou para conteúdo diferente não autoriza efeito. Alteração aprovada registra dados e resultados anteriores/novos e preserva o PDF emitido; conflito ou reenvio não duplica a correção nem a retificação. Confirmar que o estabelecimento continua limitado ao que foi liberado.
 
+**Resultado:** DC035 aplicada. A I11 verificou as três operações, cálculo pela regra original, imutabilidade das revisões e retificador com liberação própria. [Spec 0012](specs/0012-correcao-e-retificacao.md) · [Entrega da I11](entrega-i11.md)
+
 ## I12 — Consultas e indicadores · RF024/RF026
 
 **Entrega:** listagem interna com filtros e paginação, indicadores/relatórios autorizados e exportações somente se aprovadas no recorte. Não comparar pontuação de versões incompatíveis por padrão.
@@ -153,6 +157,8 @@ A fundação tem execução registrada na I01. A I02 verificou o fluxo básico d
 **Antes de executar:** dados das inspeções/resultados do recorte; aprovação de indicadores e prioridade (P010/P022), requisitos de acesso, privacidade/retenção e volume/meta (P017/P018). Pode-se aprovar uma consulta interna antes do painel, sem antecipar indicadores.
 
 **Aceite:** listagem, contagens, paginação e agregações usam somente dados acessíveis; valores conferem com uma base fictícia conhecida; filtros e exportações não expõem terceiros. Medir desempenho contra metas aprovadas, sem inventar percentuais ou prazos.
+
+**Resultado:** DC036 aplicada. A I12 verificou filtros e paginação no escopo da equipe, painel administrativo com dados confirmados e resultados agrupados por versão e regra. [Spec 0013](specs/0013-consultas-e-indicadores.md) · [Entrega da I12](entrega-i12.md)
 
 ## I13 — Homologação e piloto controlado
 
@@ -190,4 +196,4 @@ Em cada etapa autorizada, registrar requisitos cobertos total/parcialmente, arqu
 
 ## Próxima autorização sugerida
 
-A I10 é o próximo recorte e aguarda autorização. Termo e liberação ao estabelecimento dependem de P012/P016. [Entrega da I09](entrega-i09.md) · [Pendências](pendencias.md)
+A I13 é o próximo recorte e aguarda autorização. Ambiente, metas de operação e escopo do piloto dependem de P015 a P019 e P022. [Entrega da I12](entrega-i12.md) · [Pendências](pendencias.md)

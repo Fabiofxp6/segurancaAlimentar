@@ -1,0 +1,13 @@
+{% extends "gestao/base.html" %}
+
+{% block titulo %}Resultados finais | Segurança Alimentar{% endblock %}
+{% block conteudo %}
+<nav class="navegacao" aria-label="Estabelecimento">
+    <a href="{% url 'contas:acesso' %}">Área de acesso</a>
+    <a href="{% url 'inspecoes:resultados_liberados' %}">Resultados liberados</a>
+    <a href="{% url 'inspecoes:documentos' %}">Documentos do estabelecimento</a>
+</nav>
+<section class="painel" aria-labelledby="titulo-gestao">
+    {% block resultados %}{% endblock %}
+</section>
+{% endblock %}

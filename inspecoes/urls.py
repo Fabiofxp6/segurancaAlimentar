@@ -8,18 +8,45 @@ from .campo_views import (
     CampoAnexarView, CampoBaixarView, CampoConexaoView, CampoItemView, CampoListaView, CampoResponderView,
 )
 from .conclusao_views import ConcluirView, ConclusaoConexaoView, ConclusaoView
+from .correcao_views import (
+    AplicarCorrecaoView, CorrecaoConexaoView, DecidirCorrecaoView, PedidoCorrecaoView, PedidosCorrecaoView,
+    PrepararCorrecaoView, RevisoesInspecaoView, SolicitarCorrecaoView,
+)
 from .documentos_views import (
     DocumentosBaixarView, DocumentosConexaoView, DocumentosEnviarView, DocumentosInspecaoView, DocumentosListaView,
 )
+from .termo_views import (
+    ResultadoLiberadoView, ResultadoPdfView, ResultadosLiberadosView, TermoConexaoView, TermoEmitirView,
+    TermoLiberarView, TermoPdfView, TermoView, TermosEmitidosView,
+)
 from .views import (
-    AtribuirView, EquipeView, InicioDiretoView, InicioView, InspecaoView, InspecoesView, SupervisaoView,
+    AtribuirView, EquipeView, IndicadoresView, InicioDiretoView, InicioView, InspecaoView, InspecoesView, SupervisaoView,
 )
 
 
 app_name = "inspecoes"
 urlpatterns = [
     path("", InspecoesView.as_view(), name="lista"),
+    path("indicadores/", IndicadoresView.as_view(), name="indicadores"),
     path("atribuir/", AtribuirView.as_view(), name="atribuir"),
+    path("correcoes/", PedidosCorrecaoView.as_view(), name="correcoes"),
+    path("<int:pk>/correcoes/", RevisoesInspecaoView.as_view(), name="revisoes"),
+    path("<int:pk>/correcoes/conexao/", CorrecaoConexaoView.as_view(), name="correcao_conexao"),
+    path("<int:pk>/correcoes/item/<uuid:item_id>/", PrepararCorrecaoView.as_view(), name="correcao_item"),
+    path("<int:pk>/correcoes/item/<uuid:item_id>/solicitar/", SolicitarCorrecaoView.as_view(), name="correcao_solicitar"),
+    path("<int:pk>/correcoes/<int:pedido_id>/", PedidoCorrecaoView.as_view(), name="correcao"),
+    path("<int:pk>/correcoes/<int:pedido_id>/decidir/", DecidirCorrecaoView.as_view(), name="correcao_decidir"),
+    path("<int:pk>/correcoes/<int:pedido_id>/aplicar/", AplicarCorrecaoView.as_view(), name="correcao_aplicar"),
+    path("termos/", TermosEmitidosView.as_view(), name="termos"),
+    path("resultados/", ResultadosLiberadosView.as_view(), name="resultados_liberados"),
+    path("resultados/<int:termo_id>/", ResultadoLiberadoView.as_view(), name="resultado_liberado"),
+    path("resultados/<int:termo_id>/pdf/", ResultadoPdfView.as_view(), name="resultado_pdf"),
+    path("<int:pk>/termo/", TermoView.as_view(), name="termo"),
+    path("<int:pk>/termo/<int:termo_id>/", TermoView.as_view(), name="termo_versao"),
+    path("<int:pk>/termo/conexao/", TermoConexaoView.as_view(), name="termo_conexao"),
+    path("<int:pk>/termo/emitir/", TermoEmitirView.as_view(), name="termo_emitir"),
+    path("<int:pk>/termo/<int:termo_id>/liberar/", TermoLiberarView.as_view(), name="termo_liberar"),
+    path("<int:pk>/termo/<int:termo_id>/pdf/", TermoPdfView.as_view(), name="termo_pdf"),
     path("documentos/", DocumentosListaView.as_view(), name="documentos"),
     path("<int:pk>/documentos/", DocumentosInspecaoView.as_view(), name="documentos_inspecao"),
     path("<int:pk>/documentos/conexao/", DocumentosConexaoView.as_view(), name="documentos_conexao"),

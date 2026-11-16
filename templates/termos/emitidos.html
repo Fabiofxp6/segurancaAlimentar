@@ -1,0 +1,14 @@
+{% extends "inspecoes/base.html" %}
+
+{% block inspecoes %}
+<h1 id="titulo-gestao">Termos emitidos</h1>
+<ul class="registros">
+    {% for termo in pagina %}
+    <li>
+        <a href="{% url 'inspecoes:termo_versao' termo.resultado.inspecao_id termo.pk %}">{{ termo.codigo }} · {{ termo.resultado.inspecao.identificacao_estabelecimento.nome }}</a>
+        <span>{% if termo.liberacao %}Liberado{% else %}Aguardando liberação{% endif %}</span>
+    </li>
+    {% empty %}<li>Nenhum termo emitido no seu escopo.</li>{% endfor %}
+</ul>
+{% include "gestao/paginacao.html" %}
+{% endblock %}

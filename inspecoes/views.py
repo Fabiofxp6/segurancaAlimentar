@@ -3,14 +3,17 @@ from uuid import uuid4
 from django.core.exceptions import ValidationError
 from django.http import Http404
 from django.shortcuts import redirect, render
+from django.utils.decorators import method_decorator
 from django.views import View
+from django.views.decorators.cache import never_cache
 
 from contas.gestao import GestaoMixin
 from contas.models import Perfil
 
 from .cancelamento_services import tem_pedido_pendente
 
-from . import services
+from . import consulta_services, services
+from .consulta_forms import ConsultaInspecaoForm, FiltrosInspecaoForm
 from .forms import AtribuirForm, EquipeForm, InicioDiretoForm, InicioForm, SupervisaoForm
 from .models import AcaoFiscalizacao, Inspecao
 
@@ -29,12 +32,27 @@ class InspecaoMixin(GestaoMixin):
         }, status=status)
 
 
+@method_decorator(never_cache, name="dispatch")
 class InspecoesView(InspecaoMixin, View):
     def get(self, request):
-        pagina, perfil = services.listar(request.user.pk, request.GET.get("pagina"))
+        perfil, opcoes = consulta_services.opcoes(request.user.pk)
+        form = ConsultaInspecaoForm(request.GET, opcoes=opcoes)
+        pagina = consulta_services.listar(request.user.pk, **form.cleaned_data) if form.is_valid() else None
         return render(request, "inspecoes/lista.html", {
-            "pagina": pagina, "admin": perfil == Perfil.ADMINISTRADOR,
-        })
+            "pagina": pagina, "admin": perfil == Perfil.ADMINISTRADOR, "form": form,
+            "parametros": request.GET,
+        }, status=400 if form.errors else 200)
+
+
+@method_decorator(never_cache, name="dispatch")
+class IndicadoresView(InspecaoMixin, View):
+    def get(self, request):
+        _, opcoes = consulta_services.opcoes(request.user.pk, painel=True)
+        form = FiltrosInspecaoForm(request.GET, opcoes=opcoes)
+        dados = consulta_services.indicadores(request.user.pk, **form.cleaned_data) if form.is_valid() else {}
+        return render(request, "inspecoes/indicadores.html", {
+            "form": form, **dados,
+        }, status=400 if form.errors else 200)
 
 
 class InspecaoView(InspecaoMixin, View):

@@ -1,0 +1,6 @@
+<script>
+(() => {
+    {% include "envios/controle.html" %}
+    iniciarEnvios(document.getElementById("correcao"), (_form, dados) => window.location.assign(dados.url));
+})();
+</script>

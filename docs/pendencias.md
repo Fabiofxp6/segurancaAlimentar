@@ -1,6 +1,6 @@
 # Pendências e propostas
 
-Atualizado em 16/11/2026, com a fundação I01 e as entregas locais I02 a I09.
+Atualizado em 16/11/2026, com a fundação I01 e as entregas locais I02 a I12.
 
 As pessoas responsáveis nominalmente e os prazos ainda não foram definidos. A coluna de encaminhamento identifica o papel que precisa participar, sem atribuir uma decisão a alguém que não a assumiu. P001 foi resolvida para a fundação local. P002 foi resolvida em parte e as demais pendências seguem abertas.
 
@@ -46,7 +46,7 @@ Origem: F003; RF002 e RS002.
 
 ## P005 Autoridade aprovadora
 
-DC032 definiu a autoridade para RF022. Outro supervisor ativo e elegível da ação decide, com o Administrador na ausência de outro elegível. O solicitante fica impedido de decidir. Definir quem aprova correções de RF018, como tratar ausência e pedido próprio nesse fluxo. [Spec 0009](specs/0009-cancelamento-e-auditoria.md)
+DC032 definiu a autoridade para RF022. Outro supervisor ativo e elegível da ação decide, com o Administrador na ausência de outro elegível. O solicitante fica impedido de decidir. DC035 aplica a mesma regra de decisão à correção de demonstração. A aplicação cabe ao solicitante ativo na equipe ou ao Administrador. Definir política de correção de produção. [Spec 0012](specs/0012-correcao-e-retificacao.md) [Spec 0009](specs/0009-cancelamento-e-auditoria.md)
 
 Encaminhamento: Responsável pelo processo de fiscalização.
 
@@ -56,7 +56,7 @@ Origem: F003; RF018, RF022 e RS002.
 
 ## P006 Alterações durante o andamento
 
-DC032 definiu o bloqueio de novas respostas, fotos e documentos durante pedido de cancelamento pendente. A rejeição libera os registros permitidos. Delimitar as demais mudanças que exigem autorização e o efeito de pendência em outros fluxos.
+DC032 definiu o bloqueio de novas respostas, fotos e documentos durante pedido de cancelamento pendente. A rejeição libera os registros permitidos. DC035 cobre correção após a conclusão de um item por pedido na demonstração. Delimitar as demais mudanças que exigem autorização, alterações em andamento e o alcance dos fluxos documentais.
 
 Encaminhamento: Responsável pelo processo de fiscalização.
 
@@ -96,7 +96,7 @@ Origem: F001; tópico 1. F003; RF004 e RF007.
 
 ## P010 Pontuação
 
-A I09 usa o percentual ponderado, a exclusão de N/A e as faixas confirmadas em DC033 para a demonstração. Definir fórmula, pesos, N/A, arredondamento, faixas de classificação e comparabilidade para uso oficial. [Spec 0010](specs/0010-pontuacao-e-conclusao.md)
+A I09 usa o percentual ponderado, a exclusão de N/A e as faixas confirmadas em DC033 para a demonstração. A I12 apresenta médias em grupos separados por versão e regra. Definir fórmula, pesos, N/A, arredondamento, faixas de classificação e comparabilidade para uso oficial. [Spec 0010](specs/0010-pontuacao-e-conclusao.md)
 
 Encaminhamento: Responsável pela avaliação, com apoio da equipe.
 
@@ -116,11 +116,11 @@ Origem: F003; RF017 e RS008.
 
 ## P012 Resultado final e termos
 
-Definir momento de liberação ao estabelecimento, modelos, numeração, vigência, nova versão versus termo retificador e tratamento de inspeção concluída inválida.
+DC034 define emissão e liberação separadas para a demonstração. DC035 exige nova liberação para retificador e mantém as versões já liberadas. Definir liberação oficial, modelos, numeração, vigência, nova versão ou termo retificador e tratamento de inspeção concluída inválida. [Spec 0011](specs/0011-termo-e-liberacao.md)
 
 Encaminhamento: Responsável pelo processo e pela validação documental.
 
-Quando precisa estar resolvida: Antes de implementar publicação, termos e anulação.
+Quando precisa estar resolvida: Antes de publicar termos oficiais, retificar ou anular.
 
 Origem: F003; RF015, RF016, RF021 e RF022.
 
@@ -158,7 +158,7 @@ Origem: F005; seções 8 e 10.
 
 ## P016 Arquivos e PDF
 
-Definir armazenamento e entrega privada em produção, coordenação com banco, biblioteca de PDF, formatos, limites e validação de arquivos reais. A I06 usou PostgreSQL para JPEG/PNG de demonstração. A I07 validou PDF/JPEG/PNG de documentos no mesmo banco, em registros próprios e com download por autorização. [Spec 0007](specs/0007-campo-evidencias-e-reenvio.md)
+Definir armazenamento e entrega privada em produção, coordenação com banco, biblioteca de PDF, formatos, limites e validação de arquivos reais. A I06 usou PostgreSQL para JPEG/PNG de demonstração. A I07 validou PDF/JPEG/PNG de documentos no mesmo banco, em registros próprios e com download por autorização. A I10 usa ReportLab e armazena o PDF emitido no PostgreSQL de demonstração. Armazenamento e entrega de produção permanecem pendentes. [Spec 0011](specs/0011-termo-e-liberacao.md)
 
 Encaminhamento: Equipe técnica, após requisitos operacionais.
 
@@ -220,7 +220,7 @@ Origem: F009; tela 10 e exemplos. F003; RF022.
 
 ## P022 Priorização e estimativas
 
-Validar prioridades do catálogo, escopo da primeira versão, responsáveis, esforço, prazo e orçamento. Não há calendário de implementação aprovado.
+DC036 define acesso administrativo e indicadores de demonstração para I12. Validar prioridades do catálogo, exportações, escopo da primeira versão e do piloto, responsáveis, esforço, prazo e orçamento. Não há calendário de implementação aprovado.
 
 Encaminhamento: Responsável pelo projeto com a equipe.
 

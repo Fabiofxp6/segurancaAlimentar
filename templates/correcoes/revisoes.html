@@ -1,0 +1,27 @@
+{% extends "inspecoes/base.html" %}
+
+{% block inspecoes %}
+<h1 id="titulo-gestao">Correções e revisões · Inspeção #{{ inspecao.pk }}</h1>
+<p>{{ base.versao_checklist.titulo }} · Checklist versão {{ base.versao_checklist.numero }}</p>
+<h2>Revisões do resultado</h2>
+<ul class="registros">
+    {% for revisao in revisoes %}
+    <li>
+        <span><strong>Revisão {{ revisao.revisao }}</strong>{% if revisao.pk == base.pk %} · Atual{% endif %}</span>
+        <span>{{ revisao.get_classificacao_display }}{% if revisao.pontuacao is not None %} · {{ revisao.pontuacao|floatformat:2 }}%{% endif %}</span>
+        {% if revisao.correcao_id %}<a href="{% url 'inspecoes:correcao' inspecao.pk revisao.correcao_id %}">Ver correção</a>{% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% if pode_solicitar %}
+<h2>Escolher item para corrigir</h2>
+<ul class="registros">
+    {% for item in itens %}
+    <li><a href="{% url 'inspecoes:correcao_item' inspecao.pk item.id %}">{{ item.ordem }}. {{ item.enunciado }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+<h2>Pedidos desta inspeção</h2>
+{% include "correcoes/pedidos.html" %}
+<p><a href="{% url 'inspecoes:detalhe' inspecao.pk %}">Voltar à inspeção</a></p>
+{% endblock %}

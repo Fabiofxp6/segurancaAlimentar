@@ -1,0 +1,61 @@
+{% extends "inspecoes/base.html" %}
+
+{% block inspecoes %}
+<h1 id="titulo-gestao">Indicadores de inspeção</h1>
+{% url 'inspecoes:indicadores' as sem_filtros %}
+{% include "inspecoes/filtros.html" %}
+{% if not form.errors %}
+<section aria-labelledby="situacoes">
+    <h2 id="situacoes">Inspeções por situação</h2>
+    <p>{{ total_inspecoes }} {% if total_inspecoes == 1 %}inspeção na consulta{% else %}inspeções na consulta{% endif %}.</p>
+    <ul class="indicadores-situacoes">
+        {% for rotulo, quantidade in situacoes %}
+        <li>
+            <span>{{ rotulo }}</span>
+            <strong>{{ quantidade }}</strong>
+            <meter aria-hidden="true" min="0" max="{{ total_inspecoes|default:1 }}" value="{{ quantidade }}"></meter>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+<section aria-labelledby="resultados">
+    <h2 id="resultados">Resultados por versão e regra</h2>
+    <ul class="registros resultados-versao">
+        {% for grupo in resultados_por_versao %}
+        <li>
+            <div>
+                <strong>{{ grupo.versao_checklist__titulo }}</strong>
+                <p class="secundario">Checklist #{{ grupo.versao_checklist__checklist_id }} · Versão {{ grupo.versao_checklist__numero }} · {{ grupo.regra_pontuacao }}</p>
+            </div>
+            <dl class="contagens-resultado">
+                <div><dt>Concluídas</dt><dd>{{ grupo.total }}</dd></div>
+                <div><dt>Satisfatórias</dt><dd>{{ grupo.satisfatorias }}</dd></div>
+                <div><dt>Regulares</dt><dd>{{ grupo.regulares }}</dd></div>
+                <div><dt>Insatisfatórias</dt><dd>{{ grupo.insatisfatorias }}</dd></div>
+                <div><dt>Sem pontuação</dt><dd>{{ grupo.sem_pontuacao }}</dd></div>
+                <div><dt>Média</dt><dd>{% if grupo.media is not None %}{{ grupo.media|floatformat:2 }}%{% else %}Sem notas{% endif %}</dd></div>
+            </dl>
+        </li>
+        {% empty %}
+        <li>Nenhuma inspeção concluída para os filtros informados.</li>
+        {% endfor %}
+    </ul>
+</section>
+<section aria-labelledby="irregularidades">
+    <h2 id="irregularidades">Irregularidades mais frequentes</h2>
+    <p class="secundario">Ocorrências por item e versão nas inspeções concluídas.</p>
+    <ul class="registros">
+        {% for item in irregularidades %}
+        <li>
+            <div>
+                <strong>{{ item.enunciado }}</strong>
+                <p class="secundario">{{ item.versao.titulo }} · Checklist #{{ item.versao.checklist_id }} · Versão {{ item.versao.numero }}</p>
+            </div>
+            <span>{{ item.total }} {% if item.total == 1 %}ocorrência{% else %}ocorrências{% endif %}</span>
+        </li>
+        {% empty %}<li>Nenhuma irregularidade registrada para os filtros informados.</li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,9 @@
+<ul class="registros">
+    {% for pedido in pagina %}
+    <li>
+        <a href="{% url 'inspecoes:correcao' pedido.base.inspecao_id pedido.pk %}">Pedido #{{ pedido.pk }} · Inspeção #{{ pedido.base.inspecao_id }}</a>
+        <span>{{ pedido.situacao }} · Revisão {{ pedido.base.revisao }}</span>
+    </li>
+    {% empty %}<li>Nenhum pedido de correção disponível.</li>{% endfor %}
+</ul>
+{% include "gestao/paginacao.html" %}

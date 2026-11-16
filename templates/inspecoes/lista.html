@@ -3,20 +3,29 @@
 {% block inspecoes %}
 <h1 id="titulo-gestao">Inspeções de demonstração</h1>
 <p><a href="{% url 'inspecoes:cancelamentos' %}">Pedidos de cancelamento</a></p>
+<p><a href="{% url 'inspecoes:termos' %}">Termos emitidos</a></p>
+<p><a href="{% url 'inspecoes:correcoes' %}">Pedidos de correção</a></p>
 {% if admin %}
+<p><a href="{% url 'inspecoes:indicadores' %}">Indicadores de inspeção</a></p>
 <a class="acao" href="{% url 'inspecoes:atribuir' %}">Atribuir inspeção</a>
 {% else %}
 <a class="acao" href="{% url 'inspecoes:inicio_direto' %}">Iniciar nova inspeção</a>
 {% endif %}
+{% url 'inspecoes:lista' as sem_filtros %}
+{% include "inspecoes/filtros.html" %}
+{% if pagina is not None %}
+<p>{{ pagina.paginator.count }} {% if pagina.paginator.count == 1 %}inspeção encontrada{% else %}inspeções encontradas{% endif %}.</p>
 <ul class="registros">
     {% for inspecao in pagina %}
     <li>
         <a href="{% url 'inspecoes:detalhe' inspecao.pk %}">Inspeção #{{ inspecao.pk }} · {% firstof inspecao.identificacao_estabelecimento.nome inspecao.estabelecimento.nome %}</a>
         <span>{{ inspecao.get_estado_display }}</span>
+        <span class="secundario">{{ inspecao.responsavel.get_username }} · Criada em {{ inspecao.criada_em|date:"d/m/Y" }}</span>
     </li>
     {% empty %}
     <li>Nenhuma inspeção disponível.</li>
     {% endfor %}
 </ul>
 {% include "gestao/paginacao.html" %}
+{% endif %}
 {% endblock %}

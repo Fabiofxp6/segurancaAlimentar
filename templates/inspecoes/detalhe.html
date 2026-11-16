@@ -29,6 +29,8 @@
 {% endif %}
 {% if tem_resultado %}
 <p><a class="acao" href="{% url 'inspecoes:conclusao' inspecao.pk %}">Ver resultado interno</a></p>
+<p><a href="{% url 'inspecoes:termo' inspecao.pk %}">Termo e liberação</a></p>
+<p><a href="{% url 'inspecoes:revisoes' inspecao.pk %}">Correções e revisões</a></p>
 {% elif pode_revisar %}
 <p><a href="{% url 'inspecoes:conclusao' inspecao.pk %}">Revisar para concluir</a></p>
 {% endif %}

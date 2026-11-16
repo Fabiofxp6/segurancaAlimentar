@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.core.exceptions import PermissionDenied, ValidationError
-from django.core.paginator import Paginator
 from django.db import transaction
 from django.db.models import Q
 from django.utils import timezone
@@ -74,12 +73,6 @@ def opcoes_criacao(ator_id, perfil):
     return opcoes
 
 
-def listar(ator_id, pagina):
-    ator = _ator(ator_id, Perfil.ADMINISTRADOR, Perfil.FISCALIZACAO)
-    inspecoes = _acessiveis(ator).select_related("estabelecimento", "acao").order_by("-pk")
-    return Paginator(inspecoes, 25).get_page(pagina), ator.perfil
-
-
 def consultar(ator_id, pk):
     ator = _ator(ator_id, Perfil.ADMINISTRADOR, Perfil.FISCALIZACAO)
     inspecao = _acessiveis(ator).select_related(
@@ -107,6 +100,13 @@ def opcoes_equipe(ator_id, pk):
     _ator(ator_id, Perfil.ADMINISTRADOR)
     inspecao = Inspecao.objects.prefetch_related("participantes").get(pk=pk)
     return inspecao, _opcoes(_fiscais_ativos())
+
+
+def acoes_supervisionadas(ator_id):
+    inspecoes = Inspecao.objects.filter(Q(responsavel_id=ator_id) | Q(participantes=ator_id))
+    return DesignacaoSupervisor.objects.filter(
+        fiscal_id=ator_id, fim__isnull=True, acao_id__in=inspecoes.values("acao_id"),
+    ).values("acao_id")
 
 
 def supervisor_ativo(acao_id, fiscal_id):

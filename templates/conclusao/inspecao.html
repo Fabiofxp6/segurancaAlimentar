@@ -12,6 +12,7 @@
 {% if resultado %}
 <p>Inspeção concluída em {{ resultado.concluido_em|date:"d/m/Y H:i" }}, por {{ resultado.concluido_por.username }}.</p>
 <dl>
+    <dt>Revisão do resultado</dt><dd>{{ resultado.revisao }}</dd>
     <dt>Classificação</dt><dd>{{ resultado.get_classificacao_display }}</dd>
     {% if resultado.pontuacao is not None %}
     <dt>Pontuação</dt><dd>{{ resultado.pontuacao|floatformat:2 }}%</dd>

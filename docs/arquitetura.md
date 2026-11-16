@@ -17,7 +17,7 @@ As escolhas já confirmadas permanecem válidas. O detalhamento técnico apresen
 | MVT, Django Templates, views derivadas diretamente de `View`, services sem HTTP | Confirmado; fronteiras detalhadas abaixo | DC005 e DC006, ADR 0002 |
 | Usuário customizado `AbstractUser`, nome de usuário/senha e sessão Django | Base confirmada; campos e políticas pendentes | DC007, P002, P014, ADR 0003 |
 | Online, confirmação do servidor e retentativa sem duplicidade | Confirmado; mecanismo e prazos pendentes | DC018 e DC019, P020, ADR 0004 |
-| Autorização contextual e supervisão por ação | Confirmado para supervisão e cancelamento local; autoridade de correção pendente | DC008 a DC013, DC029, DC032, P005/P006, ADR 0005 |
+| Autorização contextual e supervisão por ação | Confirmado no recorte de supervisão, cancelamento e correção de demonstração | DC008 a DC013, DC029, DC032/DC035, P005/P006, ADR 0005 |
 | Checklist, resultados, termos e histórico preservados | Confirmado; política detalhada pendente | DC011 a DC020, P009 a P013, P017, ADR 0006 |
 | Uma aplicação Django organizada por áreas do domínio | Aceito para a fundação | DC025, ADR 0007 |
 | Backend nativo de sessões no servidor com PostgreSQL | Adotado na I02, verificado localmente | Spec 0002, ADR 0008, DC026 |
@@ -99,7 +99,7 @@ Na proposta de monólito modular, uma área usa contratos de service da área re
 
 Identidade vem da sessão validada pelo servidor. IDs, perfis e autoria enviados pelo navegador não são prova de identidade ou autoridade. Aplicar verificação de perfil, vínculo, situação e escopo nas consultas, alterações e downloads, incluindo entradas pelo Admin ou por comando futuro.
 
-Supervisor continua fiscal designado por ação. Participar de uma equipe, iniciar uma inspeção ou possuir acesso administrativo técnico não designa supervisão automaticamente. O Administrador gere designações opcionais e imediatas de fiscais ativos da equipe, conforme DC029. A decisão de cancelamento segue DC032. Outro supervisor elegível da ação decide, com Administrador na ausência de outro elegível. A política de correção segue em P005.
+Supervisor continua fiscal designado por ação. Participar de uma equipe, iniciar uma inspeção ou possuir acesso administrativo técnico não designa supervisão automaticamente. O Administrador gere designações opcionais e imediatas de fiscais ativos da equipe, conforme DC029. A decisão de cancelamento segue DC032. Outro supervisor elegível da ação decide, com Administrador na ausência de outro elegível. A I11 aplica a autoridade de DC035. A regra de produção permanece em P005.
 
 O estabelecimento fica limitado aos próprios envios e resultados finais liberados. Anexar documento não libera avaliação interna nem modifica nota. Arquivos precisam da mesma decisão de acesso que os registros aos quais pertencem; não devem ser públicos por conhecer o endereço.
 
@@ -131,17 +131,21 @@ Desde o início, a inspeção mantém o conteúdo e as regras que sustentaram su
 
 Uma correção autorizada registra o anterior, o novo, justificativa, decisão, executor e momento. Quando afetar a avaliação, recalcular automaticamente com as regras originais e preservar os dois resultados. Precisão, Não se aplica, pesos e classificação dependem de P010.
 
-Preservar cada termo emitido e ligá-lo ao resultado/revisão pertinente. Nova versão ou retificador não sobrescreve o original. Numeração, vigência, liberação, anulação e assinatura dependem de P012 e P013. A trilha oficial e os registros operacionais têm finalidades distintas; limites de acesso, retenção e proteção não são definidos por manter um campo genérico de log.
+Preservar cada termo emitido e ligá-lo ao resultado/revisão pertinente. Nova versão ou retificador não sobrescreve o original. A I10 registra emissão e liberação separadas. Na I11, pedido, decisão e aplicação são atos distintos. A aplicação cria uma revisão com base na regra original e grava eventual retificador na mesma transação. Cada PDF conserva sua liberação. [Spec 0012](specs/0012-correcao-e-retificacao.md) Numeração, vigência, liberação, anulação e assinatura oficiais dependem de P012/P013. A trilha oficial e os registros operacionais têm finalidades distintas; limites de acesso, retenção e proteção não são definidos por manter um campo genérico de log.
 
 ## Arquivos e geração de PDF
 
-Acesso privado e preservação são requisitos. A I06 guarda fotos de demonstração no PostgreSQL. A I07 guarda documentos do estabelecimento em registros próprios, com download autorizado por unidade ou equipe da inspeção. A verificação estrutural de PDF recebido na I07 usa pypdf. Armazenamento em produção e geração de termos continuam em P016. [Spec 0008](specs/0008-documentos-do-estabelecimento.md) O desenho deve distinguir evidência fiscal, documento do estabelecimento e termo emitido, mantendo origem, autoria, vínculo e confirmação.
+Acesso privado e preservação são requisitos. A I06 guarda fotos de demonstração no PostgreSQL. A I07 guarda documentos do estabelecimento em registros próprios, com download autorizado por unidade ou equipe da inspeção. A verificação estrutural de PDF recebido na I07 usa pypdf. A I10 gera termos de demonstração com ReportLab, guarda os bytes no PostgreSQL e serve o PDF por autorização contextual. Armazenamento em produção segue em P016. [Spec 0008](specs/0008-documentos-do-estabelecimento.md) O desenho deve distinguir evidência fiscal, documento do estabelecimento e termo emitido, mantendo origem, autoria, vínculo e confirmação.
 
 Proposta de coordenação: só apresentar um arquivo como recebido quando seu conteúdo e metadados estiverem consistentes e aceitos. Tratar recebimento parcial, arquivo sem vínculo e vínculo sem arquivo disponível. A transação do banco não torna o armazenamento de arquivos automaticamente atômico; serão necessários recuperação e tratamento dos resíduos conforme a estratégia escolhida.
 
-Gerar PDF a partir da revisão confirmada, com identificação da emissão. Falha de geração não apaga a inspeção. Retentativa não emite outro termo indevidamente e não troca os dados de uma emissão anterior. O modo síncrono ou posterior, o controle durável da solicitação, o processamento concorrente e a reexecução serão especificados antes da implementação.
+Gerar PDF a partir da revisão confirmada, com identificação da emissão. Falha de geração não apaga a inspeção. Retentativa não emite outro termo indevidamente e não troca os dados de uma emissão anterior. A I10 gera na solicitação de emissão, em transação própria após a conclusão. O UUID permite recuperar o recibo após perda de conexão. A liberação é outra transação. [Spec 0011](specs/0011-termo-e-liberacao.md)
 
 Validar formato, tamanho e conteúdo dos arquivos no servidor, com limites ainda não definidos. A escolha de entrega pelo Django ou mecanismo privado do provedor precisa preservar a autorização. Não estão escolhidos armazenamento local em produção, S3, links assinados, Celery, Redis ou outro serviço.
+
+## Consultas e indicadores
+
+A I12 reutiliza o escopo de inspeções da I05 antes de aplicar os filtros. A lista não concede acesso por designação de supervisor. O painel administrativo conta inspeções por situação e usa um resultado por inspeção concluída, correspondente à última revisão. As médias e frequências preservam a identidade da versão do checklist. O dimensionamento para produção segue em P018. [Spec 0013](specs/0013-consultas-e-indicadores.md)
 
 ## Operação e qualidade
 
@@ -153,7 +157,7 @@ Templates com interação complementar no navegador são compatíveis com o padr
 
 ## Viabilidade, riscos e validação futura
 
-A proposta é tecnicamente viável em princípio com a base escolhida. A implementação local chegou à autenticação. Desempenho, custo operacional e usabilidade em campo ainda precisam ser medidos. As principais incertezas são de regras e coordenação de falhas, além da infraestrutura ainda não escolhida.
+A proposta é tecnicamente viável em princípio com a base escolhida. A implementação local abrange o ciclo de demonstração até consultas e indicadores. Desempenho, custo operacional e usabilidade em campo ainda precisam ser medidos. As principais incertezas são de regras e coordenação de falhas, além da infraestrutura ainda não escolhida.
 
 | Risco ou dúvida | Como reduzir ou verificar | Dependência |
 |---|---|---|

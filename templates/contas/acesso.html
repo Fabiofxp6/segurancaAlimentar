@@ -13,6 +13,7 @@
 <p><a href="{% url 'inspecoes:lista' %}">Inspeções</a></p>
 {% endif %}
 {% if documentos_demo %}
+<p><a href="{% url 'inspecoes:resultados_liberados' %}">Resultados liberados</a></p>
 <p><a href="{% url 'inspecoes:documentos' %}">Documentos do estabelecimento</a></p>
 {% endif %}
 {% if unidade_id %}

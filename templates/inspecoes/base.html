@@ -1,6 +1,23 @@
 {% extends "gestao/base.html" %}
 
 {% block titulo %}{{ titulo|default:"Inspeções" }} | Segurança Alimentar{% endblock %}
+{% block cabecalho %}
+{{ block.super }}
+<style>
+    .filtros-inspecoes { background: #f2f6f3; border: 1px solid #cedbd4; border-radius: .65rem; padding: 1rem; margin: 1rem 0; }
+    .campos-filtro { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr)); gap: .85rem; }
+    .campos-filtro > div { min-width: 0; }
+    .acoes-filtro { display: flex; flex-wrap: wrap; gap: .75rem 1rem; align-items: center; margin-top: 1rem; }
+    .indicadores-situacoes { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); gap: .75rem; }
+    .indicadores-situacoes li { display: grid; gap: .3rem; padding: .75rem; border: 1px solid #cedbd4; border-radius: .55rem; }
+    .indicadores-situacoes strong { font-size: 1.5rem; font-variant-numeric: tabular-nums; }
+    .indicadores-situacoes meter { width: 100%; }
+    .resultados-versao li { display: block; }
+    .contagens-resultado { display: grid; grid-template-columns: repeat(auto-fit, minmax(7.75rem, 1fr)); gap: .55rem; margin: .5rem 0 .25rem; }
+    .contagens-resultado dd { margin: .2rem 0 0; font-weight: 650; }
+</style>
+{% endblock %}
+
 {% block conteudo %}
 <nav class="navegacao" aria-label="Inspeções">
     <a href="{% url 'contas:acesso' %}">Área de acesso</a>

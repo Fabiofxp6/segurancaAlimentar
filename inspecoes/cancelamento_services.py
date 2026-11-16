@@ -7,7 +7,7 @@ from django.utils import timezone
 from contas.models import Perfil, Usuario
 
 from .models import AcaoFiscalizacao, DesignacaoSupervisor, HistoricoInspecao, Inspecao, PedidoCancelamento
-from .services import _acessiveis, _ator, _equipe_acao
+from .services import _acessiveis, _ator, _equipe_acao, acoes_supervisionadas
 
 
 class CancelamentoDesatualizado(Exception):
@@ -18,20 +18,13 @@ def tem_pedido_pendente(inspecao):
     return inspecao.pedidos_cancelamento.filter(situacao=PedidoCancelamento.Situacao.PENDENTE).exists()
 
 
-def _acoes_supervisionadas(ator_id):
-    inspecoes = Inspecao.objects.filter(Q(responsavel_id=ator_id) | Q(participantes=ator_id))
-    return DesignacaoSupervisor.objects.filter(
-        fiscal_id=ator_id, fim__isnull=True, acao_id__in=inspecoes.values("acao_id"),
-    ).values("acao_id")
-
-
 def _visiveis(ator):
     equipe = _acessiveis(ator)
     if ator.perfil == Perfil.ADMINISTRADOR:
         return equipe
     return Inspecao.objects.filter(
         Q(pk__in=equipe.values("pk"))
-        | Q(acao_id__in=_acoes_supervisionadas(ator.pk), pedidos_cancelamento__isnull=False),
+        | Q(acao_id__in=acoes_supervisionadas(ator.pk), pedidos_cancelamento__isnull=False),
     ).distinct()
 
 

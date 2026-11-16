@@ -1,6 +1,6 @@
 # Spec 0003: Acesso, vínculos e supervisão por ação
 
-- **Status:** Cadastros, perfis e vínculos verificados na I03. Designações por ação verificadas na I05. Cancelamento verificado na I08. A política de correção permanece em P005.
+- **Status:** Cadastros, perfis e vínculos verificados na I03. Designações por ação verificadas na I05. Cancelamento verificado na I08. Correção de demonstração verificada na I11. Regras de produção seguem em P005.
 - **Data:** 10/11/2026. **Etapa:** 6.
 - **Produto:** [PRD 0001](../prd/0001-sistema-avaliacao-seguranca-alimentar.md), principalmente RF002, RS001 e RS002; limites de RF016/RF017, RF018/RF022, RS007 e RS010.
 - **Base:** [decisões DC005 a DC013 e DC017](../decisoes-confirmadas.md), [arquitetura](../arquitetura.md), [ADR 0005](../adr/0005-autorizacao-contextual-por-acao.md), F003/F008 no [índice](../referencias/README.md).
@@ -18,10 +18,10 @@ A I03 implementou a manutenção cadastral, o vínculo com estabelecimento e a c
 | Tema | Base preservada | O que esta spec não decide |
 |---|---|---|
 | Perfis-base | Fiscalização, Administrador e Estabelecimento; cliente significa estabelecimento | Um perfil-base por conta na I03, conforme DC027. P002 mantém campos cadastrais adicionais em revisão. |
-| Supervisor | Fiscal designado para uma ação; atuação contextual, sem quarto perfil | Administrador designa vários fiscais ativos da equipe em paralelo, de forma opcional e imediata. DC032 define a aprovação de cancelamento. A aprovação de correção segue em P005. |
+| Supervisor | Fiscal designado para uma ação; atuação contextual, sem quarto perfil | Administrador designa vários fiscais ativos da equipe em paralelo, de forma opcional e imediata. DC032 define a aprovação de cancelamento. DC035 define a aprovação de correção na demonstração. |
 | Ação e inspeção | A designação precisa identificar seu escopo | Uma ação pode agrupar várias inspeções, conforme DC029. |
-| Aprovação | Correção concluída e cancelamento em andamento exigem autorização, justificativa e histórico | DC032 para cancelamento. P005/P006 para correção. |
-| Estabelecimento | Próprios envios e resultados/documentos finais liberados; sem avaliação interna | Uma unidade por conta e várias contas por unidade. A I07 verifica envio da atribuição ao fim do andamento e consulta por conta ativa da unidade. Resultados finais em P012. |
+| Aprovação | Correção concluída e cancelamento em andamento exigem autorização, justificativa e histórico | DC032 para cancelamento e DC035 para correção de demonstração. |
+| Estabelecimento | Próprios envios e resultados/documentos finais liberados; sem avaliação interna | Uma unidade por conta e várias contas por unidade. A I07 verifica envio da atribuição ao fim do andamento e consulta por conta ativa da unidade. A I10 verifica consulta de resultado e PDF liberados à unidade. Regras oficiais seguem em P012. |
 | Identidade e arquitetura | Usuário customizado, sessão Django, views próprias diretamente de `View`, services sem HTTP | Novas bibliotecas, backend de permissões por objeto, representação por `Group` ou enum persistido |
 
 Os nomes, formatos de retorno, rotas e regras técnicas abaixo descrevem a proposta original. O recorte implementado e suas escolhas técnicas estão no [registro da I03](../entrega-i03.md). Pendências não são encerradas por documentar uma solução. Até a política aplicável ser escolhida, não existe concessão automática para a operação dependente dela; o comportamento seguro proposto é recusar a concessão e registrar o motivo técnico restrito.
@@ -55,14 +55,18 @@ O Django fornece grupos e permissões de modelo, mas sua existência não implem
 | Cadastrar estabelecimentos/checklists e atribuir inspeção | V, RF003/RF004/RF005 | N para essas concessões administrativas | N | Sem acréscimo |
 | Iniciar diretamente uma inspeção | Não concedido só pelo perfil administrativo | V, RF006, conforme escopo operacional futuro | N | Como fiscal, sem supervisão automática |
 | Preencher checklist e registrar evidências | Não concedido só pelo perfil administrativo | V, acesso à inspeção RF008/RF009 | N | Como fiscal autorizado |
+| Listar e filtrar inspeções | V na demonstração | V para inspeções da equipe atual | N | A designação mantém o mesmo escopo na lista geral. |
+| Consultar painel de indicadores | V na demonstração conforme DC036 | N | N | N |
 | Consultar inspeção interna/documentos recebidos | P, escopo interno não é irrestrito por inferência | V, recurso no escopo fiscal validado | N para avaliações internas | P/V apenas no escopo autorizado da ação |
 | Enviar/consultar documentos próprios do estabelecimento | P para atuação em nome de terceiro | N como origem cliente; consulta fiscal autorizada é distinta | V, vínculo e janela de envio validados | Sem acréscimo |
-| Consultar resultado/termo final próprio liberado | P para abrangência administrativa | P/V no escopo interno da função | V, liberação e vínculo atuais | Sem publicação ou liberação automática |
+| Consultar resultado/termo final próprio liberado | V na demonstração | V no escopo da equipe | V, liberação e vínculo atuais | O supervisor ativo da ação pode consultar seu termo emitido pelo fluxo de liberação. |
+| Liberar resultado e termo de demonstração | V | N apenas por ser fiscal | N | V para supervisor ativo da ação conforme DC034. |
 | Designar, substituir ou encerrar supervisor | V, DC029 | N | N | N para a função de Supervisor |
-| Solicitar alteração/cancelamento | P para atuar como solicitante | V conforme RF018/RF022 e acesso ao recurso | N neste recorte | Como fiscal. Para cancelamento, decisão por outra pessoa conforme DC032. Para correção, P005. |
+| Solicitar alteração/cancelamento | P para atuar como solicitante | V conforme RF018/RF022 e acesso ao recurso | N neste recorte | Como fiscal. Para cancelamento, decisão por outra pessoa conforme DC032. Para correção, DC035. |
 | Aprovar/rejeitar cancelamento | V quando não houver outro supervisor elegível | N apenas por ser fiscal | N | V para outro supervisor ativo e elegível da ação |
-| Aprovar/rejeitar correção | P, P005 | N apenas por ser fiscal | N | P, P005 |
-| Aplicar correção ou efetivar cancelamento | P para executor e escopo | P para executor; autorização específica obrigatória | N | P; designação não é autorização genérica de execução |
+| Aprovar/rejeitar correção | V quando não houver outro supervisor elegível | N apenas por ser fiscal | N | V para outro supervisor ativo e elegível da ação |
+| Aplicar correção aprovada | V | V para o solicitante ativo na equipe | N | Somente com permissão de aplicação de DC035 |
+| Efetivar cancelamento aprovado | Automático pelo servidor | Automático pelo servidor | N | Automático pelo servidor |
 | Consultar auditoria e decisões internas | P, P017 | P, P017 e escopo | N | P, não equivale a acesso irrestrito |
 
 Os V não aprovam prioridades, fórmulas, categorias de arquivo, modelos documentais ou contratos de funções futuras. Fiscal iniciado diretamente ainda precisa de regra explícita de escopo; P002 não autoriza consultar todas as inspeções. A I03 representa um perfil-base por conta. A concessão de Administrador segue o procedimento técnico de DC027.
@@ -116,7 +120,7 @@ Os nomes abaixo representam operações candidatas, não classes obrigatórias. 
 | Consultar equipe/designações | Ator e contexto validado | Dados de fiscalização mínimos autorizados; estabelecimento não obtém gestão de usuários ou deliberação interna |
 | Designar/substituir/encerrar supervisão | Ator, fiscal, contexto, operação, vigência aprovada e referência atual | Validar autoridade P004, elegibilidade, estado e concorrência; conservar registro anterior e autoria |
 | Avaliar acesso ao recurso | Ator, operação do domínio e referência do recurso | Resultado lógico permitido/negado/política não definida, com motivo técnico restrito; não é token reutilizável nem autorização emitida pelo cliente |
-| Consultar resultado/arquivo acessível | Ator, recurso, filtros/versão admissíveis | Retornar somente objeto/arquivo autorizado; aplicação futura de RF016/RS010 ainda depende de liberação e entrega privada |
+| Consultar resultado/arquivo acessível | Ator, recurso, filtros/versão admissíveis | Retornar somente objeto/arquivo autorizado; a I10 aplica RF016/RS010 com vínculo atual, liberação e download privado |
 
 Proposta: motivos internos distinguem identidade inválida, perfil, vínculo, contexto, vigência, estado, política indefinida e conflito. A mensagem pública não precisa revelar essa diferença nem a existência do recurso. Erro de banco não vira decisão `permitido=true` ou resultado parcial.
 
@@ -144,7 +148,7 @@ Na I05 a vigência começa com a gravação confirmada pelo servidor. O registro
 
 ### Autorização para correção/cancelamento
 
-RF018 e RF022 continuam separando solicitação, decisão e efetivação. Esta spec define apenas o contrato de acesso: solicitante autorizado; autoridade competente; designação válida na ação quando exigida; conteúdo e inspeção exatos; estado e decisão revalidados na aplicação. A Spec 0009 aplica DC032 ao cancelamento, inclusive pedido feito por um Supervisor. P005 permanece para correção.
+RF018 e RF022 continuam separando solicitação, decisão e efetivação. Esta spec define apenas o contrato de acesso: solicitante autorizado; autoridade competente; designação válida na ação quando exigida; conteúdo e inspeção exatos; estado e decisão revalidados na aplicação. A Spec 0009 aplica DC032 ao cancelamento, inclusive pedido feito por um Supervisor. A Spec 0012 aplica DC035 à correção de demonstração.
 
 Proposta de tratamento enquanto houver política indefinida: operação dependente permanece indisponível para concessão; não escolher autoaprovação nem substituto automático. Se a autoridade for definida posteriormente, aplicar somente a mudança aprovada. Aprovação de outra inspeção, outro conteúdo ou outra ação não autoriza. A pendência de cancelamento bloqueia novas respostas, fotos e documentos. A rejeição libera as operações cabíveis. [Spec 0009](0009-cancelamento-e-auditoria.md)
 
@@ -208,7 +212,7 @@ Admin e futuras entradas técnicas usam os mesmos services para atos de negócio
 | P001/P002 | Models, perfis, credenciais e vínculos | Validar versões/chaves/campos, combinação de perfis, cardinalidades, autoridade de gestão e bootstrap sem autoelevação |
 | P003 | Escopo da supervisão | I05 usa ação que pode agrupar várias inspeções, conforme DC029. |
 | P004 | Designação, quantidade e vigência | I05 permite designações simultâneas, opcionais e imediatas pelo Administrador, conforme DC029. |
-| P005/P006 | Aprovação, pedido próprio e alterações em andamento | DC032 para cancelamento. Definir autoridade e efeitos pendentes para correções. |
+| P005/P006 | Aprovação, pedido próprio e alterações em andamento | DC032 para cancelamento, DC035 para correção de demonstração. Regras de produção pendentes. |
 | P011/P012/P016 | Envio, publicação e acesso a documentos | Escolher janelas, liberação e entrega privada antes dos fluxos funcionais |
 | P014/P017/P020 | Identidade, história, revogação e retentativa | Definir políticas aplicáveis, acesso/retenção e recuperação de operações |
 
@@ -246,7 +250,7 @@ A [entrega da I03](../entrega-i03.md) registra os cenários executados de cadast
 | AC24 | Autoridade, agrupamento ou autoaprovação sem política definida | Nenhuma concessão por inferência; diagnóstico restrito |
 | AC25 | Pedido pendente/rejeitado tenta executar correção/cancelamento | Nenhum efeito oficial nem mudança indevida de estado |
 | AC26 | Usar aprovação de outra inspeção, conteúdo ou contexto | Não autoriza o efeito; aprovação não é edição irrestrita |
-| AC27 | Supervisor solicita mudança e tenta decidir seu próprio pedido | Impedir decisão do próprio pedido de cancelamento conforme DC032. Política de correção em P005. |
+| AC27 | Supervisor solicita mudança e tenta decidir seu próprio pedido | Impedir decisão do próprio pedido conforme DC032/DC035. |
 | AC28 | Aprovação válida é consumida pelo fluxo funcional futuro | Somente efeito autorizado, histórico e versões preservados; validar na spec funcional, não declarar implementado aqui |
 | AC29 | Tentar os mesmos atos via Admin/entrada técnica | Mesmas invariantes; flag técnica não concede autoridade de negócio |
 | AC30 | CSRF inválido e GET/HEAD nas ações de encerramento | Sem mutação; métodos e respostas respeitam a ordem dos controles |

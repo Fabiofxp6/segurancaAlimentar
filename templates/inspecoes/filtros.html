@@ -1,0 +1,17 @@
+<form method="get" class="filtros-inspecoes" aria-label="Filtrar inspeções">
+    {{ form.non_field_errors }}
+    {{ form.pagina.errors }}
+    <div class="campos-filtro">
+        {% for campo in form.visible_fields %}
+        <div>
+            {{ campo.label_tag }}
+            {{ campo }}
+            {{ campo.errors }}
+        </div>
+        {% endfor %}
+    </div>
+    <div class="acoes-filtro">
+        <button type="submit">Aplicar filtros</button>
+        <a href="{{ sem_filtros }}">Limpar filtros</a>
+    </div>
+</form>

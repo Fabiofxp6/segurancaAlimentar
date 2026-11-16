@@ -4,9 +4,9 @@ Sistema web para organizar inspeções de segurança alimentar: checklist, respo
 
 ## Situação atual
 
-As oito etapas de documentação foram elaboradas e conferidas para revisão do usuário. O catálogo contém **28 RF, 14 RNF e 16 RS**, preservando os 58 IDs. Há dez specs e oito ADRs, além da matriz, das skills e dos perfis de agentes.
+As oito etapas de documentação foram elaboradas e conferidas para revisão do usuário. O catálogo contém **28 RF, 14 RNF e 16 RS**, preservando os 58 IDs. Há treze specs e oito ADRs, além da matriz, das skills e dos perfis de agentes.
 
-A I01 entregou a fundação Django local com configuração por perfil, PostgreSQL isolado e primeira migração de `contas.Usuario`. Os resultados estão no [registro da I01](docs/entrega-i01.md). A [I02](docs/entrega-i02.md) entregou entrada, saída e acesso protegido local, com sessão no PostgreSQL conforme o ADR 0008. A [I03](docs/entrega-i03.md) entrega cadastros, perfis, vínculos e o procedimento de concessão de Administrador. A [I04](docs/entrega-i04.md) entrega rascunhos e versões imutáveis de demonstração. A [I05](docs/entrega-i05.md) entrega atribuição, início, equipes e supervisão por ação em ambiente de demonstração. A [I06](docs/entrega-i06.md) entrega preenchimento em campo com evidências privadas e recuperação de envio. A [I07](docs/entrega-i07.md) entrega envio e consulta de documentos por unidade. A [I08](docs/entrega-i08.md) entrega cancelamento autorizado e auditoria por inspeção. A [I09](docs/entrega-i09.md) entrega pontuação ponderada, classificação e conclusão da inspeção em demonstração. O [estado](docs/state.md) informa a retomada e as [pendências](docs/pendencias.md) delimitam as decisões que faltam.
+A I01 entregou a fundação Django local com configuração por perfil, PostgreSQL isolado e primeira migração de `contas.Usuario`. Os resultados estão no [registro da I01](docs/entrega-i01.md). A [I02](docs/entrega-i02.md) entregou entrada, saída e acesso protegido local, com sessão no PostgreSQL conforme o ADR 0008. A [I03](docs/entrega-i03.md) entrega cadastros, perfis, vínculos e o procedimento de concessão de Administrador. A [I04](docs/entrega-i04.md) entrega rascunhos e versões imutáveis de demonstração. A [I05](docs/entrega-i05.md) entrega atribuição, início, equipes e supervisão por ação em ambiente de demonstração. A [I06](docs/entrega-i06.md) entrega preenchimento em campo com evidências privadas e recuperação de envio. A [I07](docs/entrega-i07.md) entrega envio e consulta de documentos por unidade. A [I08](docs/entrega-i08.md) entrega cancelamento autorizado e auditoria por inspeção. A [I09](docs/entrega-i09.md) entrega pontuação ponderada, classificação e conclusão da inspeção em demonstração. A [I10](docs/entrega-i10.md) entrega emissão do termo em PDF e liberação ao estabelecimento. A [I11](docs/entrega-i11.md) entrega correção em revisão, recálculo e retificador. A [I12](docs/entrega-i12.md) entrega lista filtrada e painel administrativo de demonstração. O [estado](docs/state.md) informa a retomada e as [pendências](docs/pendencias.md) delimitam as decisões que faltam.
 
 ## Base confirmada
 
@@ -43,6 +43,9 @@ Os contratos completos e as decisões abertas estão nos documentos abaixo. Fór
 | [Spec 0008 — documentos do estabelecimento](docs/specs/0008-documentos-do-estabelecimento.md) | Janela, autorização por unidade e recebimento de documentos |
 | [Spec 0009 — cancelamento e auditoria](docs/specs/0009-cancelamento-e-auditoria.md) | Pedido justificado, decisão por ação, efetivação e trilha por inspeção |
 | [Spec 0010 — pontuação e conclusão](docs/specs/0010-pontuacao-e-conclusao.md) | Regra de demonstração, validações, conclusão e resultado interno |
+| [Spec 0011 — termo e liberação](docs/specs/0011-termo-e-liberacao.md) | Emissão, versão, auditoria e download por unidade |
+| [Spec 0012 — correção e retificação](docs/specs/0012-correcao-e-retificacao.md) | Pedido, decisão, aplicação, revisão e nova liberação |
+| [Spec 0013 — consultas e indicadores](docs/specs/0013-consultas-e-indicadores.md) | Escopo da lista, filtros, paginação e métricas por versão |
 | [Matriz de rastreabilidade](docs/matriz-rastreabilidade.md) | Fontes, relações e cobertura documental das 58 entradas; 58 validações VR futuras |
 | [Skills e agentes](.agents/README.md) | Onze skills locais e seis perfis, com escopo de uso |
 | [Revisão das skills](docs/revisao-skills-tecnicas.md) | Conferência integrada de Python, Django e segurança |
@@ -157,6 +160,24 @@ Entre como supervisor e acesse **Pedidos de cancelamento** na lista de inspeçõ
 Aplique as migrações e publique um checklist fictício com dois itens obrigatórios, opções Sim, Não e Não se aplica e pesos 4 e 1. Abra uma inspeção com essa versão. Como fiscal da equipe, confirme Sim no primeiro item e Não no segundo.
 
 No checklist ou no detalhe, abra **Revisar para concluir**. Confira as respostas confirmadas e use **Concluir inspeção**. Após a confirmação, o resultado interno deve mostrar **80,00% — Satisfatória**. Abra **Ver auditoria da inspeção** no detalhe para conferir o evento. [Regras e limites](docs/specs/0010-pontuacao-e-conclusao.md)
+
+### Demonstrar emissão e liberação
+
+Atualize as dependências com `uv sync --locked` e aplique as migrações. Conclua uma inspeção fictícia. Como fiscal da equipe ou Administrador, abra **Termo e liberação**, clique em **Emitir termo em PDF** e confira o arquivo.
+
+Como Administrador ou supervisor ativo da ação, abra **Termos emitidos** e use **Liberar ao estabelecimento**. Entre com uma conta vinculada à unidade da inspeção. Em **Resultados liberados**, abra o resultado e baixe a versão emitida. [Spec 0011](docs/specs/0011-termo-e-liberacao.md)
+
+### Demonstrar correção e retificação
+
+Aplique as migrações e use uma inspeção fictícia concluída com termo já liberado. Como fiscal da equipe, abra **Correções e revisões**, escolha um item e envie a alteração proposta com a justificativa. Como outro supervisor ou Administrador na ausência de outro supervisor elegível, abra **Pedidos de correção** e decida com motivo.
+
+Como fiscal solicitante ou Administrador, abra o pedido aprovado e use **Aplicar correção aprovada**. Compare os resultados e confira o termo retificador em **Termo e liberação** quando a alteração afetar o PDF. Libere o novo termo com uma conta autorizada e confira as duas versões no portal do estabelecimento. [Spec 0012](docs/specs/0012-correcao-e-retificacao.md)
+
+### Demonstrar consultas e indicadores
+
+Abra **Inspeções** como Administrador ou fiscal da equipe. Combine os filtros de situação, estabelecimento, fiscal e datas de criação. Use **Próxima** quando houver mais de 25 registros. A lista conserva os filtros e apresenta o total autorizado.
+
+Como Administrador, abra **Indicadores de inspeção** a partir da lista. Use inspeções fictícias concluídas com versões de checklist diferentes. Confira os totais e as médias por versão. Se houver correção aprovada e aplicada, confira a nota e a descrição de irregularidade na revisão mais recente. [Spec 0013](docs/specs/0013-consultas-e-indicadores.md)
 
 ## Uso das ferramentas de apoio
 

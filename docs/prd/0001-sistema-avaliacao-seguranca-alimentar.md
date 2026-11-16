@@ -715,9 +715,9 @@ O servidor confere as respostas confirmadas e a revisão da base de cálculo. A 
 
 Gerar termo em PDF com os resultados e não conformidades pertinentes após o salvamento confirmado da inspeção. Uma falha na geração não deve apagar a avaliação já registrada nem causar emissão duplicada no reenvio da mesma operação.
 
-**Participantes:** Sistema gera o termo solicitado no fluxo autorizado; usuários o consultam conforme acesso.
+**Participantes:** Fiscal da equipe ou Administrador solicita a emissão de demonstração. O sistema gera o arquivo e usuários autorizados consultam conforme o escopo.
 
-**Condições de uso e preenchimento:** Inspeção/revisão salva e confirmada. Modelos, tipos, numeração, condições de emissão e geração síncrona ou posterior continuam a definir.
+**Condições de uso e preenchimento:** Inspeção/revisão salva e confirmada. A I10 gera o PDF na solicitação de emissão, após a conclusão confirmada. O termo recebe código e versão de demonstração. Modelos, tipos, numeração e condições oficiais continuam em P012.
 
 **Dados de referência (F003)**
 
@@ -733,7 +733,7 @@ Gerar termo em PDF com os resultados e não conformidades pertinentes após o sa
 **Fluxo principal:**
 
 1. Identificar a inspeção, o resultado e a revisão confirmada que fundamentam a emissão.
-2. Gerar o PDF com os dados e não conformidades pertinentes e registrar identificação, versão, momento e situação da geração.
+2. Gerar o PDF com identificação, resultado, itens não conformes e descrições registradas nas revisões confirmadas. Gravar identificação, versão, autor e momento da emissão.
 3. Disponibilizar o documento pelo acesso autorizado; em falha, informar o problema e permitir recuperação sem apagar a inspeção ou emitir duplicata indevida.
 
 **Regras e validações da fonte:**
@@ -754,7 +754,7 @@ As fontes de levantamento preveem termos de autorização, multa e bloqueio/inte
 2. Falha de geração conserva a inspeção salva e não é apresentada como PDF disponível.
 3. Repetir a mesma emissão não cria outro termo indevidamente nem substitui um documento já emitido.
 
-**Relações e decisões pendentes:** RF013, RF014, RF016, RF021, RF025, RNF13 e RS010; P012, P013 e P016.
+**Relações e decisões pendentes:** RF013, RF014, RF016, RF021, RF025, RNF13 e RS010. P012/P013/P016 para política oficial e produção. [Spec 0011](../specs/0011-termo-e-liberacao.md)
 
 #### RF016 Consultar resultados finais e termos do estabelecimento
 
@@ -762,7 +762,7 @@ Permitir ao estabelecimento consultar somente seus resultados finais liberados e
 
 **Participantes:** Estabelecimento autenticado, limitado ao vínculo que possui.
 
-**Condições de uso e preenchimento:** Resultado próprio final liberado ou documento final autorizado. Estar concluída não significa que a inspeção foi publicada; liberação depende de P012.
+**Condições de uso e preenchimento:** Resultado próprio final liberado ou documento final autorizado. A liberação é uma ação separada após emissão, conforme DC034 para demonstração. A política oficial segue em P012.
 
 **Dados de referência (F003)**
 
@@ -788,7 +788,7 @@ Permitir ao estabelecimento consultar somente seus resultados finais liberados e
 2. O estabelecimento acessa o resultado final disponibilizado e seus documentos finais. Não acessa respostas em elaboração, avaliações parciais, deliberações internas ou dados de outros estabelecimentos.
 3. O histórico consultável pelo cliente é o de resultados e documentos finais. Seus documentos enviados são consultados conforme RF017.
 4. Preservar a identificação da versão do resultado e do termo. Não substituir silenciosamente uma versão já emitida.
-5. O momento de liberação do resultado final e eventual aprovação antes da publicação ainda serão definidos. Concluir e publicar não são considerados automaticamente o mesmo evento.
+5. Na demonstração, Administrador ou supervisor ativo da ação libera resultado e termo. O estabelecimento acessa a versão liberada pelo vínculo atual. A liberação oficial segue em P012.
 
 **Alteração, exclusão e consulta:**
 
@@ -804,7 +804,7 @@ Permitir ao estabelecimento consultar somente seus resultados finais liberados e
 
 **Cenário de referência de F003:** Entrar como estabelecimento e tentar consultar uma inspeção em elaboração, um resultado final liberado e uma inspeção de terceiro. Somente o resultado próprio liberado deve ficar acessível.
 
-**Relações e decisões pendentes:** RF015, RF017, RF021, RF024, RS001 e RS010; P002 e P012.
+**Relações e decisões pendentes:** RF015, RF017, RF021, RF024, RS001 e RS010. P012 cobre o fluxo oficial. [Spec 0011](../specs/0011-termo-e-liberacao.md)
 
 #### RF017 Enviar documentos pelo estabelecimento
 
@@ -868,7 +868,7 @@ Permitir ao estabelecimento anexar documentos relacionados à sua inspeção, co
 
 Registrar pedido de alteração com justificativa e decisão anterior à aplicação, obrigatoriamente para correções posteriores à conclusão. A autorização deve se referir à inspeção e à mudança solicitada.
 
-**Participantes:** Solicitante autorizado e autoridade definida pela política; supervisor somente no escopo em que lhe couber decidir.
+**Participantes:** Fiscal ativo da equipe solicita na demonstração. Outro supervisor ativo e elegível da ação decide. Na ausência de outro elegível, decide o Administrador.
 
 **Condições de uso e preenchimento:** Inspeção e mudança identificadas, com justificativa e acesso. Correção após conclusão exige o fluxo; mudanças adicionais em andamento sujeitas à autorização dependem de P006.
 
@@ -902,7 +902,7 @@ Registrar pedido de alteração com justificativa e decisão anterior à aplica�
 2. O fiscal solicita; a autoridade responsável decide. Se o aprovador for o supervisor, validar a designação daquela ação, e não apenas o perfil de fiscal.
 3. Aprovação deve estar vinculada à inspeção e à mudança solicitada. Uma autorização não libera edição irrestrita.
 4. Correções de inspeção concluída exigem autorização, justificativa e histórico. O preenchimento normal do checklist em andamento continua previsto em RF008.
-5. Ainda será definido quais mudanças em andamento também exigem autorização, quem pode aprovar na ausência de supervisor e como tratar a solicitação feita pelo próprio supervisor.
+5. DC035 define autoridade, ausência e pedido próprio para correção de demonstração. Mudanças em andamento seguem em P006.
 6. Documentos novos após a conclusão podem motivar pedido de alteração. A regra de reanálise ainda depende da decisão descrita em RF028.
 7. UUID não possui máscara. Datas e horas são preenchidas pelo servidor, com fuso, e exibidas em dd/MM/yyyy HH:mm. Limites de texto e arquivos ainda serão definidos.
 
@@ -920,13 +920,13 @@ Registrar pedido de alteração com justificativa e decisão anterior à aplica�
 
 **Cenário de referência de F003:** Solicitar mudança, tentar executá-la pendente, rejeitada e aprovada. Somente a mudança aprovada, no escopo correto, pode ser aplicada; supervisor de outra ação não pode decidir.
 
-**Relações e decisões pendentes:** RF002, RF008, RF019 a RF021, RF028 e RS002; P005, P006 e P008.
+**Relações e decisões pendentes:** RF002, RF008, RF019 a RF021, RF028 e RS002. Política oficial, andamento e reanálise seguem em P005/P006/P008. [Spec 0012](../specs/0012-correcao-e-retificacao.md)
 
 #### RF019 Aplicar correção com histórico
 
 Aplicar somente a correção autorizada e preservar o conteúdo anterior, o novo, a justificativa, quem solicitou, quem decidiu, quem executou e quando ocorreu. Não sobrescrever silenciosamente uma revisão concorrente.
 
-**Participantes:** Executor autorizado; sistema mantém vínculo com solicitante e decisão.
+**Participantes:** Fiscal solicitante ainda ativo na equipe ou Administrador aplica. O sistema mantém vínculo com o pedido e a decisão.
 
 **Condições de uso e preenchimento:** Solicitação aprovada, escopo correspondente e revisão atual verificada. Não basta ter acesso de edição ou conhecer a inspeção.
 
@@ -949,7 +949,7 @@ Aplicar somente a correção autorizada e preservar o conteúdo anterior, o novo
 **Regras e validações da fonte:**
 
 1. Histórico preserva valores, autoria e justificativa; conflito de versão deve impedir sobrescrita silenciosa.
-2. Aplicar apenas a mudança autorizada em RF018. Conservar o vínculo entre solicitação, decisão, executor, valores anteriores e novos e documentos que motivaram a correção.
+2. Aplicar somente o conteúdo autorizado em RF018. A I11 registra os valores anteriores e propostos de um item e cria nova revisão sem editar a coleta original. Conservar os vínculos do pedido, da decisão, da aplicação e, quando pertinente, dos documentos.
 
 **Alteração, exclusão e consulta:**
 
@@ -963,7 +963,7 @@ Aplicar somente a correção autorizada e preservar o conteúdo anterior, o novo
 2. Mudança sem aprovação correspondente ou fora do escopo não é aplicada.
 3. Revisão desatualizada não sobrescreve silenciosamente a alteração de outro usuário; o histórico anterior continua preservado.
 
-**Relações e decisões pendentes:** RF018, RF020, RF021, RF023, RNF04 e RS007; P005, P006 e P017.
+**Relações e decisões pendentes:** RF018, RF020, RF021, RF023, RNF04 e RS007. [Spec 0012](../specs/0012-correcao-e-retificacao.md)
 
 #### RF020 Recalcular resultado após correção
 
@@ -1005,7 +1005,7 @@ Quando a correção autorizada afetar a avaliação, recalcular automaticamente 
 2. Pontuações/classificações anteriores e novas ficam identificáveis e relacionadas à correção.
 3. Receber um documento sem mudança oficialmente autorizada não altera o resultado.
 
-**Relações e decisões pendentes:** RF007, RF013, RF019, RF021 e RF028; P010 e P012.
+**Relações e decisões pendentes:** RF007, RF013, RF019, RF021 e RF028. A I11 recalcula pela regra original de demonstração. Regra oficial em P010/P012. [Spec 0012](../specs/0012-correcao-e-retificacao.md)
 
 #### RF021 Versionar termo e retificar
 
@@ -1013,7 +1013,7 @@ Preservar o termo emitido e, quando necessário, gerar nova versão ou termo ret
 
 **Participantes:** Sistema no fluxo de emissão autorizado; usuários consultam documentos conforme acesso.
 
-**Condições de uso e preenchimento:** Termo anterior identificado e motivo de nova emissão relacionado à revisão/correção. Decidir entre versão nova, retificador e vigência depende da política documental.
+**Condições de uso e preenchimento:** Termo anterior identificado e motivo de nova emissão relacionado à revisão/correção. Na demonstração, alteração do conteúdo de termo emitido gera retificador quando a correção é aplicada. A política oficial de versão e vigência segue em P012.
 
 **Dados de referência (F003)**
 
@@ -1035,7 +1035,7 @@ Preservar o termo emitido e, quando necessário, gerar nova versão ou termo ret
 **Regras e validações da fonte:**
 
 1. Original preservado; anterior não é sobrescrito; relação entre documentos consultável.
-2. Relacionar o documento emitido à correção autorizada e ao resultado correspondente. A necessidade de nova versão ou termo retificador segue a política ainda a definir; a versão anterior permanece preservada.
+2. Relacionar o documento emitido à correção autorizada e ao resultado correspondente. Na I11 o retificador exige nova liberação. A versão anterior já liberada segue disponível e os bytes do original são preservados.
 
 **Alteração, exclusão e consulta:**
 
@@ -1049,7 +1049,7 @@ Preservar o termo emitido e, quando necessário, gerar nova versão ou termo ret
 2. É possível relacionar termo novo, termo anterior, motivo e resultado correspondente.
 3. Não se presume anulação ou perda de vigência por simples edição; aplicar os critérios que forem validados em P012.
 
-**Relações e decisões pendentes:** RF015, RF016, RF019, RF020, RNF13 e RS010; P012, P013 e P016.
+**Relações e decisões pendentes:** RF015, RF016, RF019, RF020, RNF13 e RS010. Política oficial e produção em P012/P013/P016. [Spec 0012](../specs/0012-correcao-e-retificacao.md)
 
 #### RF022 Solicitar e autorizar cancelamento da inspeção
 
@@ -1163,7 +1163,7 @@ Permitir consultas autorizadas por situação, estabelecimento, fiscal e períod
 
 **Participantes:** Usuários autenticados dentro de seus vínculos e escopos de consulta.
 
-**Condições de uso e preenchimento:** Filtros válidos, período inicial não posterior ao final e paginação positiva. Tamanho de página e nomes finais de estados ainda serão detalhados.
+**Condições de uso e preenchimento:** Filtros válidos, período inicial não posterior ao final e paginação positiva. A lista de demonstração usa os estados cadastrados da inspeção e páginas de 25 registros. O filtro de período usa a data de criação.
 
 **Dados de referência (F003)**
 
@@ -1197,7 +1197,7 @@ Permitir consultas autorizadas por situação, estabelecimento, fiscal e períod
 2. Período inválido e paginação não positiva são rejeitados sem ampliar a consulta.
 3. Estabelecimento permanece limitado aos próprios envios e resultados finais liberados, sem avaliações em elaboração ou pedidos internos.
 
-**Relações e decisões pendentes:** RF016, RF017, RS001 e RS009; P002, P003 e P012.
+**Relações e decisões pendentes:** RF016, RF017, RS001 e RS009. A I12 verifica o escopo da lista interna. [Spec 0013](../specs/0013-consultas-e-indicadores.md)
 
 #### RF025 Assinatura e registro de ciência
 
@@ -1245,7 +1245,7 @@ Registrar a identificação do fiscal e do responsável pelo estabelecimento e a
 
 Apresentar a usuários autorizados indicadores de inspeções, resultados dos estabelecimentos e irregularidades frequentes, usando dados confirmados. Considerar versões de checklist e regras nas comparações de pontuação.
 
-**Participantes:** Administrador ou usuários de gestão efetivamente autorizados; não há perfil novo Gestor.
+**Participantes:** Na demonstração, somente Administrador acessa o painel conforme DC036.
 
 **Condições de uso e preenchimento:** Dados confirmados, filtros válidos e permissão definida para indicadores. Supervisão de uma ação não concede visão global automaticamente.
 
@@ -1269,7 +1269,7 @@ Apresentar a usuários autorizados indicadores de inspeções, resultados dos es
 **Regras e validações da fonte:**
 
 1. Usar dados confirmados e respeitar as permissões. Comparações de notas devem considerar as versões de checklist e regras.
-2. O termo gestor não cria um novo perfil. Permissões de indicadores devem ser definidas para o Administrador ou para usuários autorizados; ser supervisor de uma ação não concede acesso global aos indicadores.
+2. O termo gestor não cria um novo perfil. DC036 define acesso exclusivo do Administrador na demonstração. A lista do fiscal permanece vinculada à equipe atual.
 
 **Alteração, exclusão e consulta:**
 
@@ -1283,7 +1283,7 @@ Apresentar a usuários autorizados indicadores de inspeções, resultados dos es
 2. Fiscal supervisor de uma ação não obtém dados globais apenas por sua designação.
 3. Comparações de notas não tratam checklists/regras incompatíveis como se fossem a mesma base; critérios dependem de P010.
 
-**Relações e decisões pendentes:** RF013, RF020, RF023 e RF024; P005, P010 e P022.
+**Relações e decisões pendentes:** RF013, RF020, RF023 e RF024. O painel de demonstração agrupa a revisão atual por versão e regra. Comparabilidade oficial, exportações e metas seguem em P010/P018/P022. [Spec 0013](../specs/0013-consultas-e-indicadores.md)
 
 ### Fluxos a validar
 

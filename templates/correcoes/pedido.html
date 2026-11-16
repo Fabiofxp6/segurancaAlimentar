@@ -1,0 +1,52 @@
+{% extends "inspecoes/base.html" %}
+
+{% block inspecoes %}
+<h1 id="titulo-gestao">Pedido de correção #{{ pedido.pk }}</h1>
+<p>Inspeção #{{ inspecao.pk }} · Revisão {{ pedido.base.revisao }} · <strong>{{ pedido.situacao }}</strong></p>
+<p>Solicitado por {{ pedido.solicitante.username }} em {{ pedido.solicitada_em|date:"d/m/Y H:i T" }}.</p>
+<p>Justificativa: {{ pedido.justificativa|linebreaksbr }}</p>
+<h2>{{ item.ordem }}. {{ item.enunciado }}</h2>
+<h3>Registro anterior</h3>
+{% include "correcoes/resposta.html" with resposta=pedido.antes only %}
+<h3>Mudança solicitada</h3>
+{% include "correcoes/resposta.html" with resposta=pedido.proposto only %}
+{% if pedido.decisao %}
+<h2>Decisão</h2>
+<p>{{ pedido.decisao.aprovada|yesno:"Aprovada,Rejeitada" }} por {{ pedido.decisao.autor.username }} em {{ pedido.decisao.decidida_em|date:"d/m/Y H:i T" }}.</p>
+<p>Motivo: {{ pedido.decisao.motivo|linebreaksbr }}</p>
+{% endif %}
+{% if pedido.resultado_aplicado %}
+<h2>Aplicação</h2>
+<p>Aplicada por {{ pedido.resultado_aplicado.aplicado_por.username }} em {{ pedido.resultado_aplicado.aplicado_em|date:"d/m/Y H:i T" }}.</p>
+<dl>
+    <dt>Resultado anterior</dt><dd>Revisão {{ pedido.base.revisao }} · {{ pedido.base.get_classificacao_display }}{% if pedido.base.pontuacao is not None %} · {{ pedido.base.pontuacao|floatformat:2 }}%{% endif %}</dd>
+    <dt>Novo resultado</dt><dd>Revisão {{ pedido.resultado_aplicado.revisao }} · {{ pedido.resultado_aplicado.get_classificacao_display }}{% if pedido.resultado_aplicado.pontuacao is not None %} · {{ pedido.resultado_aplicado.pontuacao|floatformat:2 }}%{% endif %}</dd>
+</dl>
+{% elif not base_atual %}
+<p>Uma revisão posterior superou a base deste pedido.</p>
+{% endif %}
+{% if pode_decidir or pode_aplicar %}
+<section id="correcao" data-contexto="{{ contexto }}" data-conexao="{% url 'inspecoes:correcao_conexao' inspecao.pk %}">
+    <p data-estado-conexao role="status" hidden></p>
+    <noscript><p>Ative JavaScript para acompanhar a confirmação nesta tela.</p></noscript>
+    {% if pode_decidir %}
+    <form method="post" action="{% url 'inspecoes:correcao_decidir' inspecao.pk pedido.pk %}" data-envio>
+        {% csrf_token %}
+        <fieldset data-campos>{{ form_decidir.as_div }}</fieldset>
+        <button type="submit" disabled>Registrar decisão</button>
+        <p data-status role="status"></p>
+    </form>
+    {% else %}
+    <form method="post" action="{% url 'inspecoes:correcao_aplicar' inspecao.pk pedido.pk %}" data-envio>
+        {% csrf_token %}
+        <fieldset data-campos hidden></fieldset>
+        <button type="submit" disabled>Aplicar correção aprovada</button>
+        <p data-status role="status"></p>
+    </form>
+    {% endif %}
+</section>
+{% include "correcoes/envio.html" %}
+{% endif %}
+{% if equipe %}<p><a href="{% url 'inspecoes:revisoes' inspecao.pk %}">Voltar às revisões da inspeção</a></p>{% endif %}
+<p><a href="{% url 'inspecoes:correcoes' %}">Ver pedidos de correção</a></p>
+{% endblock %}

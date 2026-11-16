@@ -1,0 +1,9 @@
+{% if resposta %}
+<dl>
+    <dt>Resposta</dt><dd>{{ resposta.opcao }}</dd>
+    <dt>Observação</dt><dd>{{ resposta.observacao|default:"—"|linebreaksbr }}</dd>
+    <dt>Irregularidade</dt><dd>{{ resposta.descricao_irregularidade|default:"—"|linebreaksbr }}</dd>
+</dl>
+{% else %}
+<p>Item sem resposta.</p>
+{% endif %}

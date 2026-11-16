@@ -4,19 +4,19 @@ Atualizado em 16/11/2026.
 
 ## Situação
 
-- [I01 concluída](entrega-i01.md) com Django, PostgreSQL isolado, migração inicial e verificações VF01–VF12.
-- [I02 concluída localmente](entrega-i02.md) com entrada, saída, sessão no PostgreSQL e verificações de HTTP e navegador.
-- [I03 concluída localmente](entrega-i03.md) com cadastros, perfis, vínculo por unidade, concessão técnica de Administrador e histórico.
-- [I04 concluída localmente](entrega-i04.md) com rascunhos e versões de demonstração imutáveis.
-- [I05 concluída localmente](entrega-i05.md) com atribuição, início, versão fixada e supervisão por ação.
-- [I06 concluída localmente](entrega-i06.md) com respostas em campo, fotos e retentativa na página aberta.
+- [I01](entrega-i01.md) e [I02](entrega-i02.md) concluídas localmente com fundação Django/PostgreSQL e autenticação verificada.
+- [I03](entrega-i03.md) e [I04](entrega-i04.md) concluídas localmente com cadastros, perfis, vínculos e checklists de demonstração versionados.
+- [I05](entrega-i05.md) e [I06](entrega-i06.md) concluídas localmente com início, supervisão, checklist em campo, evidências e retentativa.
 - [I07 concluída localmente](entrega-i07.md) com documentos do estabelecimento, autorização por unidade e confirmação de envio.
 - [I08 concluída localmente](entrega-i08.md) com cancelamento autorizado, bloqueio durante análise e auditoria por inspeção.
-- [I09 concluída localmente](entrega-i09.md) com pontuação e classificação de demonstração e conclusão confirmada no servidor. [Trello](acompanhamento-trello.md)
+- [I09 concluída localmente](entrega-i09.md) com pontuação e classificação de demonstração e conclusão confirmada no servidor.
+- [I10 concluída localmente](entrega-i10.md) com termo em PDF e liberação privada ao estabelecimento.
+- [I11 concluída localmente](entrega-i11.md) com correção em revisão, recálculo e retificador com liberação própria.
+- [I12 concluída localmente](entrega-i12.md) com lista filtrada e painel administrativo de demonstração. [Trello](acompanhamento-trello.md)
 
 ## Próximo passo
 
-Aguardar autorização para a I10. Definir termo e liberação em P012 e P016. [Plano](plano-implementacao.md) · [Pendências](pendencias.md)
+Aguardar autorização para a I13. Definir escopo do piloto, ambiente e metas em P015 a P019 e P022. [Plano](plano-implementacao.md) · [Pendências](pendencias.md)
 
 ## Contexto para retomada
 

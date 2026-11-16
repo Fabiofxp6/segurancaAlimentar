@@ -2,6 +2,7 @@
 
 {% block inspecoes %}
 <h1 id="titulo-gestao">Checklist da inspeção #{{ inspecao.pk }}</h1>
+{% if inspecao.estado == "concluida" %}<p>Registros originais de campo. <a href="{% url 'inspecoes:revisoes' inspecao.pk %}">Ver correções e revisões</a></p>{% endif %}
 <p>{{ inspecao.versao_checklist.titulo }} · Versão {{ inspecao.versao_checklist.numero }}</p>
 <ul class="registros">
     {% for item in itens %}

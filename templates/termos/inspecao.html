@@ -1,0 +1,51 @@
+{% extends "inspecoes/base.html" %}
+
+{% block inspecoes %}
+<h1 id="titulo-gestao">Termo e liberação · Inspeção #{{ inspecao.pk }}</h1>
+<p>{{ inspecao.identificacao_estabelecimento.nome }} · Demonstração</p>
+<section id="termo" data-contexto="{{ contexto }}" data-conexao="{% url 'inspecoes:termo_conexao' inspecao.pk %}">
+    {% if termo %}
+    <p><strong>{{ termo.codigo }}</strong> · Versão {{ termo.versao }}.</p>
+    {% if termo.anterior_id %}
+    <p>Retifica <a href="{% url 'inspecoes:termo_versao' inspecao.pk termo.anterior_id %}">{{ termo.anterior.codigo }}</a>.</p>
+    {% endif %}
+    <p>Emitido em {{ termo.emitido_em|date:"d/m/Y H:i T" }}.</p>
+    <p>{% if termo.liberacao %}Liberado em {{ termo.liberacao.liberado_em|date:"d/m/Y H:i T" }}.{% else %}Aguardando liberação ao estabelecimento.{% endif %}</p>
+    <p><a class="acao" href="{% url 'inspecoes:termo_pdf' inspecao.pk termo.pk %}">Baixar termo em PDF</a></p>
+    {% elif pode_emitir %}
+    <p>Emita o termo de demonstração a partir do resultado confirmado.</p>
+    {% else %}
+    <p>A conclusão da inspeção é necessária para emitir um termo.</p>
+    {% endif %}
+    {% if pode_liberar or pode_emitir %}
+    <p data-estado-conexao role="status" hidden></p>
+    <noscript><p>Ative JavaScript para acompanhar a confirmação nesta tela.</p></noscript>
+    {% if pode_liberar %}
+    <p>A liberação dá às contas vinculadas à unidade acesso ao resultado final e ao PDF.</p>
+    <form method="post" action="{% url 'inspecoes:termo_liberar' inspecao.pk termo.pk %}" data-envio="liberacao">
+        {% csrf_token %}
+        <fieldset data-campos hidden></fieldset>
+        <button type="submit" disabled>Liberar ao estabelecimento</button>
+        <p data-status role="status"></p>
+    </form>
+    {% else %}
+    <form method="post" action="{% url 'inspecoes:termo_emitir' inspecao.pk %}" data-envio="emissao">
+        {% csrf_token %}
+        <fieldset data-campos hidden></fieldset>
+        <button type="submit" disabled>Emitir termo em PDF</button>
+        <p data-status role="status"></p>
+    </form>
+    {% endif %}
+    {% endif %}
+</section>
+{% if equipe %}<p><a href="{% url 'inspecoes:detalhe' inspecao.pk %}">Voltar à inspeção</a></p>{% endif %}
+<p><a href="{% url 'inspecoes:termos' %}">Ver termos emitidos</a></p>
+{% if pode_liberar or pode_emitir %}
+<script>
+(() => {
+    {% include "envios/controle.html" %}
+    iniciarEnvios(document.getElementById("termo"), (_form, dados) => window.location.assign(dados.url));
+})();
+</script>
+{% endif %}
+{% endblock %}

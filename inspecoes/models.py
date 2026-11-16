@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 
 class AcaoFiscalizacao(models.Model):
@@ -82,6 +83,11 @@ class HistoricoInspecao(models.Model):
         DECISAO_CANCELAR = "decisao_cancelar", "Decisão de cancelamento"
         CANCELAMENTO = "cancelamento", "Cancelamento efetivado"
         CONCLUSAO = "conclusao", "Conclusão confirmada"
+        TERMO_EMITIDO = "termo_emitido", "Termo emitido"
+        TERMO_LIBERADO = "termo_liberado", "Resultado e termo liberados"
+        CORRECAO_PEDIDA = "correcao_pedido", "Correção solicitada"
+        CORRECAO_DECIDIDA = "correcao_decisao", "Decisão de correção"
+        CORRECAO_APLICADA = "correcao_aplic", "Correção aplicada"
 
     inspecao = models.ForeignKey(Inspecao, on_delete=models.PROTECT, related_name="historico")
     autor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
@@ -282,7 +288,15 @@ class ResultadoInspecao(models.Model):
         INSATISFATORIA = "insatisfatoria", "Insatisfatória"
         SEM_PONTUACAO = "sem_pontuacao", "Sem pontuação"
 
-    inspecao = models.OneToOneField(Inspecao, on_delete=models.PROTECT, related_name="resultado")
+    inspecao = models.ForeignKey(Inspecao, on_delete=models.PROTECT, related_name="resultados")
+    revisao = models.PositiveIntegerField(default=1)
+    correcao = models.OneToOneField(
+        "PedidoCorrecao", on_delete=models.PROTECT, null=True, related_name="resultado_aplicado",
+    )
+    aplicado_em = models.DateTimeField(null=True)
+    aplicado_por = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, related_name="resultados_corrigidos",
+    )
     versao_checklist = models.ForeignKey("checklists.VersaoChecklist", on_delete=models.PROTECT)
     regra_pontuacao = models.CharField(max_length=32)
     pontuacao = models.DecimalField(max_digits=5, decimal_places=2, null=True)
@@ -290,7 +304,7 @@ class ResultadoInspecao(models.Model):
     respostas_utilizadas = models.JSONField()
     revisao_base = models.CharField(max_length=64)
     concluido_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
-    concluido_em = models.DateTimeField(auto_now_add=True)
+    concluido_em = models.DateTimeField(default=timezone.now, editable=False)
     operacao_id = models.UUIDField()
 
     class Meta:
@@ -305,4 +319,71 @@ class ResultadoInspecao(models.Model):
                 ),
                 name="resultado_pontuacao_e_classificacao_coerentes",
             ),
+            models.UniqueConstraint(fields=["inspecao", "revisao"], name="resultado_revisao_unica_por_inspecao"),
+            models.CheckConstraint(
+                condition=(
+                    models.Q(revisao=1, correcao__isnull=True, aplicado_em__isnull=True, aplicado_por__isnull=True)
+                    | models.Q(revisao__gt=1, correcao__isnull=False, aplicado_em__isnull=False, aplicado_por__isnull=False)
+                ),
+                name="resultado_revisao_e_correcao_coerentes",
+            ),
         ]
+
+
+class TermoInspecao(models.Model):
+    resultado = models.ForeignKey(ResultadoInspecao, on_delete=models.PROTECT, related_name="termos")
+    anterior = models.ForeignKey("self", on_delete=models.PROTECT, null=True, related_name="retificadores")
+    codigo = models.CharField(max_length=48, unique=True)
+    versao = models.PositiveSmallIntegerField(default=1)
+    emitido_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    emitido_em = models.DateTimeField()
+    operacao_id = models.UUIDField()
+    conteudo = models.BinaryField(editable=False)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["resultado", "versao"], name="termo_versao_unica_por_resultado"),
+        ]
+
+
+class LiberacaoTermo(models.Model):
+    termo = models.OneToOneField(TermoInspecao, on_delete=models.PROTECT, related_name="liberacao")
+    liberado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    designacao = models.ForeignKey(DesignacaoSupervisor, on_delete=models.PROTECT, null=True)
+    liberado_em = models.DateTimeField(auto_now_add=True)
+    operacao_id = models.UUIDField()
+
+
+class PedidoCorrecao(models.Model):
+    base = models.ForeignKey(ResultadoInspecao, on_delete=models.PROTECT, related_name="pedidos_correcao")
+    item_id = models.UUIDField()
+    antes = models.JSONField(null=True)
+    proposto = models.JSONField()
+    justificativa = models.CharField(max_length=2000)
+    solicitante = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    solicitada_em = models.DateTimeField(auto_now_add=True)
+    operacao_id = models.UUIDField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["base", "operacao_id"], name="correcao_pedido_operacao_unica"),
+        ]
+
+    @property
+    def situacao(self):
+        if hasattr(self, "resultado_aplicado"):
+            return "Aplicada"
+        decisao = getattr(self, "decisao", None)
+        if decisao is None:
+            return "Pendente"
+        return "Aprovada" if decisao.aprovada else "Rejeitada"
+
+
+class DecisaoCorrecao(models.Model):
+    pedido = models.OneToOneField(PedidoCorrecao, on_delete=models.PROTECT, related_name="decisao")
+    aprovada = models.BooleanField()
+    motivo = models.CharField(max_length=2000)
+    autor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    designacao = models.ForeignKey(DesignacaoSupervisor, on_delete=models.PROTECT, null=True)
+    decidida_em = models.DateTimeField(auto_now_add=True)
+    operacao_id = models.UUIDField()

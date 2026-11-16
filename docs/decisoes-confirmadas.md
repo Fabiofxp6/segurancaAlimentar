@@ -80,7 +80,7 @@ Origem: F003; RF022. Etapas relacionadas: 2 e 6; spec funcional posterior.
 
 ## DC013 Correção posterior à conclusão
 
-Exigir autorização, justificativa e histórico antes de aplicar a correção. Preservar valores anteriores e novos e o vínculo com a decisão. O preenchimento normal em andamento permanece previsto.
+Exigir autorização, justificativa e histórico antes de aplicar a correção. Preservar valores anteriores e novos e o vínculo com a decisão. O preenchimento normal em andamento permanece previsto. DC035 define a autoridade e a aplicação da correção na demonstração.
 
 Origem: F003; RF018 e RF019. Etapas relacionadas: 2 e 6; specs funcionais posteriores.
 
@@ -92,7 +92,7 @@ Origem: F002; RF06. F003; RF013 e RF020. Etapas relacionadas: 2; spec funcional 
 
 ## DC015 Termos em PDF
 
-PDF pode ser gerado depois do salvamento no servidor. Preservar termo emitido e relacionar nova versão ou termo retificador ao anterior quando necessário. A política documental detalhada está aberta.
+PDF pode ser gerado depois do salvamento no servidor. Preservar termo emitido e relacionar nova versão ou termo retificador ao anterior quando necessário. DC034 define emissão e liberação de demonstração. DC035 define retificação com nova liberação. A política documental oficial permanece em P012/P013.
 
 Origem: F003; RF015 e RF021. Etapas relacionadas: 2; spec funcional posterior.
 
@@ -207,6 +207,26 @@ Na demonstração, Conforme ou Sim soma o peso do item, Não conforme ou Não va
 Bloquear a conclusão quando faltar resposta obrigatória ou houver envio pendente ou falho na tela que conclui. Os documentos do estabelecimento são opcionais.
 
 Origem: respostas do usuário em 16/11/2026 sobre cálculo, faixas e bloqueios. [Spec 0010](specs/0010-pontuacao-e-conclusao.md)
+
+## DC034 Emissão e liberação do termo na I10
+
+Fiscal da equipe ou Administrador pode emitir o PDF de demonstração de uma inspeção concluída. Administrador ou supervisor ativo da ação pode liberar o resultado e o PDF ao estabelecimento em uma ação separada. O termo contém a identificação, o resultado, os itens não conformes e as descrições das irregularidades registradas pelo fiscal.
+
+Origem: respostas do usuário em 16/11/2026 sobre autoridade e conteúdo. [Spec 0011](specs/0011-termo-e-liberacao.md)
+
+## DC035 Correção e retificação na I11
+
+Outro supervisor ativo e elegível da ação decide o pedido de correção. Na ausência de outro elegível, decide o Administrador. O fiscal que solicitou, se permanecer ativo na equipe da inspeção, ou o Administrador aplica a mudança aprovada.
+
+Quando a correção mudar o conteúdo de um PDF já emitido, a aplicação gera termo retificador. O novo termo exige liberação própria. A versão anterior já liberada segue disponível.
+
+Origem: respostas do usuário em 16/11/2026 sobre decisão, executor e retificação. [Spec 0012](specs/0012-correcao-e-retificacao.md)
+
+## DC036 Consultas e indicadores na I12
+
+O painel de demonstração é exclusivo do Administrador. Ele apresenta totais por situação, resultados por versão do checklist e regra e irregularidades mais frequentes. A consulta de inspeções permanece acessível ao fiscal no escopo da sua equipe.
+
+Origem: respostas do usuário em 16/11/2026 sobre acesso e indicadores. [Spec 0013](specs/0013-consultas-e-indicadores.md)
 
 ## Regras antigas que deixaram de valer
 

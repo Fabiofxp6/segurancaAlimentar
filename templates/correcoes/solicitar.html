@@ -1,0 +1,22 @@
+{% extends "inspecoes/base.html" %}
+
+{% block inspecoes %}
+<h1 id="titulo-gestao">Solicitar correção · Inspeção #{{ inspecao.pk }}</h1>
+<h2>{{ item.ordem }}. {{ item.enunciado }}</h2>
+<p>Revisão {{ base.revisao }}</p>
+<h3>Registro atual</h3>
+{% include "correcoes/resposta.html" with resposta=antes only %}
+<section id="correcao" data-contexto="{{ contexto }}" data-conexao="{% url 'inspecoes:correcao_conexao' inspecao.pk %}">
+    <h3>Mudança proposta</h3>
+    <p data-estado-conexao role="status" hidden></p>
+    <noscript><p>Ative JavaScript para acompanhar a confirmação nesta tela.</p></noscript>
+    <form method="post" action="{% url 'inspecoes:correcao_solicitar' inspecao.pk item.id %}" data-envio>
+        {% csrf_token %}
+        <fieldset data-campos>{{ form.as_div }}</fieldset>
+        <button type="submit" disabled>Enviar pedido de correção</button>
+        <p data-status role="status"></p>
+    </form>
+</section>
+<p><a href="{% url 'inspecoes:revisoes' inspecao.pk %}">Voltar às revisões</a></p>
+{% include "correcoes/envio.html" %}
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "termos/portal.html" %}
+
+{% block resultados %}
+<h1 id="titulo-gestao">Resultados liberados</h1>
+<ul class="registros">
+    {% for termo in pagina %}
+    <li>
+        <a href="{% url 'inspecoes:resultado_liberado' termo.pk %}">Inspeção #{{ termo.resultado.inspecao_id }} · {{ termo.resultado.inspecao.identificacao_estabelecimento.nome }}</a>
+        <span>Versão {{ termo.versao }} · {% if termo.versao_anterior %}Anterior{% else %}Mais recente liberada{% endif %}</span>
+    </li>
+    {% empty %}<li>Nenhum resultado liberado para sua unidade.</li>{% endfor %}
+</ul>
+{% include "gestao/paginacao.html" %}
+{% endblock %}

@@ -8,6 +8,7 @@ from contas.models import Perfil
 
 from . import pontuacao
 from .cancelamento_services import tem_pedido_pendente
+from .resultados import atual
 from .models import HistoricoInspecao, Inspecao, ResultadoInspecao
 from .services import _acessiveis, _ator
 
@@ -51,7 +52,7 @@ def consultar(ator_id, pk):
     ator = _ator(ator_id, Perfil.ADMINISTRADOR, Perfil.FISCALIZACAO)
     inspecao = _inspecao(ator, pk)
     if inspecao.estado == Inspecao.Estado.CONCLUIDA:
-        resultado = ResultadoInspecao.objects.select_related("concluido_por").get(inspecao=inspecao)
+        resultado = atual(inspecao)
         return {"inspecao": inspecao, "resultado": resultado}
     if ator.perfil != Perfil.FISCALIZACAO:
         raise PermissionDenied
@@ -77,7 +78,7 @@ def concluir(ator_id, pk, *, operacao_id, revisao_base):
         raise Inspecao.DoesNotExist
 
     if inspecao.estado == Inspecao.Estado.CONCLUIDA:
-        anterior = ResultadoInspecao.objects.get(inspecao=inspecao)
+        anterior = inspecao.resultados.get(revisao=1)
         if (
             anterior.operacao_id == operacao_id and anterior.concluido_por_id == ator.pk
             and anterior.revisao_base == revisao_base
