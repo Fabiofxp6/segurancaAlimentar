@@ -4,9 +4,9 @@ Sistema web para organizar inspeções de segurança alimentar: checklist, respo
 
 ## Situação atual
 
-As oito etapas de documentação foram elaboradas e conferidas para revisão do usuário. O catálogo contém **28 RF, 14 RNF e 16 RS**, preservando os 58 IDs. Há cinco specs e oito ADRs, além da matriz, das skills e dos perfis de agentes.
+As oito etapas de documentação foram elaboradas e conferidas para revisão do usuário. O catálogo contém **28 RF, 14 RNF e 16 RS**, preservando os 58 IDs. Há dez specs e oito ADRs, além da matriz, das skills e dos perfis de agentes.
 
-A I01 entregou a fundação Django local com configuração por perfil, PostgreSQL isolado e primeira migração de `contas.Usuario`. Os resultados estão no [registro da I01](docs/entrega-i01.md). A [I02](docs/entrega-i02.md) entregou entrada, saída e acesso protegido local, com sessão no PostgreSQL conforme o ADR 0008. A [I03](docs/entrega-i03.md) entrega cadastros, perfis, vínculos e o procedimento de concessão de Administrador. A [I04](docs/entrega-i04.md) entrega rascunhos e versões imutáveis de demonstração. O [estado](docs/state.md) informa a retomada e as [pendências](docs/pendencias.md) delimitam as decisões que faltam.
+A I01 entregou a fundação Django local com configuração por perfil, PostgreSQL isolado e primeira migração de `contas.Usuario`. Os resultados estão no [registro da I01](docs/entrega-i01.md). A [I02](docs/entrega-i02.md) entregou entrada, saída e acesso protegido local, com sessão no PostgreSQL conforme o ADR 0008. A [I03](docs/entrega-i03.md) entrega cadastros, perfis, vínculos e o procedimento de concessão de Administrador. A [I04](docs/entrega-i04.md) entrega rascunhos e versões imutáveis de demonstração. A [I05](docs/entrega-i05.md) entrega atribuição, início, equipes e supervisão por ação em ambiente de demonstração. A [I06](docs/entrega-i06.md) entrega preenchimento em campo com evidências privadas e recuperação de envio. A [I07](docs/entrega-i07.md) entrega envio e consulta de documentos por unidade. A [I08](docs/entrega-i08.md) entrega cancelamento autorizado e auditoria por inspeção. A [I09](docs/entrega-i09.md) entrega pontuação ponderada, classificação e conclusão da inspeção em demonstração. O [estado](docs/state.md) informa a retomada e as [pendências](docs/pendencias.md) delimitam as decisões que faltam.
 
 ## Base confirmada
 
@@ -38,6 +38,11 @@ Os contratos completos e as decisões abertas estão nos documentos abaixo. Fór
 | [Spec 0003 — acesso](docs/specs/0003-acesso-vinculos-supervisao.md) | Vínculos, papéis, supervisão, revogação e 36 cenários AC futuros |
 | [Spec 0004 — estabelecimentos](docs/specs/0004-cadastro-estabelecimentos.md) | Cadastro, consulta, edição e inativação de estabelecimentos |
 | [Spec 0005 — checklist e versões](docs/specs/0005-checklist-e-versoes.md) | Rascunho, itens e publicação de demonstração |
+| [Spec 0006 — início, equipe e supervisão](docs/specs/0006-inicio-equipe-e-supervisao.md) | Atribuição, início com versão fixa e designações por ação |
+| [Spec 0007 — campo e reenvio](docs/specs/0007-campo-evidencias-e-reenvio.md) | Respostas por item, evidências privadas e confirmação do servidor |
+| [Spec 0008 — documentos do estabelecimento](docs/specs/0008-documentos-do-estabelecimento.md) | Janela, autorização por unidade e recebimento de documentos |
+| [Spec 0009 — cancelamento e auditoria](docs/specs/0009-cancelamento-e-auditoria.md) | Pedido justificado, decisão por ação, efetivação e trilha por inspeção |
+| [Spec 0010 — pontuação e conclusão](docs/specs/0010-pontuacao-e-conclusao.md) | Regra de demonstração, validações, conclusão e resultado interno |
 | [Matriz de rastreabilidade](docs/matriz-rastreabilidade.md) | Fontes, relações e cobertura documental das 58 entradas; 58 validações VR futuras |
 | [Skills e agentes](.agents/README.md) | Onze skills locais e seis perfis, com escopo de uso |
 | [Revisão das skills](docs/revisao-skills-tecnicas.md) | Conferência integrada de Python, Django e segurança |
@@ -122,6 +127,36 @@ O Django cria e remove seu banco descartável na instância de teste. Para pausa
 Aplique as migrações e entre como Administrador de demonstração. Na área de acesso, abra **Gerir checklists**. Crie um checklist fictício e use **Adicionar item** para informar enunciado, ordem e uma opção por linha. Se desejar, registre peso e obrigatoriedade.
 
 Use **Publicar versão de demonstração**. Depois, volte ao rascunho, altere uma regra, salve e publique novamente. Abra a versão anterior pela lista de versões para conferir o conteúdo preservado.
+
+### Demonstrar inspeções no ambiente local
+
+Aplique as migrações, prepare um estabelecimento fictício, publique um checklist de demonstração e cadastre fiscais fictícios conforme os passos anteriores. Na área de acesso, abra **Inspeções**. Como Administrador, atribua uma inspeção e selecione os fiscais. Para agrupar, escolha a mesma ação na atribuição seguinte. No detalhe, abra **Gerir supervisão da ação** para selecionar ou retirar supervisores.
+
+Entre como fiscal responsável e inicie a inspeção atribuída, ou use **Iniciar nova inspeção** para começar diretamente. Selecione um checklist publicado. O detalhe mostra a versão persistida e sua origem. O fluxo usa o ambiente de demonstração.
+
+### Demonstrar preenchimento e evidências
+
+Atualize as dependências com `uv sync --locked` e aplique as migrações do perfil de desenvolvimento. Entre como fiscal da equipe e abra uma inspeção de demonstração em andamento. No detalhe, abra **Preencher checklist**, selecione um item e salve a resposta. Depois envie uma foto JPEG ou PNG fictícia, de até 5 MiB, vinculada ao item ou à irregularidade confirmada.
+
+Para simular uma queda, mantenha a tela aberta. O formulário conserva os dados. O botão de envio é liberado após a recuperação da comunicação, e um envio já solicitado aguarda a confirmação do servidor.
+
+### Demonstrar documentos do estabelecimento
+
+Atualize as dependências e aplique as migrações como descrito no preparo local. Vincule ao menos uma conta de demonstração à unidade e atribua uma inspeção. No acesso da conta do estabelecimento, abra **Documentos do estabelecimento**, selecione a inspeção e envie um PDF, JPEG ou PNG fictício de até 5 MiB. Um PDF deve ter de 1 a 50 páginas e abrir sem senha.
+
+Na tela da inspeção, o fiscal da equipe pode abrir **Documentos recebidos do estabelecimento**. As contas ativas da mesma unidade também podem consultar e baixar os documentos recebidos.
+
+### Demonstrar o cancelamento
+
+Aplique as migrações e prepare uma inspeção em andamento com dois fiscais fictícios na ação. Como Administrador, designe um deles como supervisor. Entre como o outro fiscal, abra o detalhe da inspeção e acesse **Pedidos de cancelamento**. Envie a justificativa e confira o checklist em leitura durante a pendência.
+
+Entre como supervisor e acesse **Pedidos de cancelamento** na lista de inspeções. Abra o pedido, informe o motivo e aprove. No detalhe da inspeção, confira o estado **Cancelada** e abra **Ver auditoria da inspeção** para consultar solicitação, decisão e efetivação. Para testar a alternativa administrativa, prepare outro pedido sem supervisor elegível diferente do solicitante.
+
+### Demonstrar pontuação e conclusão
+
+Aplique as migrações e publique um checklist fictício com dois itens obrigatórios, opções Sim, Não e Não se aplica e pesos 4 e 1. Abra uma inspeção com essa versão. Como fiscal da equipe, confirme Sim no primeiro item e Não no segundo.
+
+No checklist ou no detalhe, abra **Revisar para concluir**. Confira as respostas confirmadas e use **Concluir inspeção**. Após a confirmação, o resultado interno deve mostrar **80,00% — Satisfatória**. Abra **Ver auditoria da inspeção** no detalhe para conferir o evento. [Regras e limites](docs/specs/0010-pontuacao-e-conclusao.md)
 
 ## Uso das ferramentas de apoio
 

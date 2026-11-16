@@ -1,0 +1,168 @@
+function iniciarEnvios(painel, confirmar, acompanhar = () => {}) {
+    const aviso = painel.querySelector("[data-estado-conexao]");
+    const controles = painel.querySelectorAll("form[data-envio]");
+    const cabecalhos = {"X-Contexto-Campo": painel.dataset.contexto};
+
+    let pendente = null;
+    let semConexao = !navigator.onLine;
+    let encerrado = false;
+    let enviando = false;
+    let sondando = false;
+    let timer;
+    let intervalo = 1500;
+
+    function estado(form, mensagem) {
+        form.querySelector("[data-status]").textContent = mensagem;
+    }
+
+    function avisoConexao(mensagem) {
+        aviso.textContent = mensagem;
+        aviso.hidden = !mensagem;
+    }
+
+    function chaveDeEnvio() {
+        if (crypto.randomUUID) return crypto.randomUUID();
+        const bytes = crypto.getRandomValues(new Uint8Array(16));
+        bytes[6] = (bytes[6] & 0x0f) | 0x40;
+        bytes[8] = (bytes[8] & 0x3f) | 0x80;
+        const hexadecimal = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+        return [hexadecimal.slice(0, 8), hexadecimal.slice(8, 12), hexadecimal.slice(12, 16),
+            hexadecimal.slice(16, 20), hexadecimal.slice(20)].join("-");
+    }
+
+    function atualizarControles() {
+        for (const form of controles) {
+            const bloqueado = form.dataset.liberado === "nao";
+            form.querySelector("[data-campos]").disabled = bloqueado || pendente?.form === form || encerrado;
+            form.querySelector("button").disabled = bloqueado || !!pendente || semConexao || encerrado;
+        }
+        for (const link of document.querySelectorAll("a[href]")) {
+            if (semConexao || pendente) {
+                link.setAttribute("aria-disabled", "true");
+            } else {
+                link.removeAttribute("aria-disabled");
+            }
+        }
+    }
+
+    function agendar() {
+        clearTimeout(timer);
+        if (semConexao && !encerrado) {
+            timer = setTimeout(recuperar, intervalo);
+            intervalo = Math.min(intervalo * 2, 10000);
+        }
+    }
+
+    function perderConexao() {
+        semConexao = true;
+        avisoConexao("Sem comunicação com o servidor. O preenchimento permanece nesta página.");
+        if (pendente) estado(pendente.form, "Pendente · aguardando reconexão");
+        atualizarControles();
+        agendar();
+    }
+
+    function encerrarEnvio() {
+        encerrado = true;
+        semConexao = false;
+        clearTimeout(timer);
+        if (pendente) estado(pendente.form, "Falha · sessão ou acesso mudou");
+        pendente = null;
+        avisoConexao("A sessão ou o acesso mudou. Confira o preenchimento antes de reabrir a página.");
+        atualizarControles();
+    }
+
+    async function requisicao(url, opcoes) {
+        const controle = new AbortController();
+        const limite = setTimeout(() => controle.abort(), 12000);
+        try {
+            const http = await fetch(url, {
+                cache: "no-store", credentials: "same-origin", redirect: "error",
+                headers: cabecalhos, ...opcoes, signal: controle.signal,
+            });
+            const json = http.headers.get("Content-Type")?.includes("application/json")
+                ? await http.json() : null;
+            return {http, json};
+        } finally {
+            clearTimeout(limite);
+        }
+    }
+
+    async function enviar() {
+        if (!pendente || semConexao || enviando || encerrado) return;
+        const envio = pendente;
+        enviando = true;
+        estado(envio.form, "Enviando");
+        try {
+            const {http, json} = await requisicao(envio.form.action, {method: "POST", body: envio.dados});
+            if ([401, 403, 404].includes(http.status)) {
+                encerrarEnvio();
+            } else if ([400, 409, 413, 422].includes(http.status)) {
+                estado(envio.form, "Falha · " + (json?.erro || "Confira os dados antes de tentar novamente."));
+                pendente = null;
+            } else if (http.ok && json?.operacao_id === envio.chave && json.confirmado_em) {
+                confirmar(envio.form, json);
+                acompanhar(envio.form, false);
+                estado(envio.form, "Salva");
+                pendente = null;
+            } else {
+                perderConexao();
+            }
+        } catch {
+            perderConexao();
+        } finally {
+            enviando = false;
+            atualizarControles();
+        }
+    }
+
+    async function recuperar() {
+        if (!semConexao || encerrado || sondando) return;
+        if (!navigator.onLine || enviando) {
+            agendar();
+            return;
+        }
+        sondando = true;
+        try {
+            const {http, json} = await requisicao(painel.dataset.conexao);
+            if ([401, 403, 404].includes(http.status)) {
+                encerrarEnvio();
+            } else if (http.ok && json?.conectado === true) {
+                semConexao = false;
+                intervalo = 1500;
+                clearTimeout(timer);
+                avisoConexao("");
+                atualizarControles();
+                void enviar();
+            } else {
+                agendar();
+            }
+        } catch {
+            agendar();
+        } finally {
+            sondando = false;
+        }
+    }
+
+    for (const form of controles) {
+        form.addEventListener("input", () => estado(form, "Pendente"));
+        form.addEventListener("submit", (evento) => {
+            evento.preventDefault();
+            if (form.dataset.liberado === "nao" || pendente || semConexao || encerrado) return;
+            const dados = new FormData(form);
+            const chave = chaveDeEnvio();
+            dados.set("operacao_id", chave);
+            pendente = {form, dados, chave};
+            acompanhar(form, true);
+            atualizarControles();
+            void enviar();
+        });
+    }
+    document.addEventListener("click", (evento) => {
+        if (evento.target.closest('a[aria-disabled="true"]')) evento.preventDefault();
+    });
+    addEventListener("offline", perderConexao);
+    addEventListener("online", recuperar);
+    atualizarControles();
+    if (semConexao) perderConexao();
+    return atualizarControles;
+}

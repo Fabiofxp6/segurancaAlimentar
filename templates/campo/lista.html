@@ -1,0 +1,16 @@
+{% extends "inspecoes/base.html" %}
+
+{% block inspecoes %}
+<h1 id="titulo-gestao">Checklist da inspeção #{{ inspecao.pk }}</h1>
+<p>{{ inspecao.versao_checklist.titulo }} · Versão {{ inspecao.versao_checklist.numero }}</p>
+<ul class="registros">
+    {% for item in itens %}
+    <li>
+        <a href="{% url 'inspecoes:campo_item' inspecao.pk item.id %}">{{ item.ordem }}. {{ item.enunciado }}</a>
+        <span>{% if item.salva %}Salva{% else %}Sem resposta{% endif %}{% if item.obrigatorio %} · Obrigatório{% endif %}</span>
+    </li>
+    {% empty %}<li>Nenhum item disponível.</li>{% endfor %}
+</ul>
+{% if pode_revisar %}<p><a class="acao" href="{% url 'inspecoes:conclusao' inspecao.pk %}">Revisar para concluir</a></p>{% endif %}
+<p><a href="{% url 'inspecoes:detalhe' inspecao.pk %}">Voltar à inspeção</a></p>
+{% endblock %}

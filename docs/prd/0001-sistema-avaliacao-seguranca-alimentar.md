@@ -135,7 +135,7 @@ Permitir a gestão autorizada de usuários e dos três perfis-base e o registro 
 
 **Participantes:** Administrador na manutenção de usuários; pessoa autorizada pela política de designação, ainda a definir, para atribuir supervisão.
 
-**Condições de uso e preenchimento:** É necessário acesso à gestão de usuários. Fiscal, ação/inspeção e designação devem ser identificáveis; elegibilidade, quantidade e vigência dependem da política a validar em P004. Não presumir que todos os dados sejam editáveis ou já conhecidos na abertura.
+**Condições de uso e preenchimento:** É necessário acesso à gestão de usuários. Fiscal, ação/inspeção e designação devem ser identificáveis; elegibilidade, designações simultâneas e vigência imediata seguem DC029. Não presumir que todos os dados sejam editáveis ou já conhecidos na abertura.
 
 **Dados de referência (F003)**
 
@@ -165,7 +165,7 @@ Permitir a gestão autorizada de usuários e dos três perfis-base e o registro 
 2. A função vale somente no escopo registrado. O mesmo grupo de fiscais pode ter supervisores diferentes em ações distintas.
 3. O sistema deve identificar o fiscal designado, o responsável pela designação, a ação abrangida e o período ou situação de validade. Um campo global supervisor: bool não representa essa regra sozinho.
 4. Designar supervisor para uma ação não concede poder de aprovação sobre outra ação. O fiscal mantém as atividades de fiscalização que já possui.
-5. Quem designa ou substitui o supervisor, quantos podem atuar por ação e como tratar ausência ou autoaprovação ainda precisam ser definidos.
+5. O Administrador pode designar, substituir e encerrar a designação de fiscais ativos da equipe. Vários supervisores podem atuar por ação. Tratamento de ausência e autoaprovação seguem em P005.
 6. UUID não possui máscara. Datas e horas são preenchidas pelo servidor, com fuso, e exibidas em dd/MM/yyyy HH:mm. Limites de texto e arquivos ainda serão definidos.
 
 **Alteração, exclusão e consulta:**
@@ -278,7 +278,7 @@ Permitir ao administrador atribuir inspeção a fiscal e registrar os participan
 
 **Participantes:** Administrador atribui; fiscais participantes consultam e executam conforme seu acesso.
 
-**Condições de uso e preenchimento:** Estabelecimento e fiscais referenciados precisam existir. Registrar os participantes não substitui a designação específica de supervisor; sua obrigatoriedade antes de iniciar continua aberta.
+**Condições de uso e preenchimento:** Estabelecimento e fiscais referenciados precisam existir. A designação específica de Supervisor continua opcional antes do início.
 
 **Dados de referência (F003)**
 
@@ -302,7 +302,7 @@ Permitir ao administrador atribuir inspeção a fiscal e registrar os participan
 
 1. Validar a existência do estabelecimento e dos fiscais vinculados. Registrar a origem administrativa da atribuição.
 2. A ação pode reunir mais de um fiscal. Participar da equipe não concede automaticamente a função de supervisor.
-3. A supervisão deve usar a designação específica de RF002. Sua obrigatoriedade antes do início e quem a cadastra ainda serão definidos.
+3. A supervisão usa a designação específica de RF002. O Administrador pode designar vários fiscais ativos da equipe da ação. A designação é opcional e tem efeito imediato.
 4. UUID não possui máscara. Datas e horas são preenchidas pelo servidor, com fuso, e exibidas em dd/MM/yyyy HH:mm. Limites de texto e arquivos ainda serão definidos.
 
 **Alteração, exclusão e consulta:**
@@ -319,7 +319,7 @@ Permitir ao administrador atribuir inspeção a fiscal e registrar os participan
 
 **Cenário de referência de F003:** Atribuir uma inspeção com três fiscais e um supervisor designado. Conferir os vínculos sem tornar todos os participantes supervisores.
 
-**Relações e decisões pendentes:** RF002, RF006, RF007 e RS001/RS002; P003 e P004.
+**Relações:** RF002, RF006, RF007 e RS001/RS002. P003/P004 resolvidas para a I05. [Spec 0006](../specs/0006-inicio-equipe-e-supervisao.md)
 
 #### RF006 Iniciar inspeção pelo fiscal
 
@@ -347,7 +347,7 @@ Permitir que o fiscal selecione o estabelecimento e inicie a inspeção sem atri
 **Regras e validações da fonte:**
 
 1. Origem FISCAL; autoria derivada da sessão; início somente confirmado pelo servidor.
-2. Registrar os participantes da ação e sua designação de supervisão quando houver. Iniciar a inspeção por iniciativa do fiscal não o torna automaticamente supervisor nem aprovador de seus próprios pedidos. A forma de designar supervisor nesse caso ainda será definida.
+2. Registrar os participantes da ação e sua designação de supervisão quando houver. Iniciar a inspeção por iniciativa do fiscal não o torna automaticamente supervisor nem aprovador de seus próprios pedidos. O Administrador pode designar supervisores da equipe da ação conforme DC029.
 
 **Alteração, exclusão e consulta:**
 
@@ -631,7 +631,7 @@ Calcular automaticamente o resultado com base nas respostas e nas regras origina
 
 **Participantes:** Sistema calcula; usuário autorizado consulta o resultado.
 
-**Condições de uso e preenchimento:** Respostas oficiais e checklist/regras originais identificados. Fórmula, pesos, Não se aplica, arredondamento, faixas e momento de cálculo dependem das regras validadas.
+**Condições de uso e preenchimento:** Respostas oficiais e checklist/regras originais identificados. Na demonstração, a I09 calcula na conclusão com o percentual ponderado e as faixas de DC033. Para uso oficial, fórmula, pesos, Não se aplica, arredondamento e faixas dependem de P010.
 
 **Dados de referência (F003)**
 
@@ -663,9 +663,9 @@ Calcular automaticamente o resultado com base nas respostas e nas regras origina
 
 1. Casos de referência aprovados produzem a pontuação e a classificação esperadas e identificam a regra utilizada.
 2. Publicação de checklist novo não altera automaticamente a nota de inspeção anterior.
-3. Sem fórmula e faixas validadas, o aceite numérico permanece pendente; não se aplica regra inventada para apresentar uma nota.
+3. O aceite numérico da demonstração usa os limites confirmados em DC033 e apresenta Sem pontuação quando a base não tiver peso aplicável. O aceite oficial depende de P010.
 
-**Relações e decisões pendentes:** RF007, RF014, RF020 e RF026; P010 e P012.
+**Relações e decisões pendentes:** RF007, RF014, RF020 e RF026. P010/P012 para cálculo oficial e liberação. [Spec 0010](../specs/0010-pontuacao-e-conclusao.md)
 
 #### RF014 Concluir inspeção no servidor
 
@@ -673,7 +673,7 @@ Registrar a conclusão da inspeção após as validações exigidas pelo fluxo e
 
 **Participantes:** Fiscal com acesso para concluir; o servidor efetiva e confirma.
 
-**Condições de uso e preenchimento:** Inspeção em situação compatível e registros oficiais identificados. As validações finais, inclusive bloqueio por campos obrigatórios vazios ou envios pendentes/falhos, ainda precisam ser aprovadas.
+**Condições de uso e preenchimento:** Inspeção em situação compatível e registros oficiais identificados. DC033 define os bloqueios de demonstração por resposta obrigatória ausente ou envio pendente ou falho na aba. Documentos do estabelecimento são opcionais nessa etapa.
 
 **Dados de referência (F003)**
 
@@ -692,10 +692,10 @@ Registrar a conclusão da inspeção após as validações exigidas pelo fluxo e
 
 **Regras e validações da fonte:**
 
-1. Proposta: impedir conclusão com obrigatórios vazios ou envios pendentes/falhos; gravação atômica.
+1. A I09 aplica os bloqueios de DC033 e grava estado, resultado e evento de conclusão na mesma transação. Pedido de cancelamento pendente também impede a conclusão.
 2. A conclusão não concede ao estabelecimento acesso a rascunhos ou deliberações internas. O momento da liberação do resultado final segue a regra ainda a definir em RF016.
 
-O bloqueio por obrigatórios vazios ou envios pendentes/falhos continua **proposta a validar**, conforme P009, P012 e P020. A consistência exigida por RNF04 não aprova automaticamente essa regra de bloqueio.
+O servidor confere as respostas confirmadas e a revisão da base de cálculo. A tela confere a pendência de envios de campo na aba em uso. A política operacional para demais ambientes segue em P020.
 
 **Alteração, exclusão e consulta:**
 
@@ -707,9 +707,9 @@ O bloqueio por obrigatórios vazios ou envios pendentes/falhos continua **propos
 
 1. Sem confirmação do servidor não aparece conclusão oficial realizada.
 2. A conclusão identifica responsável e momento e mantém os registros correspondentes.
-3. A proposta de bloqueio por obrigatórios ou envios pendentes só terá casos definitivos após validação; concluir não libera conteúdo interno ao estabelecimento.
+3. Resposta obrigatória ausente ou envio de campo pendente ou falho na aba bloqueia a conclusão. O resultado da conclusão fica interno até a liberação prevista em RF016.
 
-**Relações e decisões pendentes:** RF008, RF012, RF013, RF015, RF016 e RNF04; P009, P012 e P020.
+**Relações e decisões pendentes:** RF008, RF012, RF013, RF015, RF016 e RNF04. P009/P012/P020 para operação oficial e liberação. [Spec 0010](../specs/0010-pontuacao-e-conclusao.md)
 
 #### RF015 Gerar termo em PDF
 
@@ -812,7 +812,7 @@ Permitir ao estabelecimento anexar documentos relacionados à sua inspeção, co
 
 **Participantes:** Estabelecimento envia e consulta documentos próprios; equipe fiscal autorizada recebe/consulta o vínculo.
 
-**Condições de uso e preenchimento:** Usuário vinculado ao estabelecimento e à inspeção correspondente; tipo, prazo e etapa precisam permitir o envio conforme a política ainda aberta. Autoria não é aceita livremente do navegador.
+**Condições de uso e preenchimento:** Conta ativa vinculada à unidade da inspeção. O envio começa na atribuição e termina ao fim do andamento. O servidor registra a autoria pela sessão.
 
 **Dados de referência (F003)**
 
@@ -843,14 +843,14 @@ Permitir ao estabelecimento anexar documentos relacionados à sua inspeção, co
 2. O cliente pode anexar seus documentos durante a etapa permitida; esse acesso não libera a visualização do checklist em andamento.
 3. Validar arquivo no servidor segundo RS008. Só mostrar como salvo após a confirmação do recebimento, conforme RF010 a RF012.
 4. O envio não modifica respostas fiscais, pontuação ou resultado final automaticamente. Após a conclusão, qualquer alteração oficial segue RF018 a RF021.
-5. Categorias obrigatórias, formatos, limites, prazos, pedido de complementação e possibilidade de envio após a conclusão ainda serão definidos.
+5. A demonstração aceita PDF, JPEG e PNG. Categorias obrigatórias, limites de produção e pedidos de complementação seguem em P011/P016.
 6. UUID não possui máscara. Datas e horas são preenchidas pelo servidor, com fuso, e exibidas em dd/MM/yyyy HH:mm. Limites de texto e arquivos ainda serão definidos.
 
 **Alteração, exclusão e consulta:**
 
 - Alteração: Proposta a validar: uma substituição de documento já confirmado gera novo registro vinculado ao anterior, sem apagar o arquivo recebido.
 - Exclusão: Não apagar solicitações, decisões, versões ou evidências necessárias ao histórico.
-- Consulta: O estabelecimento consulta seus próprios envios e a confirmação de recebimento; fiscais autorizados consultam os documentos vinculados à ação.
+- Consulta: Contas ativas vinculadas à unidade consultam seus documentos e confirmações. Fiscais autorizados consultam os documentos das inspeções em que atuam. [Spec 0008](../specs/0008-documentos-do-estabelecimento.md)
 
 **Critérios de aceite:**
 
@@ -1055,7 +1055,7 @@ Preservar o termo emitido e, quando necessário, gerar nova versão ou termo ret
 
 Permitir ao fiscal solicitar cancelamento em andamento com justificativa e exigir autorização válida antes de efetivá-lo no servidor. Preservar respostas, arquivos e histórico.
 
-**Participantes:** Fiscal solicita; autoridade ainda a definir decide; servidor efetiva.
+**Participantes:** Fiscal da equipe solicita. Outro supervisor ativo e elegível da ação decide. Na ausência de outro supervisor elegível, decide o Administrador. O servidor efetiva após aprovação.
 
 **Condições de uso e preenchimento:** Inspeção em andamento, justificativa preenchida e acesso ao pedido. Aprovação válida deve anteceder o cancelamento; nenhum poder de aprovação é concedido por inferência.
 
@@ -1079,19 +1079,19 @@ Permitir ao fiscal solicitar cancelamento em andamento com justificativa e exigi
 **Fluxo principal:**
 
 1. O fiscal solicita cancelar e registra o motivo; o pedido fica separado da situação da inspeção.
-2. A autoridade competente analisa e registra sua decisão, verificando escopo/designação aplicável.
+2. O servidor verifica a autoridade e a designação vigente ao registrar a decisão. O solicitante fica impedido de decidir.
 3. Somente após aprovação válida o servidor confirma o cancelamento, registra momento/estado anterior e conserva dados/evidências.
-4. Pedido rejeitado ou pendente permanece identificável sem cancelamento; o bloqueio de edições durante análise segue decisão ainda aberta.
+4. O pedido pendente bloqueia novas respostas, fotos e documentos. A rejeição libera esses registros e conserva o pedido e a decisão.
 
 **Regras e validações da fonte:**
 
 1. O fiscal não efetiva o cancelamento apenas informando uma justificativa. Primeiro deve existir uma decisão de aprovação válida para a inspeção.
 2. Justificativa obrigatória não aceita texto vazio ou somente espaços. Registrar solicitante, decisão, responsável e datas.
-3. Se a decisão couber ao supervisor, ele deve estar designado para aquela ação. Autoridade aprovadora, substituição e autoaprovação ainda precisam ser definidas.
-4. Pedido pendente ou rejeitado não torna a inspeção cancelada. O bloqueio de novas edições durante a análise do pedido ainda será definido.
+3. A autoridade da decisão é reavaliada no servidor. O Administrador decide somente quando a ação não tiver outro supervisor elegível.
+4. Durante a análise, a inspeção segue em andamento e o servidor bloqueia novas respostas, fotos e documentos.
 5. Após aprovação e confirmação do servidor, registrar o cancelamento sem apagar respostas, arquivos ou histórico. Inspeção já concluída segue procedimento de revisão ou anulação ainda a definir.
 6. Esta revisão substitui a regra anterior que permitia cancelamento pelo fiscal somente com justificativa.
-7. UUID não possui máscara. Datas e horas são preenchidas pelo servidor, com fuso, e exibidas em dd/MM/yyyy HH:mm. Limites de texto e arquivos ainda serão definidos.
+7. UUID não possui máscara. Datas e horas são preenchidas pelo servidor, com fuso, e exibidas em dd/MM/yyyy HH:mm. A demonstração aceita até 2.000 caracteres na justificativa e no motivo da decisão.
 
 **Alteração, exclusão e consulta:**
 
@@ -1102,13 +1102,13 @@ Permitir ao fiscal solicitar cancelamento em andamento com justificativa e exigi
 **Critérios de aceite:**
 
 1. Sem justificativa, sem aprovação ou com aprovação de outra ação, o cancelamento não é efetivado.
-2. Pedido pendente ou rejeitado não torna a inspeção cancelada.
+2. A pendência bloqueia novas respostas, fotos e documentos. A rejeição libera os registros cabíveis.
 3. Aprovação válida e confirmação efetivam o cancelamento uma única vez e preservam respostas, arquivos e histórico.
 4. Inspeção concluída não é cancelada por esse atalho e não há reabertura automática.
 
 **Cenário de referência de F003:** Tentar cancelar sem justificativa, sem aprovação e com aprovação de outra ação: negar. Aprovar corretamente e confirmar no servidor: cancelar uma única vez e preservar os dados e as evidências.
 
-**Relações e decisões pendentes:** RF002, RF018, RF023, RS001, RS002 e RS007; P005, P006, P012 e P021.
+**Relações e decisões pendentes:** RF002, RF018, RF023, RS001, RS002 e RS007. DC032 aplicada na I08. [Spec 0009](../specs/0009-cancelamento-e-auditoria.md) · [Entrega da I08](../entrega-i08.md)
 
 #### RF023 Registrar trilha de auditoria
 
@@ -1116,7 +1116,7 @@ Registrar eventos críticos com autoria, momento e contexto, incluindo designaç
 
 **Participantes:** Sistema registra eventos; usuários internos autorizados consultam conforme política de auditoria.
 
-**Condições de uso e preenchimento:** Ocorrer um evento oficial relevante, com ator/contexto identificáveis. Acesso e retenção da trilha continuam em P017.
+**Condições de uso e preenchimento:** Ocorrer um evento oficial relevante, com ator/contexto identificáveis. A I08 disponibiliza trilha por inspeção para Administrador e fiscais da equipe atual. Retenção, auditoria geral e acesso de produção seguem em P017.
 
 **Dados de referência (F003)**
 

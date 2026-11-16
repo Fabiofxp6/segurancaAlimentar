@@ -1,0 +1,94 @@
+{% extends "inspecoes/base.html" %}
+
+{% block cabecalho %}
+{{ block.super }}
+<style>
+    #envios-a-conferir li[hidden] { display: none; }
+</style>
+{% endblock %}
+
+{% block inspecoes %}
+<h1 id="titulo-gestao">{% if resultado %}Resultado interno{% else %}Revisar para concluir{% endif %} · Inspeção #{{ inspecao.pk }}</h1>
+{% if resultado %}
+<p>Inspeção concluída em {{ resultado.concluido_em|date:"d/m/Y H:i" }}, por {{ resultado.concluido_por.username }}.</p>
+<dl>
+    <dt>Classificação</dt><dd>{{ resultado.get_classificacao_display }}</dd>
+    {% if resultado.pontuacao is not None %}
+    <dt>Pontuação</dt><dd>{{ resultado.pontuacao|floatformat:2 }}%</dd>
+    {% endif %}
+    <dt>Checklist</dt><dd>{{ inspecao.versao_checklist.titulo }} · Versão {{ inspecao.versao_checklist.numero }}</dd>
+    <dt>Regra de demonstração</dt><dd>{{ resultado.regra_pontuacao }}</dd>
+</dl>
+{% elif indisponivel %}
+<p>A inspeção precisa estar em andamento para ser concluída.</p>
+{% else %}
+<p>{{ inspecao.versao_checklist.titulo }} · Versão {{ inspecao.versao_checklist.numero }}</p>
+<p>Respostas confirmadas pelo servidor: {{ respondidos }} de {{ itens|length }}.</p>
+{% if bloqueada %}<p>Há um pedido de cancelamento pendente.</p>{% endif %}
+{% if faltantes %}
+<h2>Respostas obrigatórias faltantes</h2>
+<ul class="registros">
+    {% for item in faltantes %}
+    <li><a href="{% url 'inspecoes:campo_item' inspecao.pk item.id %}">{{ item.ordem }}. {{ item.enunciado }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+<section id="revisao-conclusao" data-contexto="{{ contexto }}" data-inspecao="{{ inspecao.pk }}"
+    data-conexao="{% url 'inspecoes:conclusao_conexao' inspecao.pk %}">
+    <div id="envios-a-conferir" hidden>
+        <h2>Envios desta aba a conferir</h2>
+        <p>Volte ao item e confirme o envio no servidor para concluir.</p>
+        <ul class="registros">
+            {% for item in itens %}
+            <li hidden data-item="{{ item.id }}"><a href="{% url 'inspecoes:campo_item' inspecao.pk item.id %}">{{ item.ordem }}. {{ item.enunciado }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% if pode_concluir %}
+    <p>Concluir encerra o preenchimento e calcula o resultado interno.</p>
+    <p data-estado-conexao role="status" hidden></p>
+    <noscript><p>Ative JavaScript para acompanhar a confirmação nesta tela.</p></noscript>
+    <form method="post" action="{% url 'inspecoes:conclusao_confirmar' inspecao.pk %}" data-envio="conclusao">
+        {% csrf_token %}
+        <fieldset data-campos hidden>
+            <input type="hidden" name="revisao_base" value="{{ revisao_base }}">
+        </fieldset>
+        <button type="submit" disabled>Concluir inspeção</button>
+        <p data-status role="status"></p>
+    </form>
+    {% endif %}
+</section>
+<script>
+(() => {
+    {% include "campo/pendencias.html" %}
+    {% include "envios/controle.html" %}
+    const painel = document.getElementById("revisao-conclusao");
+    const avisos = document.getElementById("envios-a-conferir");
+    const form = painel.querySelector("form[data-envio]");
+    function atualizarPendencias() {
+        let pendencias = [];
+        try {
+            pendencias = lerPendencias(painel);
+        } catch {
+            // A sessão pode bloquear o armazenamento de avisos entre páginas.
+        }
+        for (const linha of avisos.querySelectorAll("[data-item]")) {
+            linha.hidden = !pendencias.some((envio) => envio.split(":")[0] === linha.dataset.item);
+        }
+        avisos.hidden = !pendencias.length;
+        if (form) form.dataset.liberado = pendencias.length ? "nao" : "sim";
+    }
+
+    atualizarPendencias();
+    const atualizarControles = form
+        ? iniciarEnvios(painel, (_form, dados) => window.location.assign(dados.url))
+        : () => {};
+    addEventListener("pageshow", () => {
+        atualizarPendencias();
+        atualizarControles();
+    });
+})();
+</script>
+{% endif %}
+<p><a href="{% url 'inspecoes:detalhe' inspecao.pk %}">Voltar à inspeção</a></p>
+{% endblock %}

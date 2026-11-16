@@ -17,7 +17,7 @@ As escolhas já confirmadas permanecem válidas. O detalhamento técnico apresen
 | MVT, Django Templates, views derivadas diretamente de `View`, services sem HTTP | Confirmado; fronteiras detalhadas abaixo | DC005 e DC006, ADR 0002 |
 | Usuário customizado `AbstractUser`, nome de usuário/senha e sessão Django | Base confirmada; campos e políticas pendentes | DC007, P002, P014, ADR 0003 |
 | Online, confirmação do servidor e retentativa sem duplicidade | Confirmado; mecanismo e prazos pendentes | DC018 e DC019, P020, ADR 0004 |
-| Autorização contextual e supervisão por ação | Confirmado; representação e autoridades pendentes | DC008 a DC013, P002 a P006, ADR 0005 |
+| Autorização contextual e supervisão por ação | Confirmado para supervisão e cancelamento local; autoridade de correção pendente | DC008 a DC013, DC029, DC032, P005/P006, ADR 0005 |
 | Checklist, resultados, termos e histórico preservados | Confirmado; política detalhada pendente | DC011 a DC020, P009 a P013, P017, ADR 0006 |
 | Uma aplicação Django organizada por áreas do domínio | Aceito para a fundação | DC025, ADR 0007 |
 | Backend nativo de sessões no servidor com PostgreSQL | Adotado na I02, verificado localmente | Spec 0002, ADR 0008, DC026 |
@@ -91,7 +91,7 @@ As áreas abaixo são uma proposta de responsabilidade. Não correspondem a apps
 | Auditoria | Eventos oficiais com autoria e relação entre decisão e efeito | Gravação consistente com o ato; retenção e acesso em P017 |
 | Consultas e indicadores | Leituras filtradas e agregação autorizada | Não cria uma segunda fonte oficial de avaliação |
 
-O significado de ação e sua relação com inspeção continuam em P003. Não será fixada uma relação de um para um ou de um para muitos neste documento. A designação de supervisor precisa de escopo e histórico, sem um booleano global que conceda poder sobre todas as ações.
+A I05 representa uma ação com várias inspeções e designações contextuais persistidas. Uma designação registra fiscal, ação, responsável e instantes de abertura e encerramento. [Spec 0006](specs/0006-inicio-equipe-e-supervisao.md)
 
 Na proposta de monólito modular, uma área usa contratos de service da área responsável em vez de reproduzir suas regras. O caso de uso coordenador torna explícitas as dependências; não se introduz barramento de eventos, repositório genérico ou camada comum para esconder ciclos. Referências persistentes e o limite exato entre apps dependem das specs e do modelo de dados.
 
@@ -99,7 +99,7 @@ Na proposta de monólito modular, uma área usa contratos de service da área re
 
 Identidade vem da sessão validada pelo servidor. IDs, perfis e autoria enviados pelo navegador não são prova de identidade ou autoridade. Aplicar verificação de perfil, vínculo, situação e escopo nas consultas, alterações e downloads, incluindo entradas pelo Admin ou por comando futuro.
 
-Supervisor continua fiscal designado por ação. Participar de uma equipe, iniciar uma inspeção ou possuir acesso administrativo técnico não designa supervisão automaticamente. Quem designa/aprova, substituição, vigência e autoaprovação permanecem em P004 e P005; a arquitetura não concede esses poderes.
+Supervisor continua fiscal designado por ação. Participar de uma equipe, iniciar uma inspeção ou possuir acesso administrativo técnico não designa supervisão automaticamente. O Administrador gere designações opcionais e imediatas de fiscais ativos da equipe, conforme DC029. A decisão de cancelamento segue DC032. Outro supervisor elegível da ação decide, com Administrador na ausência de outro elegível. A política de correção segue em P005.
 
 O estabelecimento fica limitado aos próprios envios e resultados finais liberados. Anexar documento não libera avaliação interna nem modifica nota. Arquivos precisam da mesma decisão de acesso que os registros aos quais pertencem; não devem ser públicos por conhecer o endereço.
 
@@ -111,7 +111,7 @@ Tratar separadamente três dimensões: situação oficial da inspeção, situaç
 
 O fluxo confirmado admite atribuição administrativa ou início direto, execução e conclusão confirmada. Cancelamento em andamento é uma operação autorizada com justificativa e histórico. Correção posterior à conclusão cria uma revisão rastreável; não reabre automaticamente a inspeção para edição livre. Geração de termo e liberação do resultado são etapas distintas da conclusão.
 
-A lista definitiva de estados e transições será detalhada nas specs. Adiamento, reanálise, bloqueio durante análise e retomada permanecem abertos em P006 a P008. O bloqueio de conclusão por obrigatórios vazios ou envios pendentes/falhos continua proposta em RF014.
+Na I08, a pendência mantém a inspeção em andamento e bloqueia novas respostas, fotos e documentos. A rejeição libera essas operações. A aprovação registrada e a efetivação automática são gravadas na mesma transação como eventos distintos. A trilha por inspeção integra esses eventos. Adiamento, reanálise e seus efeitos seguem em P006 a P008. [Spec 0009](specs/0009-cancelamento-e-auditoria.md) Na I09, o servidor bloqueia a conclusão com resposta obrigatória ausente ou cancelamento pendente. A tela bloqueia com envio de campo pendente ou falho na aba. O mesmo ato grava o resultado pela regra da versão original, o estado Concluída e o evento de auditoria. O resultado interno é preservado para emissão e liberação em etapa própria. [Spec 0010](specs/0010-pontuacao-e-conclusao.md)
 
 ## Transações, concorrência e confirmação
 
@@ -119,7 +119,7 @@ Como detalhamento proposto, o service coordenador delimita a transação das alt
 
 Conflitos entre fiscais precisam de detecção e resposta que preserve o contexto, sem sobrescrita silenciosa. Bloqueio, revisão otimista, restrições e isolamento serão escolhidos nas specs; não estão aprovados nomes de campos, tipos de chave ou algoritmo de concorrência.
 
-O servidor pode confirmar a gravação e a resposta se perder no caminho. A retentativa deve reconhecer a mesma operação e devolver um resultado coerente, com autorização atual e sem outro efeito oficial. Escopo da identificação, comparação do conteúdo, concorrência e prazo de reconhecimento dependem de P020. O intervalo da tentativa e o mecanismo no navegador também permanecem abertos.
+O servidor pode confirmar a gravação e a resposta se perder no caminho. A retentativa deve reconhecer a mesma operação e devolver um resultado coerente, com autorização atual e sem outro efeito oficial. A I06 guarda a chave, o conteúdo confirmado e o resultado na transação. O navegador reenvia a mesma operação em memória após uma sondagem autorizada. P020 mantém aberta a política operacional. [Spec 0007](specs/0007-campo-evidencias-e-reenvio.md)
 
 Um POST com redirecionamento, botão desabilitado ou teste sequencial de envio duplo não resolve sozinho esse problema. A interface precisa tratar a ambiguidade e preservar o conteúdo da página aberta enquanto aguarda confirmação, mesmo quando a perda de comunicação ocorre durante o envio. Não há inspeção completa offline nem armazenamento persistente aprovado.
 
@@ -127,7 +127,7 @@ Referência técnica: o Django oferece transações `atomic`; ações em `on_com
 
 ## Checklist, resultado e histórico
 
-Desde o início, a inspeção mantém o conteúdo e as regras que sustentaram sua avaliação. Nova publicação não altera inspeções iniciadas. A I04 materializa o conteúdo do rascunho em uma versão imutável com dados próprios. A I05 deve guardar a referência protegida dessa versão no início da inspeção. A regra de elegibilidade para uso oficial depende de P009. [Spec 0005](specs/0005-checklist-e-versoes.md)
+Desde o início, a inspeção mantém o conteúdo e as regras que sustentaram sua avaliação. Nova publicação não altera inspeções iniciadas. A I04 materializa o conteúdo do rascunho em uma versão imutável com dados próprios. A I05 guarda a referência protegida dessa versão e a identificação do estabelecimento no início da inspeção. A regra de elegibilidade para uso oficial depende de P009. [Spec 0005](specs/0005-checklist-e-versoes.md)
 
 Uma correção autorizada registra o anterior, o novo, justificativa, decisão, executor e momento. Quando afetar a avaliação, recalcular automaticamente com as regras originais e preservar os dois resultados. Precisão, Não se aplica, pesos e classificação dependem de P010.
 
@@ -135,7 +135,7 @@ Preservar cada termo emitido e ligá-lo ao resultado/revisão pertinente. Nova v
 
 ## Arquivos e geração de PDF
 
-Acesso privado e preservação são requisitos; a solução de armazenamento e a biblioteca de PDF permanecem em P016. O desenho deve distinguir evidência fiscal, documento do estabelecimento e termo emitido, mantendo origem, autoria, vínculo e confirmação.
+Acesso privado e preservação são requisitos. A I06 guarda fotos de demonstração no PostgreSQL. A I07 guarda documentos do estabelecimento em registros próprios, com download autorizado por unidade ou equipe da inspeção. A verificação estrutural de PDF recebido na I07 usa pypdf. Armazenamento em produção e geração de termos continuam em P016. [Spec 0008](specs/0008-documentos-do-estabelecimento.md) O desenho deve distinguir evidência fiscal, documento do estabelecimento e termo emitido, mantendo origem, autoria, vínculo e confirmação.
 
 Proposta de coordenação: só apresentar um arquivo como recebido quando seu conteúdo e metadados estiverem consistentes e aceitos. Tratar recebimento parcial, arquivo sem vínculo e vínculo sem arquivo disponível. A transação do banco não torna o armazenamento de arquivos automaticamente atômico; serão necessários recuperação e tratamento dos resíduos conforme a estratégia escolhida.
 

@@ -1,0 +1,18 @@
+{% extends "inspecoes/base.html" %}
+
+{% block inspecoes %}
+<h1 id="titulo-gestao">Auditoria da inspeção #{{ inspecao.pk }}</h1>
+<ul class="registros">
+    {% for registro in pagina %}
+    <li>
+        <div>
+            <strong>{{ registro.evento }}</strong>
+            <p>{{ registro.fonte }} · {{ registro.ator_nome }}</p>
+        </div>
+        <time datetime="{{ registro.ocorreu_em|date:'c' }}">{{ registro.ocorreu_em|date:"d/m/Y H:i T" }}</time>
+    </li>
+    {% empty %}<li>Nenhum evento registrado.</li>{% endfor %}
+</ul>
+{% include "gestao/paginacao.html" %}
+<p><a href="{% url 'inspecoes:detalhe' inspecao.pk %}">Voltar à inspeção</a></p>
+{% endblock %}

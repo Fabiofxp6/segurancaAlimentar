@@ -1,0 +1,23 @@
+{% extends "inspecoes/formulario.html" %}
+
+{% block inspecoes %}
+{{ block.super }}
+<h2>Histórico de designações</h2>
+<ul class="registros">
+    {% for registro in historico %}
+    <li>
+        <div>
+            <strong>{{ registro.fiscal.get_username }}</strong>
+            <p>{{ registro.designado_por.get_username }} designou em {{ registro.inicio|date:"d/m/Y H:i T" }}.</p>
+            {% if registro.fim %}
+            <p>{{ registro.encerrado_por.get_username }} encerrou em {{ registro.fim|date:"d/m/Y H:i T" }}.</p>
+            {% elif registro.fiscal_id in elegiveis %}
+            <p>Em vigor</p>
+            {% else %}
+            <p>Fiscal indisponível</p>
+            {% endif %}
+        </div>
+    </li>
+    {% empty %}<li>Nenhuma designação registrada.</li>{% endfor %}
+</ul>
+{% endblock %}

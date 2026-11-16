@@ -1,0 +1,14 @@
+{% extends "inspecoes/base.html" %}
+
+{% block inspecoes %}
+<h1 id="titulo-gestao">Pedidos de cancelamento</h1>
+<ul class="registros">
+    {% for pedido in pagina %}
+    <li>
+        <a href="{% url 'inspecoes:cancelamento' pedido.inspecao_id %}">Inspeção #{{ pedido.inspecao_id }} · Pedido #{{ pedido.pk }}</a>
+        <span>{{ pedido.get_situacao_display }}</span>
+    </li>
+    {% empty %}<li>Nenhum pedido no seu escopo.</li>{% endfor %}
+</ul>
+{% include "gestao/paginacao.html" %}
+{% endblock %}

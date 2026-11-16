@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "contas.apps.ContasConfig",
     "estabelecimentos",
     "checklists",
+    "inspecoes",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -83,6 +84,8 @@ DATABASES = {
         "PORT": read_port(),
     },
 }
+
+INSPECOES_DEMONSTRACAO = False
 
 LANGUAGE_CODE = "pt-br"
 USE_TZ = True

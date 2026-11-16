@@ -74,7 +74,7 @@ Origem: F003; RF004 e RF007. Etapas relacionadas: 2; specs funcionais posteriore
 
 ## DC012 Cancelamento em andamento
 
-Exigir solicitação, justificativa e autorização antes de efetivar o cancelamento no servidor. Preservar respostas, evidências e histórico. A autoridade aprovadora ainda será definida.
+Exigir solicitação, justificativa e autorização antes de efetivar o cancelamento no servidor. Preservar respostas, evidências e histórico. A regra de autoridade e o efeito do pedido pendente foram definidos em DC032.
 
 Origem: F003; RF022. Etapas relacionadas: 2 e 6; spec funcional posterior.
 
@@ -86,7 +86,7 @@ Origem: F003; RF018 e RF019. Etapas relacionadas: 2 e 6; specs funcionais poster
 
 ## DC014 Score e recálculo
 
-Cálculo automático faz parte do escopo atual. Quando uma correção afetar a avaliação, recalcular pelas regras originais e conservar resultado anterior e novo. Fórmula, pesos e faixas ainda não definidos.
+Cálculo automático faz parte do escopo atual. Quando uma correção afetar a avaliação, recalcular pelas regras originais e conservar resultado anterior e novo. DC033 define a regra de demonstração. A regra sanitária oficial segue em P010.
 
 Origem: F002; RF06. F003; RF013 e RF020. Etapas relacionadas: 2; spec funcional posterior.
 
@@ -175,6 +175,38 @@ Origem: escolhas conservadoras adotadas no recorte local após autorização do 
 O Administrador mantém o checklist e publica versões para demonstração. O servidor copia o conteúdo do rascunho para uma versão com número, autor, data e finalidade identificada. As versões publicadas ficam imutáveis no PostgreSQL. A futura inspeção deve preservar a referência à versão usada.
 
 Origem: escolhas técnicas adotadas na I04 autorizada em 15/11/2026. A governança e o conteúdo oficiais seguem em P009, e a fórmula em P010. [Spec 0005](specs/0005-checklist-e-versoes.md) · [Entrega da I04](entrega-i04.md)
+
+## DC029 Ações e supervisão na I05
+
+Uma ação de fiscalização pode agrupar várias inspeções. O Administrador pode designar simultaneamente fiscais ativos da equipe da ação. A designação é opcional e começa imediatamente. A identidade de Supervisor permanece vinculada à ação. DC032 define a aprovação de cancelamento. A política de correção continua em P005.
+
+Origem: respostas do usuário em 16/11/2026 às perguntas sobre relação ação–inspeção e autoridade, cardinalidade e vigência da designação. [Spec 0006](specs/0006-inicio-equipe-e-supervisao.md) · [Entrega da I05](entrega-i05.md)
+
+## DC030 Confirmação e evidências no recorte local da I06
+
+A demonstração da I06 grava a resposta por item da versão original e registra as fotos no PostgreSQL. A confirmação da operação e o dado são persistidos na mesma transação. A interface conserva na memória da página um envio solicitado e usa a mesma chave ao reenviar após reconexão. A seleção local de JPEG e PNG, os limites e o armazenamento da demonstração permanecem escolhas técnicas do recorte.
+
+Origem: DC018/DC019 e autorização para executar a I06 em 16/11/2026. As escolhas operacionais seguem nas pendências. [Spec 0007](specs/0007-campo-evidencias-e-reenvio.md) · [Entrega da I06](entrega-i06.md)
+
+## DC031 Documentos do estabelecimento na I07
+
+O estabelecimento envia documentos da atribuição ao fim do andamento. Todas as contas ativas vinculadas à unidade podem consultar os documentos da unidade. Para demonstração, os formatos aceitos são PDF, JPEG e PNG.
+
+Origem: respostas do usuário em 16/11/2026 sobre janela, formatos de demonstração e consulta entre contas da mesma unidade. [Spec 0008](specs/0008-documentos-do-estabelecimento.md) · [Entrega da I07](entrega-i07.md)
+
+## DC032 Cancelamento autorizado na I08
+
+Outro supervisor ativo e elegível da ação decide o pedido de cancelamento, inclusive quando o solicitante for supervisor. O Administrador decide quando não houver outro supervisor elegível. Enquanto o pedido estiver pendente, novas respostas, fotos e documentos ficam bloqueados. Após registrar a aprovação, o servidor efetiva o cancelamento automaticamente.
+
+Origem: respostas do usuário em 16/11/2026 sobre autoridade, bloqueio de registros e efetivação. [Spec 0009](specs/0009-cancelamento-e-auditoria.md) · [Entrega da I08](entrega-i08.md)
+
+## DC033 Pontuação, classificação e conclusão na I09
+
+Na demonstração, Conforme ou Sim soma o peso do item, Não conforme ou Não vale zero e Não se aplica sai da base. Sem itens aplicáveis, mostrar Sem pontuação. A nota arredondada a duas casas fica Satisfatória a partir de 80%, Regular a partir de 60% e Insatisfatória abaixo de 60%.
+
+Bloquear a conclusão quando faltar resposta obrigatória ou houver envio pendente ou falho na tela que conclui. Os documentos do estabelecimento são opcionais.
+
+Origem: respostas do usuário em 16/11/2026 sobre cálculo, faixas e bloqueios. [Spec 0010](specs/0010-pontuacao-e-conclusao.md)
 
 ## Regras antigas que deixaram de valer
 

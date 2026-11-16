@@ -1,0 +1,26 @@
+function chavePendencias(painel) {
+    return "inspecao-envios:" + painel.dataset.contexto + ":" + painel.dataset.inspecao;
+}
+
+function lerPendencias(painel) {
+    return JSON.parse(sessionStorage.getItem(chavePendencias(painel)) || "[]");
+}
+
+function registrarPendencia(painel, tipo, semConfirmacao) {
+    try {
+        const chave = painel.dataset.item + ":" + tipo;
+        const pendencias = new Set(lerPendencias(painel));
+        if (semConfirmacao) {
+            pendencias.add(chave);
+        } else {
+            pendencias.delete(chave);
+        }
+        if (pendencias.size) {
+            sessionStorage.setItem(chavePendencias(painel), JSON.stringify([...pendencias]));
+        } else {
+            sessionStorage.removeItem(chavePendencias(painel));
+        }
+    } catch {
+        // A operação de campo ainda usa a confirmação normal do servidor.
+    }
+}

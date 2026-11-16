@@ -1,6 +1,6 @@
 # Spec 0003: Acesso, vínculos e supervisão por ação
 
-- **Status:** Cadastros, perfis e vínculos implementados e verificados na I03. Supervisão por ação segue em especificação.
+- **Status:** Cadastros, perfis e vínculos verificados na I03. Designações por ação verificadas na I05. Cancelamento verificado na I08. A política de correção permanece em P005.
 - **Data:** 10/11/2026. **Etapa:** 6.
 - **Produto:** [PRD 0001](../prd/0001-sistema-avaliacao-seguranca-alimentar.md), principalmente RF002, RS001 e RS002; limites de RF016/RF017, RF018/RF022, RS007 e RS010.
 - **Base:** [decisões DC005 a DC013 e DC017](../decisoes-confirmadas.md), [arquitetura](../arquitetura.md), [ADR 0005](../adr/0005-autorizacao-contextual-por-acao.md), F003/F008 no [índice](../referencias/README.md).
@@ -18,10 +18,10 @@ A I03 implementou a manutenção cadastral, o vínculo com estabelecimento e a c
 | Tema | Base preservada | O que esta spec não decide |
 |---|---|---|
 | Perfis-base | Fiscalização, Administrador e Estabelecimento; cliente significa estabelecimento | Um perfil-base por conta na I03, conforme DC027. P002 mantém campos cadastrais adicionais em revisão. |
-| Supervisor | Fiscal designado para uma ação; atuação contextual, sem quarto perfil | Quem designa/substitui/encerra, quantidade, vigência e ausência, P004 |
-| Ação e inspeção | A designação precisa identificar seu escopo | Equivalência ou agrupamento de inspeções, P003 |
-| Aprovação | Correção concluída e cancelamento em andamento exigem autorização, justificativa e histórico | Quem aprova, substituição e pedido próprio do supervisor, P005/P006 |
-| Estabelecimento | Próprios envios e resultados/documentos finais liberados; sem avaliação interna | Uma unidade por conta e várias contas por unidade. Janela de envio e liberação em P011/P012. |
+| Supervisor | Fiscal designado para uma ação; atuação contextual, sem quarto perfil | Administrador designa vários fiscais ativos da equipe em paralelo, de forma opcional e imediata. DC032 define a aprovação de cancelamento. A aprovação de correção segue em P005. |
+| Ação e inspeção | A designação precisa identificar seu escopo | Uma ação pode agrupar várias inspeções, conforme DC029. |
+| Aprovação | Correção concluída e cancelamento em andamento exigem autorização, justificativa e histórico | DC032 para cancelamento. P005/P006 para correção. |
+| Estabelecimento | Próprios envios e resultados/documentos finais liberados; sem avaliação interna | Uma unidade por conta e várias contas por unidade. A I07 verifica envio da atribuição ao fim do andamento e consulta por conta ativa da unidade. Resultados finais em P012. |
 | Identidade e arquitetura | Usuário customizado, sessão Django, views próprias diretamente de `View`, services sem HTTP | Novas bibliotecas, backend de permissões por objeto, representação por `Group` ou enum persistido |
 
 Os nomes, formatos de retorno, rotas e regras técnicas abaixo descrevem a proposta original. O recorte implementado e suas escolhas técnicas estão no [registro da I03](../entrega-i03.md). Pendências não são encerradas por documentar uma solução. Até a política aplicável ser escolhida, não existe concessão automática para a operação dependente dela; o comportamento seguro proposto é recusar a concessão e registrar o motivo técnico restrito.
@@ -58,9 +58,10 @@ O Django fornece grupos e permissões de modelo, mas sua existência não implem
 | Consultar inspeção interna/documentos recebidos | P, escopo interno não é irrestrito por inferência | V, recurso no escopo fiscal validado | N para avaliações internas | P/V apenas no escopo autorizado da ação |
 | Enviar/consultar documentos próprios do estabelecimento | P para atuação em nome de terceiro | N como origem cliente; consulta fiscal autorizada é distinta | V, vínculo e janela de envio validados | Sem acréscimo |
 | Consultar resultado/termo final próprio liberado | P para abrangência administrativa | P/V no escopo interno da função | V, liberação e vínculo atuais | Sem publicação ou liberação automática |
-| Designar, substituir ou encerrar supervisor | P, P004 | P, não há autoconcessão | N | P, não recebe poder de designar sucessor automaticamente |
-| Solicitar alteração/cancelamento | P para atuar como solicitante | V conforme RF018/RF022 e acesso ao recurso | N neste recorte | Como fiscal; decisão sobre pedido próprio em P005 |
-| Aprovar/rejeitar alteração/cancelamento | P, P005 | N apenas por ser fiscal | N | P, P005; designação correta é necessária se for a autoridade escolhida, mas não suficiente para aprovar qualquer ato |
+| Designar, substituir ou encerrar supervisor | V, DC029 | N | N | N para a função de Supervisor |
+| Solicitar alteração/cancelamento | P para atuar como solicitante | V conforme RF018/RF022 e acesso ao recurso | N neste recorte | Como fiscal. Para cancelamento, decisão por outra pessoa conforme DC032. Para correção, P005. |
+| Aprovar/rejeitar cancelamento | V quando não houver outro supervisor elegível | N apenas por ser fiscal | N | V para outro supervisor ativo e elegível da ação |
+| Aprovar/rejeitar correção | P, P005 | N apenas por ser fiscal | N | P, P005 |
 | Aplicar correção ou efetivar cancelamento | P para executor e escopo | P para executor; autorização específica obrigatória | N | P; designação não é autorização genérica de execução |
 | Consultar auditoria e decisões internas | P, P017 | P, P017 e escopo | N | P, não equivale a acesso irrestrito |
 
@@ -80,7 +81,7 @@ O modelo a seguir é **lógico**. Não escolhe nomes de models/tabelas, chaves f
 | `perfil` | Enum | Opções-base Fiscalização, Administrador e Estabelecimento; origem na gestão autorizada. Não aceitar Supervisor como valor. Quantidade por conta e persistência em P002 |
 | `fiscalSupervisorId` | UUID | Referência ao fiscal candidato; obrigatória na designação, não é a identidade do executor. Verificar conta ativa, perfil fiscal e elegibilidade que P004 definir |
 | `inspecaoId` | UUID | Referência de escopo quando ação equivaler à inspeção; validar existência e autoridade sem expor terceiro |
-| `acaoFiscalizacaoId` | UUID condicional | Somente se agrupamento for aprovado em P003. Não exigir os dois campos ou criar ambos como relações definitivas agora |
+| `acaoFiscalizacaoId` | UUID condicional | A I05 usa a ação como escopo estável. Cada inspeção referencia sua ação. |
 | `designacaoId` | UUID | Gerado/recuperado pelo servidor; identifica o registro histórico, sem edição manual da chave |
 | `designadoPor` | UUID | Ator confiável do servidor, não entrada editável; registrar quem realizou a designação autorizada |
 | `inicio/fim` | `datetime` | Instantes com fuso. Momento efetivo e eventual agendamento, retroatividade e fim opcional precisam de P004; datas de registro do ato vêm do servidor |
@@ -94,8 +95,8 @@ Proposta de apresentação de data/hora: `dd/MM/yyyy HH:mm`, preservando o insta
 |---|---|---|
 | Atuação-base do usuário | Referência ao usuário; código de perfil fechado; situação atual | A I03 persiste `Usuario.perfil`. Flags técnicas permanecem independentes da concessão. |
 | Vínculo de estabelecimento | Referência ao usuário e estabelecimento; situação; início/fim quando aprovados; ator/momento de concessão e encerramento | Persistido em `VinculoEstabelecimento`. Um vínculo aberto por conta, autoria e instante de abertura e encerramento. A consulta da unidade exige vínculo, perfil e situação no banco. |
-| Contexto de fiscalização | Referência estável ao escopo autorizado e relação com a inspeção | P003 decide inspeção isolada versus agrupamento. A expressão contexto nesta spec não cria uma nova entidade de domínio |
-| Designação de supervisor | Referências da tabela RF002, situação e história de alterações | Não existe `supervisor: bool` global; não impor unicidade de supervisor por ação enquanto P004 permitir essa dúvida |
+| Contexto de fiscalização | Referência estável ao escopo autorizado e relação com a inspeção | A I05 usa `AcaoFiscalizacao` para agrupar inspeções e relacionar designações. |
+| Designação de supervisor | Referências da tabela RF002, situação e história de alterações | Uma designação aberta por fiscal por ação. Vários fiscais podem atuar em paralelo na mesma ação. |
 | Registro do ato de gestão | Referências do objeto e ator, ação, instante e valores anteriores/novos pertinentes | Histórico preservado sem senha/token; formato, retenção e acesso em P017 e futura spec de auditoria |
 | Referência de decisão autorizadora | Solicitação, inspeção, conteúdo autorizado, decisão, autor e contexto aplicáveis | Consome RF018/RF022; não criar autorização genérica para editar tudo nem implementar suas tabelas nesta etapa |
 
@@ -134,18 +135,18 @@ Os services de inspeção/correção/cancelamento devem chamar o controle contex
 ### Designar e substituir supervisor
 
 1. Resolver contexto conforme P003 e recuperar fiscal/equipe autorizados. Participar da equipe ou iniciar a inspeção não designa supervisor.
-2. Verificar se a política P004 definiu autoridade, quantidade e vigência. Ausência de definição não concede designação ao Administrador ou ao próprio fiscal.
+2. Administrador ativo pode designar e encerrar designações, conforme DC029. A I05 verifica a equipe da ação.
 3. Validar dados, elegibilidade do fiscal e autorização do ator. Referência de outro contexto não é aceita pelo fato de o fiscal existir.
 4. Gravar concessão/substituição/encerramento com autoria e história. Proposta: mudanças de vigência não reescrevem retroativamente a autoria de decisões anteriores.
 5. A próxima decisão usa a designação atual válida. Se uma operação concorrente alterar a designação, a efetivação precisa revalidar sua condição antes de aplicar o efeito.
 
-Proposta de cálculo de vigência quando houver período: início inclusivo e fim exclusivo, usando instante do servidor; ausência de fim só representa período aberto se P004 aceitar. `ativa=true` com início futuro, fim vencido, fiscal inativo ou contexto diferente não basta para autorizar. Não fixar validade em dias/horas nem aceitar retroatividade por padrão.
+Na I05 a vigência começa com a gravação confirmada pelo servidor. O registro aberto produz efeito enquanto o fiscal continuar ativo, com perfil Fiscalização e membro da ação. Remover o fiscal da equipe inteira encerra a designação com autoria. [Spec 0006](0006-inicio-equipe-e-supervisao.md)
 
 ### Autorização para correção/cancelamento
 
-RF018 e RF022 continuam separando solicitação, decisão e efetivação. Esta spec define apenas o contrato de acesso: solicitante autorizado; autoridade competente; designação válida na ação quando exigida; conteúdo e inspeção exatos; estado e decisão revalidados na aplicação. P005 não está resolvida, inclusive para solicitação feita pelo próprio Supervisor.
+RF018 e RF022 continuam separando solicitação, decisão e efetivação. Esta spec define apenas o contrato de acesso: solicitante autorizado; autoridade competente; designação válida na ação quando exigida; conteúdo e inspeção exatos; estado e decisão revalidados na aplicação. A Spec 0009 aplica DC032 ao cancelamento, inclusive pedido feito por um Supervisor. P005 permanece para correção.
 
-Proposta de tratamento enquanto houver política indefinida: operação dependente permanece indisponível para concessão; não escolher autoaprovação nem substituto automático. Se a autoridade for definida posteriormente, aplicar somente a mudança aprovada. Aprovação de outra inspeção, outro conteúdo ou outra ação não autoriza. Rejeição/pendência não cancela nem reabre inspeção; P006 decide bloqueio durante análise.
+Proposta de tratamento enquanto houver política indefinida: operação dependente permanece indisponível para concessão; não escolher autoaprovação nem substituto automático. Se a autoridade for definida posteriormente, aplicar somente a mudança aprovada. Aprovação de outra inspeção, outro conteúdo ou outra ação não autoriza. A pendência de cancelamento bloqueia novas respostas, fotos e documentos. A rejeição libera as operações cabíveis. [Spec 0009](0009-cancelamento-e-auditoria.md)
 
 ## Consultas e arquivos do estabelecimento
 
@@ -166,10 +167,9 @@ Namespace candidato `contas` para gestão de identidade; views próprias herdam 
 | `/gestao/usuarios/<usuario_ref>/` — `contas:usuario_editar` | GET/POST, `UsuarioEditarView(View)` | Campos permitidos e alvo no escopo; mesma validação no POST; flags técnicas indisponíveis |
 | `/gestao/usuarios/<id>/vinculo/` — `gestao_contas:vinculo` | GET/POST, `VinculoView` | GET consulta, POST concede, troca ou encerra. 409 se a versão mudou e a operação diverge do vínculo atual. |
 | `/conta/estabelecimento/<id>/` — `contas:estabelecimento` | GET, `MeuEstabelecimentoView` | 200 para unidade ativa do vínculo efetivo. 404 uniforme fora do conjunto acessível. |
-| `/gestao/supervisao/<contexto_ref>/` — `contas:supervisao` | GET/POST, `SupervisaoView(View)` | Consulta/gestão com escopo; mutações somente após P003/P004; sucesso 302 |
-| `/gestao/supervisao/<contexto_ref>/encerrar/` — `contas:supervisao_encerrar` | POST, `SupervisaoEncerrarView(View)` | Autoridade e designação atual validadas; não retirar outra designação por manipulação da referência |
+| `/inspecoes/acoes/<id>/supervisao/` — `inspecoes:supervisao` | GET/POST, `SupervisaoView` | Administrador consulta o histórico e seleciona o conjunto atual de supervisores. Retirar um nome encerra sua designação. |
 
-Rotas de gestão cadastral e vínculo estão implementadas. Rotas de supervisão seguem propostas. Não criar rotas de aprovar correção/cancelamento, reanálise, upload ou PDF nesta entrega. GET/HEAD não alteram estado; OPTIONS, se admitido, só informa métodos. POSTs exigem CSRF, inclusive por chamadas diretas. Sem autenticação, solicitar entrada conforme Spec 0002; nunca reenviar silenciosamente um POST depois do login.
+Rotas cadastrais e de supervisão estão implementadas nos recortes I03/I05. [Spec 0006](0006-inicio-equipe-e-supervisao.md) Não criar rotas de aprovar correção/cancelamento, reanálise, upload ou PDF nesta entrega. GET/HEAD não alteram estado; OPTIONS, se admitido, só informa métodos. POSTs exigem CSRF, inclusive por chamadas diretas. Sem autenticação, solicitar entrada conforme Spec 0002; nunca reenviar silenciosamente um POST depois do login.
 
 Forms candidatos: gestão de usuário, vínculo e supervisão, com listas filtradas e campos ocultos tratados como entrada não confiável. Validar referência e poder de atuação no service novamente. Limites de texto, filtro/paginação e instante/vigência devem ser os aprovados, sem tamanhos inventados. Não usar `ModelForm.save()` como atalho que ignore histórico/autorização.
 
@@ -206,9 +206,9 @@ Admin e futuras entradas técnicas usam os mesmos services para atos de negócio
 | Decisão | Parte afetada | Condição antes de executar |
 |---|---|---|
 | P001/P002 | Models, perfis, credenciais e vínculos | Validar versões/chaves/campos, combinação de perfis, cardinalidades, autoridade de gestão e bootstrap sem autoelevação |
-| P003 | Escopo e relacionamentos da supervisão | Definir ação versus inspeção antes de criar FK, rotas resolvíveis e restrições físicas |
-| P004 | Designação, quantidade, vigência e substituição | Validar autoridade, elegibilidade, sobreposição, ausência e retroatividade; não adotar intervalo proposto sem revisão |
-| P005/P006 | Aprovação, pedido próprio e alterações em andamento | Definir autoridade, substituição, autoaprovação e eventual bloqueio de edição |
+| P003 | Escopo da supervisão | I05 usa ação que pode agrupar várias inspeções, conforme DC029. |
+| P004 | Designação, quantidade e vigência | I05 permite designações simultâneas, opcionais e imediatas pelo Administrador, conforme DC029. |
+| P005/P006 | Aprovação, pedido próprio e alterações em andamento | DC032 para cancelamento. Definir autoridade e efeitos pendentes para correções. |
 | P011/P012/P016 | Envio, publicação e acesso a documentos | Escolher janelas, liberação e entrega privada antes dos fluxos funcionais |
 | P014/P017/P020 | Identidade, história, revogação e retentativa | Definir políticas aplicáveis, acesso/retenção e recuperação de operações |
 
@@ -246,7 +246,7 @@ A [entrega da I03](../entrega-i03.md) registra os cenários executados de cadast
 | AC24 | Autoridade, agrupamento ou autoaprovação sem política definida | Nenhuma concessão por inferência; diagnóstico restrito |
 | AC25 | Pedido pendente/rejeitado tenta executar correção/cancelamento | Nenhum efeito oficial nem mudança indevida de estado |
 | AC26 | Usar aprovação de outra inspeção, conteúdo ou contexto | Não autoriza o efeito; aprovação não é edição irrestrita |
-| AC27 | Supervisor solicita mudança e tenta decidir seu próprio pedido | Comportamento somente após P005; enquanto indefinida, sem autoaprovação |
+| AC27 | Supervisor solicita mudança e tenta decidir seu próprio pedido | Impedir decisão do próprio pedido de cancelamento conforme DC032. Política de correção em P005. |
 | AC28 | Aprovação válida é consumida pelo fluxo funcional futuro | Somente efeito autorizado, histórico e versões preservados; validar na spec funcional, não declarar implementado aqui |
 | AC29 | Tentar os mesmos atos via Admin/entrada técnica | Mesmas invariantes; flag técnica não concede autoridade de negócio |
 | AC30 | CSRF inválido e GET/HEAD nas ações de encerramento | Sem mutação; métodos e respostas respeitam a ordem dos controles |

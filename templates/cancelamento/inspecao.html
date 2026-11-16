@@ -1,0 +1,67 @@
+{% extends "inspecoes/base.html" %}
+
+{% block inspecoes %}
+<h1 id="titulo-gestao">Cancelamento da inspeção #{{ inspecao.pk }}</h1>
+<p>Situação da inspeção: <strong>{{ inspecao.get_estado_display }}</strong></p>
+<div id="cancelamento" data-contexto="{{ contexto }}" data-conexao="{% url 'inspecoes:cancelamento_conexao' inspecao.pk %}">
+    <p data-estado-conexao role="status" hidden></p>
+    {% if pode_solicitar %}
+    <h2>Solicitar cancelamento</h2>
+    <p>Enquanto o pedido estiver pendente, novos registros ficam bloqueados.</p>
+    <form method="post" action="{% url 'inspecoes:cancelamento_solicitar' inspecao.pk %}" data-envio="solicitacao">
+        {% csrf_token %}
+        <fieldset data-campos style="min-width:0;border:0;padding:0;margin:0">
+            <legend>Motivo da solicitação</legend>
+            {{ form_solicitar.as_p }}
+        </fieldset>
+        <button type="submit" disabled>Enviar solicitação</button>
+        <p data-status role="status">Pendente</p>
+    </form>
+    {% endif %}
+    {% if decisao %}
+    <h2>Decidir pedido #{{ decisao.pk }}</h2>
+    <p>{{ decisao.justificativa }}</p>
+    <p>A aprovação efetiva o cancelamento e encerra os novos registros.</p>
+    <form method="post" action="{% url 'inspecoes:cancelamento_decidir' inspecao.pk decisao.pk %}" data-envio="decisao">
+        {% csrf_token %}
+        <fieldset data-campos style="min-width:0;border:0;padding:0;margin:0">
+            <legend>Decisão do pedido</legend>
+            {{ form_decidir.as_p }}
+        </fieldset>
+        <button type="submit" disabled>Registrar decisão</button>
+        <p data-status role="status">Pendente</p>
+    </form>
+    {% endif %}
+    <h2>Histórico dos pedidos</h2>
+    <ul class="registros">
+        {% for pedido in pedidos %}
+        <li>
+            <div>
+                <strong>Pedido #{{ pedido.pk }} · {{ pedido.get_situacao_display }}</strong>
+                <p>Solicitado por {{ pedido.solicitante.get_username }} em {{ pedido.solicitada_em|date:"d/m/Y H:i T" }}.</p>
+                <p>{{ pedido.justificativa }}</p>
+                {% if pedido.decidida_em %}
+                <p>Decidido por {{ pedido.decidido_por.get_username }} em {{ pedido.decidida_em|date:"d/m/Y H:i T" }}.</p>
+                <p>{{ pedido.motivo_decisao }}</p>
+                {% endif %}
+                {% if pedido.efetivada_em %}
+                <p>Efetivado automaticamente em {{ pedido.efetivada_em|date:"d/m/Y H:i T" }}.</p>
+                {% endif %}
+            </div>
+        </li>
+        {% empty %}<li>Nenhum pedido registrado.</li>{% endfor %}
+    </ul>
+    <p><a href="{% url 'inspecoes:cancelamentos' %}">Voltar aos pedidos</a></p>
+</div>
+{% if pode_solicitar or decisao %}
+<script>
+(() => {
+    {% include "envios/controle.html" %}
+    iniciarEnvios(document.getElementById("cancelamento"), (form, confirmado) => {
+        window.location.assign(confirmado.url);
+    });
+})();
+</script>
+<noscript><p>Ative JavaScript para gravar e acompanhar a confirmação.</p></noscript>
+{% endif %}
+{% endblock %}

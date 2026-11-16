@@ -1,6 +1,7 @@
 from posixpath import normpath
 from urllib.parse import unquote, urljoin, urlsplit
 
+from django.conf import settings
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import redirect_to_login
 from django.http import Http404
@@ -77,8 +78,11 @@ class AcessoView(View):
             unidade_id = estabelecimentos_acessiveis(request.user.pk).values_list("pk", flat=True).first()
         return render(request, "contas/acesso.html", {
             "unidade_id": unidade_id,
+            "documentos_demo": bool(unidade_id and settings.INSPECOES_DEMONSTRACAO),
             "usuario": request.user.get_username(),
             "administracao": request.user.perfil == Perfil.ADMINISTRADOR,
+            "inspecoes_demo": settings.INSPECOES_DEMONSTRACAO
+            and request.user.perfil in (Perfil.ADMINISTRADOR, Perfil.FISCALIZACAO),
         })
 
 

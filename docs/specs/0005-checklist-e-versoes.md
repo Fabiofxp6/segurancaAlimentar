@@ -1,6 +1,6 @@
 # Spec 0005 — Checklist e versões
 
-Implementação I04 do RF004 no ambiente local. Prepara a referência que a I05 deverá guardar ao iniciar uma inspeção (RF007). O conteúdo sanitário validado e a autoridade para publicação oficial seguem em P009. A fórmula de pontuação segue em P010. [PRD](../prd/0001-sistema-avaliacao-seguranca-alimentar.md) · [ADR 0006](../adr/0006-versoes-e-historico-da-inspecao.md)
+Implementação I04 do RF004 no ambiente local. Prepara a referência que a I05 deverá guardar ao iniciar uma inspeção (RF007). O conteúdo sanitário validado e a autoridade para publicação oficial seguem em P009. A I09 registra a regra de demonstração na versão publicada. O cálculo oficial segue em P010. [Spec 0010](0010-pontuacao-e-conclusao.md) [PRD](../prd/0001-sistema-avaliacao-seguranca-alimentar.md) · [ADR 0006](../adr/0006-versoes-e-historico-da-inspecao.md)
 
 ## Dados
 
@@ -21,7 +21,7 @@ Implementação I04 do RF004 no ambiente local. Prepara a referência que a I05 
 - Administrador ativo cria um checklist, edita o rascunho e inclui, edita ou remove itens. As alterações são confirmadas pelo servidor e usam uma revisão do rascunho para detectar conflito.
 - Para publicar a versão de demonstração, o checklist deve ter pelo menos um item válido. A publicação copia o conteúdo do rascunho para um registro separado. Publicar novamente a mesma revisão retorna a versão já registrada. Salvar o rascunho e publicar são ações distintas.
 - A transação bloqueia o rascunho ao editar ou publicar. A restrição do banco garante número e revisão de origem únicos por checklist. Uma proteção no PostgreSQL recusa alterações e exclusões de versões publicadas. A consulta a versões antigas recupera o conteúdo próprio da versão.
-- A I05 deverá usar referência protegida à versão publicada e decidir quais versões são elegíveis conforme a finalidade. Uma versão de demonstração destina-se a dados fictícios. Fórmula, regra de N/A, pesos oficiais e política de publicação sanitária permanecem nas decisões P009/P010.
+- A I05 deverá usar referência protegida à versão publicada e decidir quais versões são elegíveis conforme a finalidade. Uma versão de demonstração destina-se a dados fictícios. A I09 usa DC033 para cálculo de demonstração. Fórmula, regra de N/A, pesos e publicação oficiais permanecem em P009/P010.
 
 ## Rotas e validação
 

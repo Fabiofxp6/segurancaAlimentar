@@ -1,7 +1,7 @@
 # Plano de implementação — Sistema de Avaliação de Segurança Alimentar
 
 - **Data:** 15/11/2026.
-- **Status:** Roteiro aprovado em 15/11/2026. I00 aceita. I01 a I04 concluídas no ambiente local. I05 aguarda autorização.
+- **Status:** Roteiro aprovado em 15/11/2026. I00 aceita. I01 a I09 concluídas no ambiente local. I10 aguarda autorização.
 - **Base:** [PRD](prd/0001-sistema-avaliacao-seguranca-alimentar.md), [matriz de rastreabilidade](matriz-rastreabilidade.md), [arquitetura e ADRs](arquitetura.md), [decisões confirmadas](decisoes-confirmadas.md) e [pendências](pendencias.md).
 - **Fundação:** [decisões da I00](decisoes-fundacao-i00.md) e [verificações da I01](entrega-i01.md).
 - **Acompanhamento:** [Plano no Trello](https://trello.com/c/Ok3dpbjJ), [rotina do quadro](acompanhamento-trello.md) e [estado](state.md).
@@ -25,11 +25,11 @@ A fundação tem execução registrada na I01. A I02 verificou o fluxo básico d
 | [I02](entrega-i02.md) | Login, logout e sessão | I01 |
 | [I03](entrega-i03.md) | Usuários, estabelecimentos, perfis e vínculos | I02 e escopo cadastral aprovado |
 | [I04](entrega-i04.md) | Cadastro, publicação e versões do checklist | I03 e P009 |
-| I05 | Atribuição, início, equipe e supervisão por ação | I03/I04 e regras de escopo/designação |
-| I06 | Preenchimento, evidências e confirmação de envio | I05 e regras de arquivos/reenvio |
-| I07 | Envio de documentos pelo estabelecimento | I03/I05 e contrato de recebimento de I06 |
-| I08 | Cancelamento autorizado e auditoria do ciclo | I05, P005/P006 e registros dos atos anteriores |
-| I09 | Pontuação, classificação e conclusão | I06 e regras de cálculo/conclusão; validar I07/I08 quando aplicáveis ao fluxo |
+| [I05](entrega-i05.md) | Atribuição, início, equipe e supervisão por ação | I03/I04 e regras de escopo/designação |
+| [I06](entrega-i06.md) | Preenchimento, evidências e confirmação de envio | I05 e regras de arquivos/reenvio |
+| [I07](entrega-i07.md) | Envio de documentos pelo estabelecimento | I03/I05 e contrato de recebimento de I06 |
+| [I08](entrega-i08.md) | Cancelamento autorizado e auditoria do ciclo | I05, P005/P006 e registros dos atos anteriores |
+| [I09](entrega-i09.md) | Pontuação, classificação e conclusão | I06 e regras de cálculo/conclusão; validar I07/I08 quando aplicáveis ao fluxo |
 | I10 | Emissão de termo, publicação e consulta do estabelecimento | I09 e políticas de documentos/publicação |
 | I11 | Correção autorizada, recálculo e retificação | I08–I10 e políticas de revisão/versões |
 | I12 | Consultas, indicadores e relatórios | Inspeções e resultados no recorte autorizado |
@@ -88,6 +88,8 @@ A fundação tem execução registrada na I01. A I02 verificou o fluxo básico d
 
 **Aceite:** os dois caminhos de início preservam autoria/origem; inspeção em curso mantém a versão original após nova publicação; fiscal designado para A não recebe poder em B; remoção da designação vale na sessão atual. Usar **AC15–AC24** e os cenários de início/versionamento da matriz.
 
+**Resultado:** atribuição, início, versão do checklist e designações simultâneas por ação verificados localmente. Poderes de aprovação continuam em P005. [Entrega da I05](entrega-i05.md)
+
 ## I06 — Checklist em campo, evidências e rede · RF008–RF012
 
 **Entrega:** preenchimento em navegador móvel, observações/irregularidades, anexos vinculados e estados de envio. Se o desenho exigir subetapas, primeiro aprovar o contrato de salvamento/reenvio e depois adicionar a captura de arquivos. O comportamento online é parte do primeiro fluxo de gravação oficial, não uma correção para deixar para o final.
@@ -95,6 +97,8 @@ A fundação tem execução registrada na I01. A I02 verificou o fluxo básico d
 **Antes de executar:** I05; P009 para validações dos itens, P016 para armazenamento/limites/validação/entrega privada de evidências, P020 para identidade da operação, recuperação, conflito e limpeza. Definir alvos de dispositivos e revisar protótipo com P019/P021. A escolha de armazenamento para evidências não precisa antecipar biblioteca de PDF.
 
 **Aceite:** preservar o preenchimento na página aberta, bloquear ações dependentes do servidor durante falha, tentar recuperar ao reconectar e só marcar **Salvo** com confirmação. Simular resposta perdida depois da gravação e repetição concorrente: uma única gravação oficial; conteúdo diferente com a mesma operação segue o contrato de conflito aprovado. Arquivo de outro escopo por URL direta é negado. Não garantir recuperação após recarga ou habilitar inspeção offline completa.
+
+**Resultado:** preenchimento e fotos de demonstração verificados, com confirmação separada e retentativa após resposta perdida. Formatos e política operacional seguem em P016/P019/P020. [Entrega da I06](entrega-i06.md)
 
 ## I07 — Documentos do estabelecimento · RF017
 
@@ -104,6 +108,8 @@ A fundação tem execução registrada na I01. A I02 verificou o fluxo básico d
 
 **Aceite:** documento próprio é recebido uma vez, durante etapa permitida; tentativa de envio para terceiro ou arquivo inválido não é confirmada. Anexo não libera avaliação interna, muda nota ou dispara reanálise automaticamente. Usar **AC12–AC14** e os cenários de arquivos/reenvio da matriz.
 
+**Resultado:** envio desde a atribuição ao fim do andamento, consulta por unidade e retentativa verificados em demonstração. [Entrega da I07](entrega-i07.md)
+
 ## I08 — Cancelamento autorizado e auditoria · RF022, RF023 transversal
 
 **Entrega:** solicitação, decisão e efetivação separadas; registro oficial com autoria, escopo e histórico. Definir e usar contratos de auditoria desde os primeiros atos que precisam de histórico (I03/I05); aqui integrar e verificar a trilha do ciclo, estendida por I10/I11. Atualizar a tela de cancelamento para refletir solicitação/autorização. Não converter inspeção concluída em cancelada por este fluxo.
@@ -112,6 +118,8 @@ A fundação tem execução registrada na I01. A I02 verificou o fluxo básico d
 
 **Aceite:** pedido sem justificativa, pendente, rejeitado ou fora do escopo não cancela; aprovação válida permite efetivar uma vez, preservando respostas, evidências e histórico. Supervisor revogado antes da decisão não obtém concessão pela sessão antiga. Testar tentativa de alterar/remover histórico por conta não autorizada, preservando a política aprovada. Usar **AC18, AC21–AC28, AC32–AC35** no que se aplicar.
 
+**Resultado:** DC032 aplicada. A I08 verificou solicitação, decisão contextual e efetivação automática, bloqueio de novas gravações durante a pendência e auditoria por inspeção. [Spec 0009](specs/0009-cancelamento-e-auditoria.md) · [Entrega da I08](entrega-i08.md)
+
 ## I09 — Pontuação, classificação e conclusão · RF013/RF014
 
 **Entrega:** cálculo automático com regras da versão original, validação de conclusão e persistência do resultado com autoria e versão. Separar conclusão, emissão de termo e liberação ao estabelecimento.
@@ -119,6 +127,8 @@ A fundação tem execução registrada na I01. A I02 verificou o fluxo básico d
 **Antes de executar:** I06 e contratos pertinentes de I07/I08; P009/P010 para obrigatoriedade, pesos, faixas, arredondamento e “Não se aplica”; validar bloqueios de conclusão propostos em RF014, janelas documentais aplicáveis e comportamento em conflito/reenvio (P011/P012/P020).
 
 **Aceite:** conferir exemplos de cálculo validados; conclusão usa registros confirmados e produz um resultado coerente sem duplicidade. Inspeção pendente de dados/envios recebe o tratamento aprovado para RF014. Nova versão de checklist não muda o cálculo da inspeção iniciada. Resultado interno ainda não liberado não aparece no portal.
+
+**Resultado:** a I09 verificou as regras de demonstração da DC033, calculou pela versão original e registrou a conclusão uma vez, com resultado interno e auditoria. [Spec 0010](specs/0010-pontuacao-e-conclusao.md) · [Entrega da I09](entrega-i09.md)
 
 ## I10 — Termo, publicação e consulta externa · RF015/RF016; RF025 condicionado
 
@@ -180,4 +190,4 @@ Em cada etapa autorizada, registrar requisitos cobertos total/parcialmente, arqu
 
 ## Próxima autorização sugerida
 
-A I05 é o próximo recorte e aguarda autorização. A relação ação/inspeção e a designação seguem em P003/P004. [Entrega da I04](entrega-i04.md) · [Pendências](pendencias.md)
+A I10 é o próximo recorte e aguarda autorização. Termo e liberação ao estabelecimento dependem de P012/P016. [Entrega da I09](entrega-i09.md) · [Pendências](pendencias.md)

@@ -9,6 +9,12 @@
 <p><a href="{% url 'estabelecimentos:lista' %}">Gerir estabelecimentos</a></p>
 <p><a href="{% url 'checklists:lista' %}">Gerir checklists</a></p>
 {% endif %}
+{% if inspecoes_demo %}
+<p><a href="{% url 'inspecoes:lista' %}">Inspeções</a></p>
+{% endif %}
+{% if documentos_demo %}
+<p><a href="{% url 'inspecoes:documentos' %}">Documentos do estabelecimento</a></p>
+{% endif %}
 {% if unidade_id %}
 <p><a href="{% url 'contas:estabelecimento' unidade_id %}">Meu estabelecimento</a></p>
 {% endif %}

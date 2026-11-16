@@ -1,0 +1,74 @@
+{% extends "documentos/base.html" %}
+
+{% block documentos %}
+<h1 id="titulo-gestao">Documentos da inspeção #{{ inspecao.pk }}</h1>
+<p>{% firstof inspecao.identificacao_estabelecimento.nome inspecao.estabelecimento.nome %} · Demonstração</p>
+
+<div id="documentos" data-contexto="{{ contexto }}" data-conexao="{% url 'inspecoes:documentos_conexao' inspecao.pk %}">
+    {% if pode_enviar %}
+    <h2>Enviar documento</h2>
+    <p>PDF, JPEG ou PNG até 5 MiB. Use dados fictícios.</p>
+    <p data-estado-conexao role="status" hidden></p>
+    <noscript><p>Ative JavaScript para enviar e acompanhar a confirmação.</p></noscript>
+    <form method="post" enctype="multipart/form-data" action="{% url 'inspecoes:documentos_enviar' inspecao.pk %}" data-envio="documento">
+        {% csrf_token %}
+        <fieldset data-campos style="min-width:0;border:0;padding:0;margin:0">
+            <legend>Documento comprobatório</legend>
+            {{ form.as_p }}
+        </fieldset>
+        <button type="submit" disabled>Enviar documento</button>
+        <p role="status" data-status>Pendente</p>
+    </form>
+    {% elif bloqueado %}
+    <p>O envio de documentos está temporariamente bloqueado.</p>
+    {% elif cliente %}
+    <p>A janela de envio desta inspeção está encerrada.</p>
+    {% endif %}
+
+    <h2>Documentos recebidos</h2>
+    <ul class="registros" id="recebidos">
+        {% for documento in documentos %}
+        <li>
+            <div>
+                <a href="{% url 'inspecoes:documentos_baixar' inspecao.pk documento.pk %}">{{ documento.nome }}</a>
+                <p>{{ documento.autor.get_username }} · {{ documento.recebido_em|date:"d/m/Y H:i T" }}</p>
+                {% if documento.descricao %}<p>{{ documento.descricao }}</p>{% endif %}
+            </div>
+            <span>Salva</span>
+        </li>
+        {% empty %}<li data-vazio>Nenhum documento recebido.</li>{% endfor %}
+    </ul>
+</div>
+{% if pode_enviar %}
+<script>
+(() => {
+    {% include "envios/controle.html" %}
+    const painel = document.getElementById("documentos");
+    const recebidos = document.getElementById("recebidos");
+
+    iniciarEnvios(painel, (form, dados) => {
+        recebidos.querySelector("[data-vazio]")?.remove();
+        const linha = document.createElement("li");
+        const resumo = document.createElement("div");
+        const nome = document.createElement("a");
+        nome.href = dados.url;
+        nome.textContent = dados.nome;
+        const autor = document.createElement("p");
+        autor.textContent = dados.autor + " · " + new Date(dados.confirmado_em).toLocaleString("pt-BR");
+        resumo.append(nome, autor);
+        if (dados.descricao) {
+            const descricao = document.createElement("p");
+            descricao.textContent = dados.descricao;
+            resumo.append(descricao);
+        }
+        const estado = document.createElement("span");
+        estado.textContent = "Salva";
+        linha.append(resumo, estado);
+        recebidos.prepend(linha);
+        form.elements.descricao.value = "";
+        form.elements.arquivo.value = "";
+    });
+})();
+</script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,55 @@
+<script>
+(() => {
+    {% include "envios/controle.html" %}
+    {% include "campo/pendencias.html" %}
+    const painel = document.getElementById("campo");
+    const resposta = painel.querySelector('[data-envio="resposta"]');
+    const arquivo = painel.querySelector('[data-envio="arquivo"]');
+    const fotos = document.getElementById("fotos-salvas");
+    const opcaoIrregularidade = arquivo.elements.vinculo.querySelector('[value="irregularidade"]');
+
+    const irregularidade = resposta.elements.ha_irregularidade;
+    const descricao = resposta.elements.descricao_irregularidade;
+
+    function irregularidadeConfirmada(ativa) {
+        opcaoIrregularidade.disabled = !ativa;
+        if (!ativa && arquivo.elements.vinculo.value === "irregularidade") {
+            arquivo.elements.vinculo.value = "item";
+        }
+    }
+
+    function mostrarDescricao() {
+        descricao.disabled = !irregularidade.checked;
+        descricao.closest("div").hidden = !irregularidade.checked;
+    }
+
+    function confirmar(form, dados) {
+        if (form === resposta) {
+            resposta.elements.revisao.value = dados.revisao;
+            arquivo.elements.revisao.value = dados.revisao;
+            arquivo.dataset.liberado = "sim";
+            document.getElementById("aviso-evidencia").hidden = true;
+            if (!dados.ha_irregularidade) descricao.value = "";
+            irregularidadeConfirmada(dados.ha_irregularidade);
+        } else {
+            const linha = document.createElement("li");
+            linha.className = "foto-confirmada";
+            const link = document.createElement("a");
+            link.href = dados.url;
+            link.textContent = dados.nome;
+            const rotulo = document.createElement("span");
+            rotulo.textContent = "Salva · " + dados.vinculo;
+            linha.append(link, rotulo);
+            fotos.append(linha);
+            arquivo.elements.arquivo.value = "";
+        }
+    }
+
+    irregularidade.addEventListener("change", mostrarDescricao);
+    mostrarDescricao();
+    irregularidadeConfirmada(irregularidade.checked);
+    iniciarEnvios(painel, confirmar, (form, semConfirmacao) => {
+        registrarPendencia(painel, form.dataset.envio, semConfirmacao);
+    });
+})();
+</script>

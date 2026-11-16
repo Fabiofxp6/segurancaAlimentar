@@ -4,3 +4,5 @@ from ..testing import validate_test_database
 
 validate_test_database(DATABASES["default"])  # noqa: F405
 DEBUG = False
+
+INSPECOES_DEMONSTRACAO = True

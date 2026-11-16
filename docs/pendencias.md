@@ -1,6 +1,6 @@
 # Pendências e propostas
 
-Atualizado em 15/11/2026, com a fundação I01 e as entregas locais I02 a I04.
+Atualizado em 16/11/2026, com a fundação I01 e as entregas locais I02 a I09.
 
 As pessoas responsáveis nominalmente e os prazos ainda não foram definidos. A coluna de encaminhamento identifica o papel que precisa participar, sem atribuir uma decisão a alguém que não a assumiu. P001 foi resolvida para a fundação local. P002 foi resolvida em parte e as demais pendências seguem abertas.
 
@@ -26,27 +26,27 @@ Origem: F003; RF001, RF002 e RF003.
 
 ## P003 Ação e inspeção
 
-Determinar se uma ação equivale a uma inspeção ou pode reunir várias. A Spec 0003 usa contexto como referência lógica, sem criar entidade, FK ou relação física definitiva. Resolver antes de materializar os vínculos e as rotas de supervisão.
+Resolvida em DC029. Uma ação pode reunir várias inspeções. A I05 persiste a ação e usa sua chave para relacionar inspeções e designações. [Spec 0006](specs/0006-inicio-equipe-e-supervisao.md)
 
 Encaminhamento: Responsável pelo processo de fiscalização.
 
-Quando precisa estar resolvida: 6, antes do contrato de supervisão e do modelo de relacionamento.
+Evidência: agrupamento de duas inspeções na mesma ação, com vínculo persistido. [Entrega da I05](entrega-i05.md)
 
 Origem: F003; RF002. F005; seção 5.
 
 ## P004 Designação do supervisor
 
-Definir quem designa, substitui e encerra, quantos supervisores existem por ação e sua vigência. Na Spec 0003 permanecem candidatos os critérios de elegibilidade, sobreposição, período aberto, agendamento/retroatividade e intervalo com fim exclusivo. Não foi criada unicidade de supervisor por ação ou autoridade administrativa automática.
+Decidida para a I05 em DC029. Administrador designa, substitui e encerra. A ação admite vários fiscais ativos da equipe designados em paralelo, com designação opcional e de efeito imediato. A operação mantém histórico e uma designação aberta por fiscal na ação. A política de aprovação permanece em P005.
 
 Encaminhamento: Responsável pelo processo de fiscalização.
 
-Quando precisa estar resolvida: 6, antes de implementar supervisão.
+Evidência: designações simultâneas, isolamento por ação e revogação na sessão atual. [Entrega da I05](entrega-i05.md)
 
 Origem: F003; RF002 e RS002.
 
 ## P005 Autoridade aprovadora
 
-Definir quem aprova alteração/cancelamento, substituição na ausência e tratamento da solicitação do próprio supervisor. Não conceder esse poder ao administrador por inferência. A matriz de papéis da Spec 0003 mantém essas células pendentes; propõe não conceder a operação enquanto a política estiver indefinida, sem aprovar uma regra definitiva de autoaprovação.
+DC032 definiu a autoridade para RF022. Outro supervisor ativo e elegível da ação decide, com o Administrador na ausência de outro elegível. O solicitante fica impedido de decidir. Definir quem aprova correções de RF018, como tratar ausência e pedido próprio nesse fluxo. [Spec 0009](specs/0009-cancelamento-e-auditoria.md)
 
 Encaminhamento: Responsável pelo processo de fiscalização.
 
@@ -56,7 +56,7 @@ Origem: F003; RF018, RF022 e RS002.
 
 ## P006 Alterações durante o andamento
 
-Delimitar mudanças que exigem autorização além do preenchimento normal; decidir se pedido pendente bloqueia novas edições.
+DC032 definiu o bloqueio de novas respostas, fotos e documentos durante pedido de cancelamento pendente. A rejeição libera os registros permitidos. Delimitar as demais mudanças que exigem autorização e o efeito de pendência em outros fluxos.
 
 Encaminhamento: Responsável pelo processo de fiscalização.
 
@@ -96,21 +96,21 @@ Origem: F001; tópico 1. F003; RF004 e RF007.
 
 ## P010 Pontuação
 
-Definir fórmula, pesos, N/A, arredondamento, faixas de classificação e comparabilidade entre versões.
+A I09 usa o percentual ponderado, a exclusão de N/A e as faixas confirmadas em DC033 para a demonstração. Definir fórmula, pesos, N/A, arredondamento, faixas de classificação e comparabilidade para uso oficial. [Spec 0010](specs/0010-pontuacao-e-conclusao.md)
 
 Encaminhamento: Responsável pela avaliação, com apoio da equipe.
 
-Quando precisa estar resolvida: Antes de implementar e validar cálculo e indicadores.
+Quando precisa estar resolvida: Antes de aprovar cálculo sanitário ou indicadores oficiais.
 
 Origem: F003; RF013, RF020 e RF026.
 
 ## P011 Documentos do estabelecimento
 
-Definir categorias, obrigatoriedade, prazos, formatos, limites, complementação, substituição e envio após conclusão.
+DC031 definiu envio da atribuição ao fim do andamento, consulta por conta ativa da unidade e PDF/JPEG/PNG para demonstração. Na I09, os documentos são opcionais para concluir a demonstração, conforme DC033. Definir categorias, exigências, limites de produção, complementação e substituição. [Spec 0008](specs/0008-documentos-do-estabelecimento.md)
 
 Encaminhamento: Responsável pelo processo, com apoio técnico.
 
-Quando precisa estar resolvida: Antes de detalhar e implementar os envios.
+Quando precisa estar resolvida: antes de habilitar políticas adicionais de documento ou aceitar uso real.
 
 Origem: F003; RF017 e RS008.
 
@@ -158,7 +158,7 @@ Origem: F005; seções 8 e 10.
 
 ## P016 Arquivos e PDF
 
-Definir armazenamento, entrega privada, coordenação com banco, biblioteca de PDF, formatos, limites e validação dos arquivos.
+Definir armazenamento e entrega privada em produção, coordenação com banco, biblioteca de PDF, formatos, limites e validação de arquivos reais. A I06 usou PostgreSQL para JPEG/PNG de demonstração. A I07 validou PDF/JPEG/PNG de documentos no mesmo banco, em registros próprios e com download por autorização. [Spec 0007](specs/0007-campo-evidencias-e-reenvio.md)
 
 Encaminhamento: Equipe técnica, após requisitos operacionais.
 
@@ -168,7 +168,7 @@ Origem: F003; RF009, RF015, RS008 e RS010.
 
 ## P017 Proteção e retenção
 
-Definir classificação de dados, retenção, acesso à auditoria, proteção em repouso e eliminação conforme a política aprovada. A I03 grava autoria, data e mudanças de cadastro e vínculos na transação do ato. A política operacional e a consulta de histórico seguem em aberto.
+Definir classificação de dados, retenção, acesso à auditoria, proteção em repouso e eliminação conforme a política aprovada. A I03 grava autoria, data e mudanças de cadastro e vínculos na transação do ato. A I08 reúne a trilha por inspeção para Administrador e fiscais da equipe atual. O banco protege os eventos de inspeção e recibos de campo contra alteração ou exclusão. Retenção, auditoria geral e acesso de produção seguem em aberto. [Spec 0009](specs/0009-cancelamento-e-auditoria.md)
 
 Encaminhamento: Responsável pelo processo e equipe técnica.
 
@@ -198,13 +198,13 @@ Origem: F003; RNF01, RNF07 e RNF08.
 
 ## P020 Pendências na tela e reenvio
 
-Decidir se existirá armazenamento persistente no navegador; intervalo de tentativa, recuperação e limpeza, especialmente em aparelho compartilhado. Preservação da página aberta já está confirmada. Detalhar identificação da operação, conteúdo diferente na repetição, concorrência, prazo de reconhecimento e recuperação do resultado sem duplicidade; esses pontos foram explicitados na arquitetura da Etapa 3, sem escolher um mecanismo.
+A I06 preserva na página aberta um envio solicitado, confirma por chave única, sonda o servidor na reconexão e recupera a mesma operação. A I07 reutiliza o mesmo controle para documentos do estabelecimento. Validação/conflito exigem ação do usuário. Permanecem em aberto a política após fechar ou recarregar, a retenção do histórico de operações, os intervalos de produção e a limpeza em aparelhos compartilhados. [Spec 0007](specs/0007-campo-evidencias-e-reenvio.md)
 
 Na [Spec 0002](specs/0002-autenticacao.md), validar com P014 a proposta específica para credenciais: depois de resposta perdida, conferir a sessão por leitura e permitir nova tentativa explícita quando necessário, sem reenvio silencioso de senha. Isso ainda não aprova uma exceção à retentativa geral. Definir limpeza/proteção de outras abas e de dados pendentes ao sair, expirar ou trocar conta; não presumir salvamento nem descarte desses dados.
 
 Encaminhamento: Equipe técnica com validação do produto.
 
-Quando precisa estar resolvida: Antes de implementar recuperação de envio.
+Quando precisa estar resolvida: Antes de ampliar a recuperação para outros fluxos ou fixar a política operacional.
 
 Origem: F003; RF011, RNF14 e RS014.
 
@@ -230,7 +230,7 @@ Origem: F003; prioridades A validar. F005; seções 11 e 12.
 
 ## Propostas preservadas como propostas
 
-- Representar uma ação como agrupamento de inspeções depende de P003.
+- O agrupamento por ação foi definido em DC029. O escopo operacional de aprovação e ausências segue em P005.
 - Exigir autorização para adiamento semelhante ao cancelamento depende de P007.
 - Abrir uma reanálise a partir de documento novo depende de P008; anexo não muda resultado automaticamente.
 - Criar um app para cada área da visão conceitual não foi decidido. As áreas lógicas foram detalhadas como proposta na [arquitetura](arquitetura.md); o [ADR 0007](adr/0007-monolito-modular.md) foi aceito para a fundação. A estrutura física será detalhada nas specs pertinentes.

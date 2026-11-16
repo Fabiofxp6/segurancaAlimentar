@@ -1,0 +1,12 @@
+{% extends "gestao/base.html" %}
+
+{% block titulo %}{{ titulo|default:"Inspeções" }} | Segurança Alimentar{% endblock %}
+{% block conteudo %}
+<nav class="navegacao" aria-label="Inspeções">
+    <a href="{% url 'contas:acesso' %}">Área de acesso</a>
+    <a href="{% url 'inspecoes:lista' %}">Inspeções</a>
+</nav>
+<section class="painel" aria-labelledby="titulo-gestao">
+    {% block inspecoes %}{% endblock %}
+</section>
+{% endblock %}

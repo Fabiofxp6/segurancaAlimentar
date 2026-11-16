@@ -1,0 +1,13 @@
+{% extends "gestao/base.html" %}
+
+{% block titulo %}Documentos do estabelecimento | Segurança Alimentar{% endblock %}
+{% block conteudo %}
+<nav class="navegacao" aria-label="Documentos">
+    <a href="{% url 'contas:acesso' %}">Área de acesso</a>
+    {% if cliente %}<a href="{% url 'inspecoes:documentos' %}">Documentos do estabelecimento</a>
+    {% elif inspecao %}<a href="{% url 'inspecoes:detalhe' inspecao.pk %}">Voltar à inspeção</a>{% endif %}
+</nav>
+<section class="painel" aria-labelledby="titulo-gestao">
+    {% block documentos %}{% endblock %}
+</section>
+{% endblock %}

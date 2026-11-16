@@ -21,6 +21,11 @@ Orientação do usuário registrada em 10/11/2026: atualizar o Trello em paralel
 - [I02 — autenticação e sessão](https://trello.com/c/DpZG5hth).
 - [I03 — cadastros, perfis e vínculos](https://trello.com/c/di9RwaAR).
 - [I04 — checklist e versões](https://trello.com/c/hRV4arE6).
+- [I05 — atribuição, início e supervisão](https://trello.com/c/OfaYG9v0).
+- [I06 — checklist em campo, evidências e rede](https://trello.com/c/bvM4tCUH).
+- [I07 — documentos do estabelecimento](https://trello.com/c/tgD8DFk1).
+- [I08 — cancelamento autorizado e auditoria](https://trello.com/c/7sUzslD1).
+- [I09 — pontuação, classificação e conclusão](https://trello.com/c/BENAuj0o).
 - [Curadoria de skills e agentes](https://trello.com/c/1P8kWrmm).
 
 O projeto local fica em `Documents/segurancaAlimentar`. Os cartões registram o acompanhamento; as fontes, o PRD, as decisões e as pendências permanecem nos documentos correspondentes. Citar um arquivo local no cartão não significa que ele foi anexado ao Trello.
@@ -43,7 +48,7 @@ O usuário solicitou commit e push da fundação documental em 10/11/2026. O [ca
 
 ## Planejamento de implementação — 15/11/2026
 
-O usuário aprovou o [roteiro I00–I14](plano-implementacao.md) em 15/11/2026 e autorizou a I00. A [entrega documental](decisoes-fundacao-i00.md) detalha as propostas de versão, preparação e identidade da fundação. Depois da autorização para seguir, a [I01](entrega-i01.md) aplicou as escolhas aceitas e foi verificada em PostgreSQL local. Após nova autorização, a [I02](entrega-i02.md) entregou autenticação com verificação em PostgreSQL e Chromium. Após autorização, a [I03](entrega-i03.md) entregou a manutenção local de contas e estabelecimentos, o vínculo por unidade e a concessão técnica de Administrador. O cartão está em Concluído. O canal de entrega de credenciais reais segue em P014. A [I04](entrega-i04.md) entregou rascunhos e versões imutáveis de demonstração. As regras de checklist oficial seguem em P009/P010.
+O usuário aprovou o [roteiro I00–I14](plano-implementacao.md) em 15/11/2026 e autorizou a I00. A [entrega documental](decisoes-fundacao-i00.md) detalha as propostas de versão, preparação e identidade da fundação. Depois da autorização para seguir, a [I01](entrega-i01.md) aplicou as escolhas aceitas e foi verificada em PostgreSQL local. Após nova autorização, a [I02](entrega-i02.md) entregou autenticação com verificação em PostgreSQL e Chromium. Após autorização, a [I03](entrega-i03.md) entregou a manutenção local de contas e estabelecimentos, o vínculo por unidade e a concessão técnica de Administrador. O cartão está em Concluído. O canal de entrega de credenciais reais segue em P014. A [I04](entrega-i04.md) entregou rascunhos e versões imutáveis de demonstração. As regras de checklist oficial seguem em P009/P010. A [I05](entrega-i05.md) entregou atribuição, início, versão vinculada, equipes e supervisão por ação. A autoridade de aprovação permanece em P005. A [I06](entrega-i06.md) entregou respostas, fotos de demonstração e retentativa online verificada. A [I07](entrega-i07.md) entregou documentos de demonstração da unidade, com consulta privada e reenvio verificado. A [I08](entrega-i08.md) verificou cancelamento com aprovação, bloqueio de novos registros durante a análise e auditoria por inspeção. A [I09](entrega-i09.md) verificou a pontuação de demonstração com regras originais, a conclusão confirmada e o resultado interno.
 
 ## Situação em 10/11/2026
 

@@ -25,7 +25,9 @@ class SessaoMiddleware(SessionMiddleware):
     @staticmethod
     def _rota_protegida(request):
         route = request.resolver_match
-        return route is not None and route.namespace in {"contas", "estabelecimentos", "gestao_contas", "checklists"}
+        return route is not None and route.namespace in {
+            "contas", "estabelecimentos", "gestao_contas", "checklists", "inspecoes",
+        }
 
     @staticmethod
     def _indisponivel(request):

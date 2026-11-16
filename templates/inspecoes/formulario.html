@@ -1,0 +1,13 @@
+{% extends "inspecoes/base.html" %}
+
+{% block inspecoes %}
+<h1 id="titulo-gestao">{{ titulo }}</h1>
+{% if conflito %}
+<p class="alerta" role="alert">O registro mudou. <a href="{{ request_path }}">Reabra a página</a> e confira os dados.</p>
+{% endif %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_div }}
+    <p><button type="submit">Confirmar</button></p>
+</form>
+{% endblock %}

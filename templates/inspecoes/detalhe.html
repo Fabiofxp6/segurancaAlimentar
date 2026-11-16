@@ -1,0 +1,54 @@
+{% extends "inspecoes/base.html" %}
+
+{% block inspecoes %}
+<h1 id="titulo-gestao">Inspeção #{{ inspecao.pk }}</h1>
+<p><strong>{{ inspecao.get_estado_display }}</strong> · Demonstração</p>
+<p>Unidade: {% firstof inspecao.identificacao_estabelecimento.nome inspecao.estabelecimento.nome %}</p>
+<p>Ação #{{ inspecao.acao_id }} · {{ inspecao.get_origem_display }}</p>
+{% if supervisor %}<p><strong>Você é supervisor nesta ação.</strong></p>{% endif %}
+{% if pode_iniciar %}
+<p><a class="acao" href="{% url 'inspecoes:inicio' inspecao.pk %}">Iniciar inspeção</a></p>
+{% endif %}
+{% if admin %}
+{% if not cancelada %}<p><a href="{% url 'inspecoes:equipe' inspecao.pk %}">Alterar equipe</a></p>{% endif %}
+<p><a href="{% url 'inspecoes:supervisao' inspecao.acao_id %}">Gerir supervisão da ação</a></p>
+{% endif %}
+
+<h2>Equipe da inspeção</h2>
+<p>Fiscal responsável: {{ inspecao.responsavel.get_username }}</p>
+<ul>
+    {% for pessoa in inspecao.participantes.all %}<li>{{ pessoa.get_username }}</li>{% empty %}<li>Sem outros fiscais.</li>{% endfor %}
+</ul>
+<h2>Supervisão da ação</h2>
+<ul>
+    {% for designacao in designacoes %}<li>{{ designacao.fiscal.get_username }}</li>{% empty %}<li>Sem supervisores ativos.</li>{% endfor %}
+</ul>
+
+{% if pode_ver_documentos %}
+<p><a href="{% url 'inspecoes:documentos_inspecao' inspecao.pk %}">Documentos recebidos do estabelecimento</a></p>
+{% endif %}
+{% if tem_resultado %}
+<p><a class="acao" href="{% url 'inspecoes:conclusao' inspecao.pk %}">Ver resultado interno</a></p>
+{% elif pode_revisar %}
+<p><a href="{% url 'inspecoes:conclusao' inspecao.pk %}">Revisar para concluir</a></p>
+{% endif %}
+{% if pode_consultar_campo %}
+<p><a class="acao" href="{% url 'inspecoes:campo' inspecao.pk %}">{% if pode_preencher %}Preencher{% else %}Consultar{% endif %} checklist</a></p>
+{% endif %}
+<p><a href="{% url 'inspecoes:cancelamento' inspecao.pk %}">Pedidos de cancelamento</a></p>
+<p><a href="{% url 'inspecoes:auditoria' inspecao.pk %}">Ver auditoria da inspeção</a></p>
+{% if inspecao.versao_checklist %}
+<h2>Checklist vinculado</h2>
+<p>{{ inspecao.versao_checklist.titulo }} · Versão {{ inspecao.versao_checklist.numero }}</p>
+{{ inspecao.versao_checklist.regras|linebreaks }}
+<ol class="itens-checklist">
+    {% for item in inspecao.versao_checklist.itens %}<li>{{ item.enunciado }}</li>{% endfor %}
+</ol>
+{% endif %}
+<h2>Histórico da inspeção</h2>
+<ul>
+    {% for evento in inspecao.historico.all %}
+    <li>{{ evento.get_ato_display }} · {{ evento.autor.get_username }} · {{ evento.registrado_em|date:"d/m/Y H:i T" }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
