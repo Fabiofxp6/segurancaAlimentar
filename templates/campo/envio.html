@@ -7,9 +7,26 @@
     const arquivo = painel.querySelector('[data-envio="arquivo"]');
     const fotos = document.getElementById("fotos-salvas");
     const opcaoIrregularidade = arquivo.elements.vinculo.querySelector('[value="irregularidade"]');
-
     const irregularidade = resposta.elements.ha_irregularidade;
     const descricao = resposta.elements.descricao_irregularidade;
+    const entradaArquivo = arquivo.elements.arquivo;
+    const nomeArquivo = arquivo.querySelector("[data-nome-arquivo]");
+    const dicaArquivo = nomeArquivo.textContent;
+    const abas = painel.querySelector("[data-abas-item]");
+
+    const telaLarga = matchMedia("(min-width: 74rem)");
+    let abaAtual = location.hash === "#evidencias-item" ? "evidencias" : "resposta";
+
+    function mostrarAba(nome) {
+        abaAtual = nome;
+        abas.hidden = telaLarga.matches;
+        for (const botao of abas.querySelectorAll("[data-aba-item]")) {
+            botao.setAttribute("aria-pressed", String(botao.dataset.abaItem === nome));
+        }
+        for (const secao of painel.querySelectorAll("[data-secao-item]")) {
+            secao.hidden = !telaLarga.matches && secao.dataset.secaoItem !== nome;
+        }
+    }
 
     function irregularidadeConfirmada(ativa) {
         opcaoIrregularidade.disabled = !ativa;
@@ -36,20 +53,61 @@
             linha.className = "foto-confirmada";
             const link = document.createElement("a");
             link.href = dados.url;
-            link.textContent = dados.nome;
-            const rotulo = document.createElement("span");
+            const miniatura = document.createElement("img");
+            miniatura.src = dados.previsualizacao;
+            miniatura.alt = "";
+            miniatura.loading = "lazy";
+            const nome = document.createElement("span");
+            nome.textContent = dados.nome;
+            const rotulo = document.createElement("small");
             rotulo.textContent = "Salva · " + dados.vinculo;
+            link.append(miniatura, nome);
             linha.append(link, rotulo);
-            fotos.append(linha);
-            arquivo.elements.arquivo.value = "";
+            fotos.prepend(linha);
+            entradaArquivo.value = "";
+            nomeArquivo.textContent = dicaArquivo;
         }
     }
+
+    for (const botao of abas.querySelectorAll("[data-aba-item]")) {
+        botao.addEventListener("click", () => mostrarAba(botao.dataset.abaItem));
+    }
+    telaLarga.addEventListener("change", () => mostrarAba(abaAtual));
+    mostrarAba(abaAtual);
+
+    // Se o navegador encontrar uma opção requerida em outra seção, revela o campo antes de focar.
+    resposta.addEventListener("invalid", (evento) => {
+        const secao = evento.target.closest("[data-secao-item]");
+        if (secao?.hidden) mostrarAba(secao.dataset.secaoItem);
+    }, true);
+
+    arquivo.querySelector("[data-seletor-nativo]").classList.add("sr-only");
+    entradaArquivo.tabIndex = -1;
+    arquivo.querySelector("[data-atalhos-arquivo]").hidden = false;
+    arquivo.querySelector("[data-camera]").addEventListener("click", () => {
+        entradaArquivo.setAttribute("capture", "environment");
+        entradaArquivo.click();
+    });
+    arquivo.querySelector("[data-arquivo]").addEventListener("click", () => {
+        entradaArquivo.removeAttribute("capture");
+        entradaArquivo.click();
+    });
+    entradaArquivo.addEventListener("invalid", (evento) => {
+        evento.preventDefault();
+        const estado = arquivo.querySelector("[data-status]");
+        estado.dataset.estado = "falha";
+        estado.textContent = "Selecione uma foto JPEG ou PNG para enviar.";
+        arquivo.querySelector("[data-arquivo]").focus();
+    });
+    entradaArquivo.addEventListener("change", () => {
+        nomeArquivo.textContent = entradaArquivo.files[0]?.name || dicaArquivo;
+    });
 
     irregularidade.addEventListener("change", mostrarDescricao);
     mostrarDescricao();
     irregularidadeConfirmada(irregularidade.checked);
-    iniciarEnvios(painel, confirmar, (form, semConfirmacao) => {
-        registrarPendencia(painel, form.dataset.envio, semConfirmacao);
+    iniciarEnvios(painel, confirmar, (form, situacao) => {
+        registrarPendencia(painel, form.dataset.envio, situacao);
     });
 })();
 </script>

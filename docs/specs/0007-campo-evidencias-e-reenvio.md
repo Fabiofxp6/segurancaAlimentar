@@ -22,6 +22,12 @@ A gravação mantém uma resposta atual por item e um registro das operações c
 - O PostgreSQL guarda bytes originais, nome, formato, tamanho, vínculo, autoria e data. A confirmação e a evidência são gravadas na mesma transação. O download valida novamente a equipe e o vínculo com a inspeção e envia o conteúdo como anexo privado.
 - A aceitação de documentos, a homologação da câmera e a política de armazenamento e retenção reais continuam em P016/P017/P019. O seletor nativo pode oferecer câmera conforme o navegador.
 
+## Observações gerais e galeria
+
+A revisão visual de 16/11/2026 incorpora a tela de observações gerais do RF-08. Um fiscal ativo da equipe pode registrar até 1.000 caracteres por observação enquanto a inspeção estiver em andamento e sem pedido de cancelamento pendente. Gravação, recibo por chave e evento de auditoria são confirmados juntos. A consulta fica disponível para a equipe após conclusão ou cancelamento. Esses textos ficam associados à inspeção, em registro próprio.
+
+A galeria lista as fotos confirmadas, com miniaturas privadas e referência ao item. A aba Arquivos consulta os documentos do estabelecimento pela autorização de RF017. [Entrega da interface](../entrega-interface-rf08.md)
+
 ## Comunicação e estados
 
 A tela informa Pendente, Enviando, Salva ou Falha em texto para resposta e foto. Salva exige confirmação do servidor com a chave da operação e o instante de gravação. A resposta confirmada mantém seu estado se uma foto falhar.

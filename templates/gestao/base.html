@@ -1,45 +1,43 @@
 {% extends "base.html" %}
+{% block titulo %}{{ titulo|default:"Gestão" }} | Segurança Alimentar{% endblock %}
+{% block classe_corpo %}sistema-interno{% if request.user.is_authenticated %} tem-navegacao{% endif %}{% endblock %}
+{% block classe_main %}estrutura {% block largura %}{% endblock %}{% endblock %}
 
-{% block titulo %}{{ titulo|default:"Estabelecimentos" }} | Segurança Alimentar{% endblock %}
-{% block cabecalho %}
-<style>
-    :root { background: #f2f6f3; color: #142d28; font: 1rem Inter, system-ui, sans-serif; }
-    * { box-sizing: border-box; }
-    body { margin: 0; }
-    main { max-width: 54rem; margin: auto; padding: 1rem; }
-    .navegacao { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; margin-bottom: 1.5rem; }
-    .painel { padding: clamp(1rem, 4vw, 2rem); border: 1px solid #cedbd4; border-radius: 1rem; background: white; }
-    h1 { margin: 0 0 1rem; font-size: clamp(1.6rem, 5vw, 2.2rem); overflow-wrap: anywhere; }
-    a { color: #18503f; font-weight: 600; text-underline-offset: .2em; }
-    label { display: block; font-weight: 600; margin-bottom: .35rem; }
-    input, select, textarea, button, .acao { min-height: 2.75rem; padding: .6rem .75rem; border-radius: .45rem; font: inherit; }
-    input:not([type="checkbox"]), select, textarea { width: 100%; border: 1px solid #697d72; color: inherit; background: white; }
-    input[type="checkbox"] { min-height: 0; width: 1.25rem; height: 1.25rem; accent-color: #195342; }
-    textarea { resize: vertical; }
-    [aria-invalid="true"] { border-color: #9b272b; }
-    button, .acao { display: inline-grid; align-items: center; background: #195342; color: white; border: none; text-decoration: none; font-weight: 650; cursor: pointer; }
-    :focus-visible { outline: 3px solid #186b56; outline-offset: 3px; }
-    .errorlist, .alerta { color: #8b2025; }
-    .alerta { padding: .75rem; background: #fff0f0; border-radius: .45rem; }
-    .registros { list-style: none; padding: 0; }
-    .registros li { display: flex; flex-wrap: wrap; gap: .4rem 1rem; align-items: baseline; justify-content: space-between; padding: .75rem 0; border-bottom: 1px solid #d9e2dc; overflow-wrap: anywhere; }
-    .secundario { color: #40534c; }
-    .form-remocao { margin-top: 1rem; }
-    .acao-secundaria { background: white; color: #821e26; border: 1px solid #b77073; }
-    .itens-checklist { overflow-wrap: anywhere; }
-    .painel p { overflow-wrap: anywhere; }
-    .paginacao { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; padding-top: .5rem; }
-</style>
+{% block barra %}
+{% if request.user.is_authenticated %}{% include "comum/navegacao_desktop.html" %}{% endif %}
+<header class="barra-app">
+    <div class="barra-app__interno">
+        {% block barra_inicio %}
+        <a class="botao-icone barra-app__voltar" href="{% url 'contas:acesso' %}" aria-label="Voltar à área de acesso"><span class="icone ico-voltar" aria-hidden="true"></span></a>
+        {% endblock %}
+        <span class="barra-app__titulo">{% block barra_titulo %}Gestão{% endblock %}</span>
+        {% if request.user.is_authenticated %}
+        <span class="perfil-desktop somente-desktop">
+            <span class="icone ico-pessoa" aria-hidden="true"></span>
+            <span>{{ request.user.get_username }}</span>
+        </span>
+        <details class="menu-app" data-menu>
+            <summary class="botao-icone" aria-label="Menu de navegação"><span class="icone ico-menu" aria-hidden="true"></span></summary>
+            <nav class="menu-app__painel" aria-label="Navegação principal">
+                <a href="{% url 'contas:acesso' %}"><span class="icone ico-pessoa" aria-hidden="true"></span> Área de acesso</a>
+                {% block menu_links %}
+                <a href="{% url 'gestao_contas:lista' %}">Usuários</a>
+                <a href="{% url 'estabelecimentos:lista' %}">Estabelecimentos</a>
+                <a href="{% url 'checklists:lista' %}">Checklists</a>
+                {% endblock %}
+                <form action="{% url 'contas:sair' %}" method="post">
+                    {% csrf_token %}
+                    <button class="botao-link" type="submit">Sair</button>
+                </form>
+            </nav>
+        </details>
+        {% endif %}
+    </div>
+</header>
 {% endblock %}
 
 {% block conteudo %}
-<nav class="navegacao" aria-label="Gestão">
-    <a href="{% url 'contas:acesso' %}">Área de acesso</a>
-    <a href="{% url 'gestao_contas:lista' %}">Usuários</a>
-    <a href="{% url 'estabelecimentos:lista' %}">Estabelecimentos</a>
-    <a href="{% url 'checklists:lista' %}">Checklists</a>
-</nav>
-<section class="painel" aria-labelledby="titulo-gestao">
+<section class="painel {% block painel_classe %}{% endblock %}" aria-labelledby="titulo-gestao">
     {% block gestao %}{% endblock %}
 </section>
 {% endblock %}

@@ -1,0 +1,58 @@
+{% load static %}
+<aside class="navegacao-desktop somente-desktop" aria-label="Navegação do sistema">
+    <a class="navegacao-desktop__marca" href="{% url 'contas:acesso' %}">
+        <span><img alt="" width="37" height="37" src="{% static 'interface/marca.png' %}"></span>
+        Segurança<br>Alimentar
+    </a>
+    <nav aria-label="Menu do desktop">
+        {% url 'contas:acesso' as inicio %}
+        {% include "comum/link_desktop.html" with url=inicio ativo=navegacao_ativa secao="inicio" icone="pessoa" rotulo="Área de acesso" only %}
+
+        {% if inspecoes_habilitadas and request.user.perfil == "administrador" or inspecoes_habilitadas and request.user.perfil == "fiscalizacao" %}
+        <div class="navegacao-desktop__grupo">
+            <p>Fiscalização</p>
+            {% url 'inspecoes:lista' as inspecoes %}
+            {% include "comum/link_desktop.html" with url=inspecoes ativo=navegacao_ativa secao="inspecoes" icone="checklist" rotulo="Inspeções" only %}
+            {% if request.user.perfil == "administrador" %}
+            {% url 'inspecoes:indicadores' as indicadores %}
+            {% include "comum/link_desktop.html" with url=indicadores ativo=navegacao_ativa secao="indicadores" icone="indicadores" rotulo="Indicadores" only %}
+            {% endif %}
+            {% url 'inspecoes:adiamentos' as adiamentos %}
+            {% include "comum/link_desktop.html" with url=adiamentos ativo=navegacao_ativa secao="adiamentos" icone="calendario" rotulo="Adiamentos" only %}
+            {% url 'inspecoes:cancelamentos' as cancelamentos %}
+            {% include "comum/link_desktop.html" with url=cancelamentos ativo=navegacao_ativa secao="cancelamentos" icone="fechar" rotulo="Cancelamentos" only %}
+            {% url 'inspecoes:correcoes' as correcoes %}
+            {% include "comum/link_desktop.html" with url=correcoes ativo=navegacao_ativa secao="correcoes" icone="nota" rotulo="Correções" only %}
+            {% url 'inspecoes:termos' as termos %}
+            {% include "comum/link_desktop.html" with url=termos ativo=navegacao_ativa secao="termos" icone="arquivo" rotulo="Termos emitidos" only %}
+        </div>
+        {% endif %}
+
+        {% if request.user.perfil == "administrador" %}
+        <div class="navegacao-desktop__grupo">
+            <p>Gestão</p>
+            {% url 'gestao_contas:lista' as usuarios %}
+            {% include "comum/link_desktop.html" with url=usuarios ativo=navegacao_ativa secao="usuarios" icone="pessoa" rotulo="Usuários" only %}
+            {% url 'estabelecimentos:lista' as estabelecimentos %}
+            {% include "comum/link_desktop.html" with url=estabelecimentos ativo=navegacao_ativa secao="estabelecimentos" icone="pasta" rotulo="Estabelecimentos" only %}
+            {% url 'checklists:lista' as checklists %}
+            {% include "comum/link_desktop.html" with url=checklists ativo=navegacao_ativa secao="checklists" icone="checklist" rotulo="Checklists" only %}
+        </div>
+        {% elif inspecoes_habilitadas and request.user.perfil == "estabelecimento" %}
+        <div class="navegacao-desktop__grupo">
+            <p>Estabelecimento</p>
+            {% url 'inspecoes:documentos' as documentos %}
+            {% include "comum/link_desktop.html" with url=documentos ativo=navegacao_ativa secao="documentos" icone="pasta" rotulo="Documentos" only %}
+            {% url 'inspecoes:resultados_liberados' as resultados %}
+            {% include "comum/link_desktop.html" with url=resultados ativo=navegacao_ativa secao="resultados" icone="arquivo" rotulo="Resultados liberados" only %}
+        </div>
+        {% endif %}
+    </nav>
+    <div class="navegacao-desktop__sessao">
+        <span>{{ request.user.get_perfil_display|default:"Conta" }}</span>
+        <form action="{% url 'contas:sair' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="botao-link" data-acao-servidor>Sair</button>
+        </form>
+    </div>
+</aside>

@@ -1,64 +1,79 @@
 {% extends "inspecoes/base.html" %}
-
-{% block cabecalho %}
-{{ block.super }}
-<style>
-    #envios-a-conferir li[hidden] { display: none; }
-</style>
-{% endblock %}
-
+{% block largura %}estrutura--campo{% endblock %}
+{% block barra_titulo %}{% if resultado %}Resultado interno{% else %}Resumo da inspeção{% endif %}{% endblock %}
 {% block inspecoes %}
-<h1 id="titulo-gestao">{% if resultado %}Resultado interno{% else %}Revisar para concluir{% endif %} · Inspeção #{{ inspecao.pk }}</h1>
+<h1 id="titulo-gestao" class="sr-only">{% if resultado %}Resultado interno{% else %}Resumo da inspeção{% endif %}</h1>
 {% if resultado %}
-<p>Inspeção concluída em {{ resultado.concluido_em|date:"d/m/Y H:i" }}, por {{ resultado.concluido_por.username }}.</p>
+<p class="ajuda">Inspeção #{{ inspecao.pk }} · Concluída em {{ resultado.concluido_em|date:"d/m/Y H:i" }}, por {{ resultado.concluido_por.username }}.</p>
+<p class="alerta resultado-nota">
+    {% if resultado.pontuacao is not None %}<strong>{{ resultado.pontuacao|floatformat:2 }}%</strong>{% endif %}
+    <span>{{ resultado.get_classificacao_display }}</span>
+</p>
 <dl>
     <dt>Revisão do resultado</dt><dd>{{ resultado.revisao }}</dd>
-    <dt>Classificação</dt><dd>{{ resultado.get_classificacao_display }}</dd>
-    {% if resultado.pontuacao is not None %}
-    <dt>Pontuação</dt><dd>{{ resultado.pontuacao|floatformat:2 }}%</dd>
-    {% endif %}
     <dt>Checklist</dt><dd>{{ inspecao.versao_checklist.titulo }} · Versão {{ inspecao.versao_checklist.numero }}</dd>
     <dt>Regra de demonstração</dt><dd>{{ resultado.regra_pontuacao }}</dd>
 </dl>
 {% elif indisponivel %}
-<p>A inspeção precisa estar em andamento para ser concluída.</p>
+<p class="alerta alerta--atencao">A inspeção precisa estar em andamento para ser concluída.</p>
 {% else %}
-<p>{{ inspecao.versao_checklist.titulo }} · Versão {{ inspecao.versao_checklist.numero }}</p>
-<p>Respostas confirmadas pelo servidor: {{ respondidos }} de {{ itens|length }}.</p>
-{% if bloqueada %}<p>Há um pedido de cancelamento pendente.</p>{% endif %}
-{% if faltantes %}
-<h2>Respostas obrigatórias faltantes</h2>
-<ul class="registros">
-    {% for item in faltantes %}
-    <li><a href="{% url 'inspecoes:campo_item' inspecao.pk item.id %}">{{ item.ordem }}. {{ item.enunciado }}</a></li>
-    {% endfor %}
-</ul>
-{% endif %}
-<section id="revisao-conclusao" data-contexto="{{ contexto }}" data-inspecao="{{ inspecao.pk }}"
+{% widthratio respondidos itens|length 100 as percentual %}
+<section class="resumo-mesa" id="revisao-conclusao" data-contexto="{{ contexto }}" data-inspecao="{{ inspecao.pk }}"
     data-conexao="{% url 'inspecoes:conclusao_conexao' inspecao.pk %}">
-    <div id="envios-a-conferir" hidden>
-        <h2>Envios desta aba a conferir</h2>
-        <p>Volte ao item e confirme o envio no servidor para concluir.</p>
-        <ul class="registros">
-            {% for item in itens %}
-            <li hidden data-item="{{ item.id }}"><a href="{% url 'inspecoes:campo_item' inspecao.pk item.id %}">{{ item.ordem }}. {{ item.enunciado }}</a></li>
+    <div class="resumo-mesa__progresso">
+    <div class="resumo-progresso">
+    <div class="progresso-anel" style="--percentual: {{ percentual }}" aria-hidden="true"><strong>{{ percentual }}%</strong></div>
+    <p><strong>{{ respondidos }} de {{ itens|length }} itens respondidos</strong></p>
+</div>
+    <ul class="contadores-resumo">
+        <li class="contador-salvo"><span><span class="icone ico-salvo" aria-hidden="true"></span> Respostas salvas</span><strong>{{ respondidos }}</strong></li>
+        <li class="contador-envio"><span>Enviando</span><strong data-total-envios="enviando">0</strong></li>
+        <li class="contador-pendente"><span>Pendentes de envio</span><strong data-total-envios="pendente">0</strong></li>
+        <li class="contador-falha"><span>Falhas de envio</span><strong data-total-envios="falha">0</strong></li>
+        <li><span>Itens sem resposta</span><strong data-total-itens="{{ itens|length }}" data-respondidos="{{ respondidos }}"></strong></li>
+    </ul>
+    </div>
+    <div class="resumo-mesa__acoes">
+    {% if bloqueada %}<p class="alerta alerta--atencao">Há um pedido de cancelamento pendente.</p>{% endif %}
+    {% if faltantes %}
+    <div class="alerta alerta--atencao">
+        <h2>Respostas obrigatórias faltantes</h2>
+        <ul>
+            {% for item in faltantes %}
+            <li><a href="{% url 'inspecoes:campo_item' inspecao.pk item.id %}">{{ item.ordem }}. {{ item.enunciado }}</a></li>
             {% endfor %}
         </ul>
     </div>
+    {% endif %}
+    <div id="envios-a-conferir" class="alerta alerta--atencao" hidden>
+        <h2>Envios desta aba a conferir</h2>
+        <p>Volte ao registro para confirmar o envio antes de concluir.</p>
+        <ul>
+            {% for item in itens %}
+            <li hidden data-item="{{ item.id }}"><a href="{% url 'inspecoes:campo_item' inspecao.pk item.id %}">{{ item.ordem }}. {{ item.enunciado }}</a></li>
+            {% endfor %}
+            <li hidden data-item="observacoes"><a href="{% url 'inspecoes:observacoes' inspecao.pk %}">Observações gerais</a></li>
+        </ul>
+    </div>
     {% if pode_concluir %}
-    <p>Concluir encerra o preenchimento e calcula o resultado interno.</p>
-    <p data-estado-conexao role="status" hidden></p>
+    {% include "comum/conexao.html" %}
     <noscript><p>Ative JavaScript para acompanhar a confirmação nesta tela.</p></noscript>
-    <form method="post" action="{% url 'inspecoes:conclusao_confirmar' inspecao.pk %}" data-envio="conclusao">
+    <form class="secao" method="post" action="{% url 'inspecoes:conclusao_confirmar' inspecao.pk %}" data-envio="conclusao">
         {% csrf_token %}
-        <fieldset data-campos hidden>
-            <input type="hidden" name="revisao_base" value="{{ revisao_base }}">
-        </fieldset>
-        <button type="submit" disabled>Concluir inspeção</button>
+        <fieldset data-campos hidden><input type="hidden" name="revisao_base" value="{{ revisao_base }}"></fieldset>
+        <button class="acao acao--largura" type="submit" disabled>Concluir inspeção</button>
         <p data-status role="status"></p>
     </form>
+    {% else %}
+    <button class="acao acao--largura" type="button" disabled>Concluir inspeção</button>
     {% endif %}
+    </div>
 </section>
+<div class="rodape-acoes">
+    <a class="acao acao--secundaria" href="{% url 'inspecoes:campo' inspecao.pk %}">Voltar ao checklist</a>
+    <button class="acao acao--secundaria" type="button" data-abrir-dialogo="legenda-envios" hidden>Status do envio</button>
+</div>
+{% include "comum/legenda_envios.html" %}
 <script>
 (() => {
     {% include "campo/pendencias.html" %}
@@ -66,18 +81,18 @@
     const painel = document.getElementById("revisao-conclusao");
     const avisos = document.getElementById("envios-a-conferir");
     const form = painel.querySelector("form[data-envio]");
+    const semResposta = painel.querySelector("[data-total-itens]");
+    semResposta.textContent = Number(semResposta.dataset.totalItens) - Number(semResposta.dataset.respondidos);
+
     function atualizarPendencias() {
-        let pendencias = [];
-        try {
-            pendencias = lerPendencias(painel);
-        } catch {
-            // A sessão pode bloquear o armazenamento de avisos entre páginas.
+        const pendencias = lerPendencias(painel);
+        const itens = new Set([...pendencias.keys()].map((envio) => envio.split(":")[0]));
+        for (const linha of avisos.querySelectorAll("[data-item]")) linha.hidden = !itens.has(linha.dataset.item);
+        for (const contador of painel.querySelectorAll("[data-total-envios]")) {
+            contador.textContent = [...pendencias.values()].filter((valor) => valor === contador.dataset.totalEnvios).length;
         }
-        for (const linha of avisos.querySelectorAll("[data-item]")) {
-            linha.hidden = !pendencias.some((envio) => envio.split(":")[0] === linha.dataset.item);
-        }
-        avisos.hidden = !pendencias.length;
-        if (form) form.dataset.liberado = pendencias.length ? "nao" : "sim";
+        avisos.hidden = !pendencias.size;
+        if (form) form.dataset.liberado = pendencias.size ? "nao" : "sim";
     }
 
     atualizarPendencias();
@@ -91,5 +106,4 @@
 })();
 </script>
 {% endif %}
-<p><a href="{% url 'inspecoes:detalhe' inspecao.pk %}">Voltar à inspeção</a></p>
 {% endblock %}

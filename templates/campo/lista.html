@@ -1,17 +1,75 @@
 {% extends "inspecoes/base.html" %}
-
+{% block largura %}estrutura--campo{% endblock %}
+{% block barra_titulo %}Checklist{% endblock %}
 {% block inspecoes %}
-<h1 id="titulo-gestao">Checklist da inspeção #{{ inspecao.pk }}</h1>
-{% if inspecao.estado == "concluida" %}<p>Registros originais de campo. <a href="{% url 'inspecoes:revisoes' inspecao.pk %}">Ver correções e revisões</a></p>{% endif %}
-<p>{{ inspecao.versao_checklist.titulo }} · Versão {{ inspecao.versao_checklist.numero }}</p>
-<ul class="registros">
-    {% for item in itens %}
-    <li>
-        <a href="{% url 'inspecoes:campo_item' inspecao.pk item.id %}">{{ item.ordem }}. {{ item.enunciado }}</a>
-        <span>{% if item.salva %}Salva{% else %}Sem resposta{% endif %}{% if item.obrigatorio %} · Obrigatório{% endif %}</span>
-    </li>
-    {% empty %}<li>Nenhum item disponível.</li>{% endfor %}
-</ul>
-{% if pode_revisar %}<p><a class="acao" href="{% url 'inspecoes:conclusao' inspecao.pk %}">Revisar para concluir</a></p>{% endif %}
-<p><a href="{% url 'inspecoes:detalhe' inspecao.pk %}">Voltar à inspeção</a></p>
+<h1 id="titulo-gestao" class="sr-only">Checklist</h1>
+{% if inspecao.estado == "concluida" %}<p class="ajuda">Registros originais de campo. <a href="{% url 'inspecoes:revisoes' inspecao.pk %}">Ver correções e revisões</a>.</p>{% endif %}
+<div class="progresso-linha"><span>{{ respondidos }} de {{ itens|length }} itens respondidos</span><strong>{{ percentual }}%</strong></div>
+<progress max="{{ itens|length|default:1 }}" value="{{ respondidos }}" aria-label="Itens com resposta confirmada"></progress>
+<div id="lista-campo" data-inspecao="{{ inspecao.pk }}" data-contexto="{{ contexto }}">
+    <div class="secao cabecalho-com-acoes">
+        <div><h2>{{ inspecao.versao_checklist.titulo }}</h2><span class="etiqueta">Versão {{ inspecao.versao_checklist.numero }}</span></div>
+        <details class="retratil filtro-checklist" hidden>
+            <summary class="filtros-toggle"><span class="icone ico-filtro" aria-hidden="true"></span>Filtrar</summary>
+            <label for="filtro-checklist" class="sr-only">Filtrar itens</label>
+            <select id="filtro-checklist">
+                <option value="">Todos os itens</option>
+                <option value="salva">Salvos</option>
+                <option value="sem-resposta">Sem resposta</option>
+                <option value="em-envio">Envios a conferir</option>
+            </select>
+        </details>
+    </div>
+    <ol class="linhas-checklist">
+        {% for item in itens %}
+        <li data-item="{{ item.id }}">
+            <a class="linha-checklist" href="{% url 'inspecoes:campo_item' inspecao.pk item.id %}">
+                <span><strong>{{ item.ordem }}. {{ item.enunciado }}</strong>
+                {% if item.obrigatorio %}<small class="ajuda">Obrigatório</small>{% endif %}
+                <span class="etiqueta" data-base="{% if item.salva %}salva{% else %}sem-resposta{% endif %}">{% if item.salva %}Salva{% else %}Sem resposta{% endif %}</span></span>
+                <span class="icone ico-proximo" aria-hidden="true"></span>
+            </a>
+        </li>
+        {% empty %}<li>Nenhum item disponível.</li>{% endfor %}
+    </ol>
+    <p class="ajuda" data-sem-itens hidden>Nenhum item nesse filtro.</p>
+</div>
+<div class="rodape-acoes">
+    {% if pode_revisar %}<a class="acao" href="{% url 'inspecoes:conclusao' inspecao.pk %}">Revisar para concluir</a>{% endif %}
+    <button class="acao acao--secundaria" type="button" data-abrir-dialogo="legenda-envios" hidden>Status do envio</button>
+</div>
+{% include "comum/legenda_envios.html" %}
+<script>
+(() => {
+    {% include "campo/pendencias.html" %}
+    const painel = document.getElementById("lista-campo");
+    const filtro = document.getElementById("filtro-checklist");
+    filtro.closest("details").hidden = false;
+
+    function atualizar() {
+        const pendencias = lerPendencias(painel);
+        const porItem = new Map();
+        const prioridade = ["enviando", "pendente", "falha"];
+        for (const [chave, estado] of pendencias) {
+            const item = chave.split(":")[0];
+            if (prioridade.indexOf(estado) > prioridade.indexOf(porItem.get(item))) porItem.set(item, estado);
+        }
+        const rotulos = {salva: "Salva", "sem-resposta": "Sem resposta", pendente: "Pendente", enviando: "Enviando", falha: "Falha"};
+        let visiveis = 0;
+        for (const linha of painel.querySelectorAll("[data-item]")) {
+            const selo = linha.querySelector("[data-base]");
+            const estado = porItem.get(linha.dataset.item) || selo.dataset.base;
+            selo.dataset.estado = estado;
+            selo.textContent = rotulos[estado];
+            linha.hidden = Boolean(filtro.value && filtro.value !== estado && !(filtro.value === "em-envio" && prioridade.includes(estado)));
+            if (!linha.hidden) visiveis++;
+        }
+        painel.querySelector("[data-sem-itens]").hidden = Boolean(visiveis || !filtro.value);
+    }
+
+    filtro.addEventListener("change", atualizar);
+    addEventListener("pageshow", atualizar);
+    atualizar();
+})();
+</script>
 {% endblock %}

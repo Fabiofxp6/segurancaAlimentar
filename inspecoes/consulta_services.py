@@ -45,9 +45,21 @@ def _filtrar(escopo, *, estado, estabelecimento, fiscal, inicio, fim):
     return escopo
 
 
-def listar(ator_id, *, pagina, **filtros):
+def listar(ator_id, *, pagina, busca="", recorte="", **filtros):
     _, escopo = _escopo(ator_id)
-    consulta = _filtrar(escopo, **filtros).select_related("estabelecimento", "responsavel").order_by("-pk")
+    consulta = _filtrar(escopo, **filtros)
+    if recorte == "finalizadas":
+        consulta = consulta.filter(estado__in=(Inspecao.Estado.CONCLUIDA, Inspecao.Estado.CANCELADA))
+    if busca:
+        termo = busca.removeprefix("#")
+        if termo.isascii() and termo.isdecimal() and len(termo) <= 19:
+            consulta = consulta.filter(pk=int(termo))
+        else:
+            consulta = consulta.filter(
+                Q(identificacao_estabelecimento__nome__icontains=busca)
+                | Q(identificacao_estabelecimento__isnull=True, estabelecimento__nome__icontains=busca),
+            )
+    consulta = consulta.select_related("estabelecimento", "responsavel").order_by("-pk")
     return Paginator(consulta, 25).get_page(pagina)
 
 

@@ -92,6 +92,7 @@ class HistoricoInspecao(models.Model):
         ADIAMENTO_PEDIDO = "adiamento_pedido", "Adiamento solicitado"
         ADIAMENTO_DECISAO = "adiamento_dec", "Decisão de adiamento"
         REANALISE = "reanalise", "Reanálise documental registrada"
+        OBSERVACAO = "observacao", "Observação geral registrada"
 
     inspecao = models.ForeignKey(Inspecao, on_delete=models.PROTECT, related_name="historico")
     autor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
@@ -452,3 +453,18 @@ class ReanaliseDocumento(models.Model):
     operacao_id = models.UUIDField()
     parecer = models.CharField(max_length=2000)
     indica_correcao = models.BooleanField()
+
+
+class ObservacaoInspecao(models.Model):
+    inspecao = models.ForeignKey(Inspecao, on_delete=models.PROTECT, related_name="observacoes_gerais")
+    autor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    texto = models.CharField(max_length=1000)
+    operacao_id = models.UUIDField()
+    registrada_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["inspecao", "operacao_id"], name="observacao_inspecao_operacao_unica",
+            ),
+        ]

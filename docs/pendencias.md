@@ -210,7 +210,7 @@ Origem: F003; RF011, RNF14 e RS014.
 
 ## P021 Revisão dos protótipos
 
-Alinhar cancelamento à solicitação/autorização e revisar limites, textos, imagens, dados e obrigatoriedade ilustrativos. Não alterar o protótipo nesta etapa.
+A interface local passou a usar o protótipo RF-08 e adaptou o cancelamento ao fluxo de solicitação e autorização. Os limites e campos seguem as specs da demonstração. O artefato original permanece como referência histórica. Validação em dispositivos físicos segue em P019. [Entrega da interface](entrega-interface-rf08.md)
 
 Encaminhamento: Equipe com validação de usuários.
 

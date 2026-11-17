@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block titulo %}Acesso negado{% endblock %}
 {% block conteudo %}
+<section class="painel pagina-erro">
     <h1>Acesso negado</h1>
     <p>Você não tem permissão para acessar esta página.</p>
+    {% url 'contas:acesso' as retorno %}
+    {% if retorno %}<a href="{{ retorno }}" class="acao acao--secundaria">Voltar à área de acesso</a>{% endif %}
+</section>
 {% endblock %}

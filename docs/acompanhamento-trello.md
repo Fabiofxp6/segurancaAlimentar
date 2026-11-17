@@ -57,6 +57,12 @@ O usuário aprovou o [roteiro I00–I14](plano-implementacao.md) em 15/11/2026 e
 
 O usuário definiu execução local para a faculdade. O [cartão da I13](https://trello.com/c/y1hVzQze) acompanha o [ensaio local concluído](entrega-i13.md). O [cartão da I14](https://trello.com/c/KL83kx24) registra as escolhas, a execução e a [validação de adiamento e reanálise](entrega-i14.md).
 
+## Interface baseada no RF-08 — 16/11/2026
+
+O [cartão da revisão](https://trello.com/c/pNg9DDKy) registra a aplicação do protótipo ao fluxo do fiscal e da mesma identidade visual à gestão e ao portal. A [entrega](entrega-interface-rf08.md) documenta os comportamentos e a validação local.
+
+A [adaptação desktop](https://trello.com/c/I9hMFnXg) registra a navegação por perfil, a lista em colunas e a validação dos painéis de trabalho com a interface móvel preservada.
+
 ## Situação em 10/11/2026
 
 Etapa 1 registrada como concluída. Etapa 2 com redação e conferência terminadas, em Pendente para revisão; PRD Proposto. Etapa 3 com elaboração e conferência documentais concluídas, em Pendente para revisão. Etapa 4 com elaboração e conferência documentais concluídas, em Pendente para revisão. Etapa 5 com elaboração e conferência documentais concluídas, em Pendente para revisão; spec e novo ADR Propostos. Etapa 6 com elaboração e conferência documentais concluídas, em Pendente para revisão; spec e matriz Propostas. Etapa 7 com revisão integrada das três skills concluída, em Pendente para revisão do usuário; a curadoria anterior foi preservada como histórico. Etapa 8 com orientações da raiz e revisão final elaboradas/conferidas, em Pendente para revisão; nenhuma implementação iniciada.

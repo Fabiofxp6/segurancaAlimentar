@@ -1,26 +1,30 @@
-{% extends "contas/base.html" %}
+{% extends "gestao/base.html" %}
 {% block titulo %}Acesso | Segurança Alimentar{% endblock %}
-
-{% block conta %}
-<h1 id="titulo-conta">Área de acesso</h1>
-<p class="usuario">Usuário conectado: <strong>{{ usuario }}</strong></p>
-{% if administracao %}
-<p><a href="{% url 'gestao_contas:lista' %}">Gerir usuários</a></p>
-<p><a href="{% url 'estabelecimentos:lista' %}">Gerir estabelecimentos</a></p>
-<p><a href="{% url 'checklists:lista' %}">Gerir checklists</a></p>
-{% endif %}
-{% if inspecoes_demo %}
-<p><a href="{% url 'inspecoes:lista' %}">Inspeções</a></p>
-{% endif %}
-{% if documentos_demo %}
-<p><a href="{% url 'inspecoes:resultados_liberados' %}">Resultados liberados</a></p>
-<p><a href="{% url 'inspecoes:documentos' %}">Documentos do estabelecimento</a></p>
-{% endif %}
-{% if unidade_id %}
-<p><a href="{% url 'contas:estabelecimento' unidade_id %}">Meu estabelecimento</a></p>
-{% endif %}
-<form method="post" action="{% url 'contas:sair' %}">
+{% block barra_titulo %}Área de acesso{% endblock %}
+{% block barra_inicio %}<span class="icone ico-pessoa" aria-hidden="true"></span>{% endblock %}
+{% block menu_links %}{% endblock %}
+{% block gestao %}
+<h1 id="titulo-gestao">Área de acesso</h1>
+<p class="secundario usuario">Usuário conectado: <strong>{{ usuario }}</strong></p>
+<div class="atalhos">
+    {% if inspecoes_demo %}
+    <a class="atalho atalho--destaque" href="{% url 'inspecoes:lista' %}"><span class="icone ico-checklist" aria-hidden="true"></span><span><strong>Inspeções</strong><small>Acompanhar e registrar inspeções</small></span><span class="icone ico-proximo" aria-hidden="true"></span></a>
+    {% endif %}
+    {% if administracao %}
+    <a class="atalho" href="{% url 'gestao_contas:lista' %}"><span class="icone ico-pessoa" aria-hidden="true"></span><strong>Gerir usuários</strong><span class="icone ico-proximo" aria-hidden="true"></span></a>
+    <a class="atalho" href="{% url 'estabelecimentos:lista' %}"><span class="icone ico-pasta" aria-hidden="true"></span><strong>Gerir estabelecimentos</strong><span class="icone ico-proximo" aria-hidden="true"></span></a>
+    <a class="atalho" href="{% url 'checklists:lista' %}"><span class="icone ico-checklist" aria-hidden="true"></span><strong>Gerir checklists</strong><span class="icone ico-proximo" aria-hidden="true"></span></a>
+    {% endif %}
+    {% if documentos_demo %}
+    <a class="atalho atalho--destaque" href="{% url 'inspecoes:resultados_liberados' %}"><span class="icone ico-checklist" aria-hidden="true"></span><strong>Resultados liberados</strong><span class="icone ico-proximo" aria-hidden="true"></span></a>
+    <a class="atalho" href="{% url 'inspecoes:documentos' %}"><span class="icone ico-arquivo" aria-hidden="true"></span><strong>Documentos do estabelecimento</strong><span class="icone ico-proximo" aria-hidden="true"></span></a>
+    {% endif %}
+    {% if unidade_id %}
+    <a class="atalho" href="{% url 'contas:estabelecimento' unidade_id %}"><span class="icone ico-pasta" aria-hidden="true"></span><strong>Meu estabelecimento</strong><span class="icone ico-proximo" aria-hidden="true"></span></a>
+    {% endif %}
+</div>
+<form class="acao-final acesso__sair" method="post" action="{% url 'contas:sair' %}">
     {% csrf_token %}
-    <button type="submit">Sair</button>
+    <button class="acao acao--secundaria" type="submit">Sair</button>
 </form>
 {% endblock %}

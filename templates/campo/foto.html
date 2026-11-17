@@ -1,0 +1,8 @@
+<li class="foto-confirmada">
+    {% url 'inspecoes:campo_baixar' inspecao.pk item_id evidencia.pk as url_foto %}
+    <a href="{{ url_foto }}">
+        <img loading="lazy" src="{% url 'inspecoes:campo_visualizar' inspecao.pk item_id evidencia.pk %}" alt="">
+        <span>{{ evidencia.nome }}</span>
+    </a>
+    <small>Salva · {{ evidencia.get_vinculo_display }}</small>
+</li>

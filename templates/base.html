@@ -1,12 +1,20 @@
+{% load static %}
 <!doctype html>
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0753a7">
     <title>{% block titulo %}Sistema de Avaliação de Segurança Alimentar{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{% static 'interface/marca.png' %}">
+    <link rel="stylesheet" href="{% static 'interface/sistema.css' %}">
+    <link rel="stylesheet" href="{% static 'interface/desktop.css' %}" media="(min-width: 64rem)">
+    <script src="{% static 'interface/interface.js' %}" defer></script>
     {% block cabecalho %}{% endblock %}
 </head>
-<body>
-    <main>{% block conteudo %}{% endblock %}</main>
+<body class="{% block classe_corpo %}{% endblock %}">
+    <a class="pular" href="#conteudo" data-nav-local>Ir para o conteúdo</a>
+    {% block barra %}{% endblock %}
+    <main id="conteudo" class="{% block classe_main %}estrutura{% endblock %}">{% block conteudo %}{% endblock %}</main>
 </body>
 </html>

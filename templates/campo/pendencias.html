@@ -3,24 +3,27 @@ function chavePendencias(painel) {
 }
 
 function lerPendencias(painel) {
-    return JSON.parse(sessionStorage.getItem(chavePendencias(painel)) || "[]");
+    try {
+        const dados = JSON.parse(sessionStorage.getItem(chavePendencias(painel)) || "{}");
+        if (Array.isArray(dados)) return new Map(dados.map((chave) => [chave, "pendente"]));
+        return new Map(Object.entries(dados));
+    } catch {
+        return new Map();
+    }
 }
 
-function registrarPendencia(painel, tipo, semConfirmacao) {
+function registrarPendencia(painel, tipo, situacao) {
     try {
         const chave = painel.dataset.item + ":" + tipo;
-        const pendencias = new Set(lerPendencias(painel));
-        if (semConfirmacao) {
-            pendencias.add(chave);
-        } else {
-            pendencias.delete(chave);
-        }
+        const pendencias = lerPendencias(painel);
+        if (situacao) pendencias.set(chave, situacao);
+        else pendencias.delete(chave);
         if (pendencias.size) {
-            sessionStorage.setItem(chavePendencias(painel), JSON.stringify([...pendencias]));
+            sessionStorage.setItem(chavePendencias(painel), JSON.stringify(Object.fromEntries(pendencias)));
         } else {
             sessionStorage.removeItem(chavePendencias(painel));
         }
     } catch {
-        // A operação de campo ainda usa a confirmação normal do servidor.
+        // O envio ainda exige a confirmação do servidor.
     }
 }

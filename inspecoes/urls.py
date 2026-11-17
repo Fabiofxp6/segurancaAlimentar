@@ -9,6 +9,7 @@ from .cancelamento_views import (
 )
 from .campo_views import (
     CampoAnexarView, CampoBaixarView, CampoConexaoView, CampoItemView, CampoListaView, CampoResponderView,
+    CampoVisualizarView, GaleriaView, ObservacaoConexaoView, ObservacaoSalvarView, ObservacoesView,
 )
 from .conclusao_views import ConcluirView, ConclusaoConexaoView, ConclusaoView
 from .correcao_views import (
@@ -80,11 +81,19 @@ urlpatterns = [
     path("<int:pk>/conclusao/confirmar/", ConcluirView.as_view(), name="conclusao_confirmar"),
     path("<int:pk>/conclusao/conexao/", ConclusaoConexaoView.as_view(), name="conclusao_conexao"),
     path("<int:pk>/auditoria/", AuditoriaInspecaoView.as_view(), name="auditoria"),
+    path("<int:pk>/evidencias/", GaleriaView.as_view(), name="galeria"),
+    path("<int:pk>/observacoes/", ObservacoesView.as_view(), name="observacoes"),
+    path("<int:pk>/observacoes/conexao/", ObservacaoConexaoView.as_view(), name="observacao_conexao"),
+    path("<int:pk>/observacoes/salvar/", ObservacaoSalvarView.as_view(), name="observacao_salvar"),
     path("<int:pk>/campo/", CampoListaView.as_view(), name="campo"),
     path("<int:pk>/campo/<uuid:item_id>/", CampoItemView.as_view(), name="campo_item"),
     path("<int:pk>/campo/<uuid:item_id>/conexao/", CampoConexaoView.as_view(), name="campo_conexao"),
     path("<int:pk>/campo/<uuid:item_id>/resposta/", CampoResponderView.as_view(), name="campo_responder"),
     path("<int:pk>/campo/<uuid:item_id>/evidencias/", CampoAnexarView.as_view(), name="campo_anexar"),
     path("<int:pk>/campo/<uuid:item_id>/evidencias/<int:evidencia_id>/", CampoBaixarView.as_view(), name="campo_baixar"),
+    path(
+        "<int:pk>/campo/<uuid:item_id>/evidencias/<int:evidencia_id>/visualizar/",
+        CampoVisualizarView.as_view(), name="campo_visualizar",
+    ),
     path("acoes/<int:pk>/supervisao/", SupervisaoView.as_view(), name="supervisao"),
 ]

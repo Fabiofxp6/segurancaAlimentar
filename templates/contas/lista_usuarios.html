@@ -1,10 +1,13 @@
 {% extends "gestao/base.html" %}
 
 {% block titulo %}Usuários | Segurança Alimentar{% endblock %}
+{% block barra_titulo %}Usuários{% endblock %}
 {% block gestao %}
+<div class="cabecalho-catalogo">
 <h1 id="titulo-gestao">Usuários</h1>
 <a class="acao" href="{% url 'gestao_contas:criar' %}">Novo usuário</a>
-<ul class="registros">
+</div>
+<ul class="registros registros--catalogo">
     {% for usuario in pagina %}
     <li>
         <div>

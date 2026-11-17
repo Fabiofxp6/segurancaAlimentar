@@ -1,0 +1,14 @@
+<dialog class="dialogo" id="legenda-envios" aria-labelledby="titulo-legenda">
+    <div class="dialogo__topo">
+        <h2 id="titulo-legenda">Status do envio</h2>
+        <form method="dialog"><button class="botao-icone" type="submit" aria-label="Fechar"><span class="icone ico-fechar" aria-hidden="true"></span></button></form>
+    </div>
+    <ul class="estados-legenda">
+        <li><span class="etiqueta" data-estado="pendente">Pendente</span><p>Aguardando envio ou confirmação do servidor.</p></li>
+        <li><span class="etiqueta" data-estado="enviando">Enviando</span><p>Envio em andamento.</p></li>
+        <li><span class="etiqueta" data-estado="salva">Salva</span><p>Registro confirmado pelo servidor.</p></li>
+        <li><span class="etiqueta" data-estado="falha">Falha</span><p>Confira a mensagem do formulário antes de tentar novamente.</p></li>
+    </ul>
+    <p class="alerta">Somente registros confirmados são considerados salvos.</p>
+    <form method="dialog"><button class="acao acao--largura" type="submit">OK</button></form>
+</dialog>

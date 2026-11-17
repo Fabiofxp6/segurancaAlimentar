@@ -41,6 +41,13 @@ class FiltrosInspecaoForm(forms.Form):
 
 
 class ConsultaInspecaoForm(FiltrosInspecaoForm):
+    busca = forms.CharField(
+        label="Buscar inspeção", max_length=120, required=False,
+        widget=forms.TextInput(attrs={"type": "search", "placeholder": "Buscar inspeção…"}),
+    )
+    recorte = forms.ChoiceField(
+        choices=[("finalizadas", "Finalizadas")], required=False, widget=forms.HiddenInput,
+    )
     pagina = forms.IntegerField(
         min_value=1, required=False, widget=forms.HiddenInput,
         error_messages={"min_value": "Informe uma página maior ou igual a 1."},

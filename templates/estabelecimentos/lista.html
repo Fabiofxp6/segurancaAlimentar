@@ -1,9 +1,12 @@
 {% extends "gestao/base.html" %}
 
+{% block barra_titulo %}Estabelecimentos{% endblock %}
 {% block gestao %}
+<div class="cabecalho-catalogo">
 <h1 id="titulo-gestao">Estabelecimentos</h1>
 <a class="acao" href="{% url 'estabelecimentos:criar' %}">Novo estabelecimento</a>
-<ul class="registros">
+</div>
+<ul class="registros registros--catalogo">
     {% for cadastro in pagina %}
         <li>
             <a href="{% url 'estabelecimentos:editar' cadastro.pk %}">{{ cadastro.nome }}</a>

@@ -1,8 +1,12 @@
-{% extends "contas/base.html" %}
-
+{% extends "gestao/base.html" %}
 {% block titulo %}Meu estabelecimento | Segurança Alimentar{% endblock %}
-{% block conta %}
-<h1 id="titulo-conta">Meu estabelecimento</h1>
-<p class="usuario">{{ estabelecimento.nome }}</p>
-<p><a href="{% url 'contas:acesso' %}">Voltar à área de acesso</a></p>
+{% block barra_titulo %}Meu estabelecimento{% endblock %}
+{% block largura %}estrutura--campo{% endblock %}
+{% block menu_links %}
+<a href="{% url 'inspecoes:documentos' %}">Documentos do estabelecimento</a>
+<a href="{% url 'inspecoes:resultados_liberados' %}">Resultados liberados</a>
+{% endblock %}
+{% block gestao %}
+<h1 id="titulo-gestao">Meu estabelecimento</h1>
+<p class="alerta"><span class="icone ico-pasta" aria-hidden="true"></span>{{ estabelecimento.nome }}</p>
 {% endblock %}

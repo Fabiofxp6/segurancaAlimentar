@@ -3,7 +3,7 @@
 {% block documentos %}
 <h1 id="titulo-gestao">Documentos do estabelecimento</h1>
 <p>Selecione a inspeção para enviar ou consultar documentos.</p>
-<ul class="registros">
+<ul class="registros registros--catalogo">
     {% for registro in pagina %}
     <li><a href="{% url 'inspecoes:documentos_inspecao' registro.pk %}">
         Inspeção #{{ registro.pk }} · {% firstof registro.identificacao_estabelecimento.nome registro.estabelecimento.nome %}

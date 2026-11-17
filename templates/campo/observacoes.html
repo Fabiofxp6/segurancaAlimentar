@@ -1,0 +1,54 @@
+{% extends "inspecoes/base.html" %}
+{% load tz %}
+{% block largura %}estrutura--campo{% endblock %}
+{% block barra_titulo %}Observações gerais{% endblock %}
+{% block inspecoes %}
+<h1 id="titulo-gestao" class="sr-only">Observações gerais</h1>
+<div class="observacoes--mesa">
+<div id="observacoes" class="observacoes" data-contexto="{{ contexto }}" data-inspecao="{{ inspecao.pk }}"
+     data-item="observacoes" data-conexao="{% url 'inspecoes:observacao_conexao' inspecao.pk %}">
+    {% if pode_gravar %}
+    {% include "comum/conexao.html" %}
+    <noscript><p>Ative JavaScript para acompanhar a confirmação.</p></noscript>
+    <form method="post" action="{% url 'inspecoes:observacao_salvar' inspecao.pk %}" data-envio="observacao">
+        {% csrf_token %}
+        <fieldset data-campos>
+            <legend>Adicionar observação</legend>
+            {{ form.operacao_id }}
+            <label class="sr-only" for="{{ form.texto.id_for_label }}">{{ form.texto.label }}</label>
+            {{ form.texto }}
+            <span data-contador-saida="{{ form.texto.id_for_label }}" aria-hidden="true"></span>
+        </fieldset>
+        <button class="acao acao--largura" type="submit" disabled>Salvar observação</button>
+        <p role="status" data-status></p>
+    </form>
+    {% else %}
+    <p class="alerta alerta--atencao">Novos registros estão bloqueados nesta inspeção.</p>
+    {% endif %}
+</div>
+<div class="observacoes__historico">
+<h2 class="secao">Observações registradas</h2>
+<ul class="registros">
+    {% for observacao in pagina %}
+    <li><div>
+        <p class="ajuda">{{ observacao.registrada_em|timezone:"America/Maceio"|date:"d/m/Y · H:i" }} · {{ observacao.autor.get_username }}</p>
+        {{ observacao.texto|linebreaks }}
+    </div></li>
+    {% empty %}<li>Nenhuma observação registrada.</li>{% endfor %}
+</ul>
+{% include "gestao/paginacao.html" %}
+</div>
+</div>
+{% if pode_gravar %}
+<script>
+(() => {
+    {% include "envios/controle.html" %}
+    {% include "campo/pendencias.html" %}
+    const painel = document.getElementById("observacoes");
+    iniciarEnvios(painel, (_form, dados) => window.location.assign(dados.url), (form, situacao) => {
+        registrarPendencia(painel, form.dataset.envio, situacao);
+    });
+})();
+</script>
+{% endif %}
+{% endblock %}

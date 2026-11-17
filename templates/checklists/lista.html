@@ -1,10 +1,13 @@
 {% extends "gestao/base.html" %}
 
 {% block titulo %}Checklists | Segurança Alimentar{% endblock %}
+{% block barra_titulo %}Checklists{% endblock %}
 {% block gestao %}
+<div class="cabecalho-catalogo">
 <h1 id="titulo-gestao">Checklists</h1>
 <a class="acao" href="{% url 'checklists:criar' %}">Novo checklist</a>
-<ul class="registros">
+</div>
+<ul class="registros registros--catalogo">
     {% for checklist in pagina %}
     <li><a href="{% url 'checklists:rascunho' checklist.pk %}">{{ checklist.titulo }}</a></li>
     {% empty %}

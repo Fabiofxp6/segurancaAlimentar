@@ -7,7 +7,7 @@ from django.db import transaction
 from contas.models import Perfil
 
 from .cancelamento_services import tem_pedido_pendente
-from .models import EvidenciaCampo, Inspecao, OperacaoCampo, RespostaCampo
+from .models import EvidenciaCampo, HistoricoInspecao, Inspecao, OperacaoCampo, RespostaCampo
 from .services import _ator
 
 
@@ -145,3 +145,37 @@ def salvar_evidencia(autor_id, inspecao_id, item_id, *, operacao_id, revisao, vi
     return OperacaoCampo.objects.create(**operacao, resultado={
         "evidencia_id": evidencia.pk, "nome": evidencia.nome, "vinculo": evidencia.get_vinculo_display(),
     })
+
+
+def consultar_observacoes(autor_id, inspecao_id):
+    inspecao = _inspecao(autor_id, inspecao_id)
+    return inspecao, inspecao.observacoes_gerais.select_related("autor").order_by("-pk")
+
+
+@transaction.atomic
+def salvar_observacao(autor_id, inspecao_id, *, texto, operacao_id):
+    inspecao = _inspecao(autor_id, inspecao_id, bloquear=True)
+    texto = texto.strip()
+    if not texto or len(texto) > 1000:
+        raise ValidationError("Informe uma observação de até 1.000 caracteres.")
+    anterior = inspecao.observacoes_gerais.filter(operacao_id=operacao_id).first()
+    if anterior:
+        if anterior.autor_id != autor_id or anterior.texto != texto:
+            raise CampoDesatualizado("Este envio já foi usado com outros dados.")
+        return anterior
+
+    _exigir_gravacao(inspecao)
+    observacao = inspecao.observacoes_gerais.create(autor_id=autor_id, texto=texto, operacao_id=operacao_id)
+    HistoricoInspecao.objects.create(
+        inspecao=inspecao, autor_id=autor_id, ato=HistoricoInspecao.Ato.OBSERVACAO,
+        dados={"observacao": observacao.pk},
+    )
+    return observacao
+
+
+def consultar_galeria(autor_id, inspecao_id):
+    inspecao = _inspecao(autor_id, inspecao_id)
+    fotos = EvidenciaCampo.objects.filter(resposta__inspecao=inspecao).select_related("resposta").defer(
+        "conteudo", "resposta__observacao", "resposta__descricao_irregularidade",
+    ).order_by("-pk")
+    return inspecao, fotos

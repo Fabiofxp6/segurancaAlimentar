@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
+    "django.contrib.staticfiles",
     "contas.apps.ContasConfig",
     "estabelecimentos",
     "checklists",
@@ -45,6 +46,12 @@ TEMPLATES = [
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "contas.context_processors.navegacao_desktop",
+            ],
+        },
     },
 ]
 
@@ -90,3 +97,6 @@ INSPECOES_DEMONSTRACAO = False
 LANGUAGE_CODE = "pt-br"
 USE_TZ = True
 TIME_ZONE = "UTC"
+
+STATIC_URL = "/static/"
+STATICFILES_DIRS = [BASE_DIR / "static"]

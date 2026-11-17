@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block titulo %}Erro no servidor{% endblock %}
 {% block conteudo %}
+<section class="painel pagina-erro">
     <h1>Erro no servidor</h1>
     <p>Não foi possível concluir a solicitação. Tente novamente mais tarde.</p>
+    {% url 'contas:acesso' as retorno %}
+    {% if retorno %}<a href="{{ retorno }}" class="acao acao--secundaria">Voltar à área de acesso</a>{% endif %}
+</section>
 {% endblock %}

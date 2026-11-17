@@ -1,27 +1,35 @@
 {% extends "inspecoes/base.html" %}
 
+{% block largura %}estrutura--campo{% endblock %}
+{% block barra_titulo %}Cancelamento{% endblock %}
 {% block inspecoes %}
 <h1 id="titulo-gestao">Cancelamento da inspeção #{{ inspecao.pk }}</h1>
-<p>Situação da inspeção: <strong>{{ inspecao.get_estado_display }}</strong></p>
+<p><span class="etiqueta" data-estado="{{ inspecao.estado }}">{{ inspecao.get_estado_display }}</span></p>
 <div id="cancelamento" data-contexto="{{ contexto }}" data-conexao="{% url 'inspecoes:cancelamento_conexao' inspecao.pk %}">
-    <p data-estado-conexao role="status" hidden></p>
+    {% include "comum/conexao.html" %}
     {% if pode_solicitar %}
     <h2>Solicitar cancelamento</h2>
-    <p>Enquanto o pedido estiver pendente, novos registros ficam bloqueados.</p>
+    <p class="alerta alerta--atencao"><span class="icone ico-alerta" aria-hidden="true"></span>
+        A justificativa é obrigatória. Enquanto o pedido estiver pendente, novos registros ficam bloqueados. Os registros e evidências confirmados serão preservados.</p>
     <form method="post" action="{% url 'inspecoes:cancelamento_solicitar' inspecao.pk %}" data-envio="solicitacao">
         {% csrf_token %}
         <fieldset data-campos style="min-width:0;border:0;padding:0;margin:0">
             <legend>Motivo da solicitação</legend>
-            {{ form_solicitar.as_p }}
+            {{ form_solicitar.operacao_id }}
+            {{ form_solicitar.justificativa.label_tag }}{{ form_solicitar.justificativa }}
+            <span class="contador-cancelamento" data-contador-saida="{{ form_solicitar.justificativa.id_for_label }}" aria-hidden="true"></span>
         </fieldset>
-        <button type="submit" disabled>Enviar solicitação</button>
+        <div class="rodape-acoes">
+            <a class="acao acao--secundaria" href="{% url 'inspecoes:detalhe' inspecao.pk %}">Voltar à inspeção</a>
+            <button type="submit" disabled>Enviar solicitação</button>
+        </div>
         <p data-status role="status">Pendente</p>
     </form>
     {% endif %}
     {% if decisao %}
     <h2>Decidir pedido #{{ decisao.pk }}</h2>
     <p>{{ decisao.justificativa }}</p>
-    <p>A aprovação efetiva o cancelamento e encerra os novos registros.</p>
+    <p class="alerta alerta--atencao">A aprovação efetiva o cancelamento e encerra os novos registros.</p>
     <form method="post" action="{% url 'inspecoes:cancelamento_decidir' inspecao.pk decisao.pk %}" data-envio="decisao">
         {% csrf_token %}
         <fieldset data-campos style="min-width:0;border:0;padding:0;margin:0">

@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.contrib.staticfiles.views import serve
 from django.urls import include, path
 
 
@@ -8,3 +10,7 @@ urlpatterns = [
     path("gestao/checklists/", include("checklists.urls")),
     path("inspecoes/", include("inspecoes.urls")),
 ]
+
+
+if settings.SETTINGS_MODULE == "config.settings.development":
+    urlpatterns += [path("static/<path:path>", serve, {"insecure": True})]

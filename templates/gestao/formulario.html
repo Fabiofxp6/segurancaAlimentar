@@ -1,5 +1,6 @@
 {% extends "gestao/base.html" %}
 
+{% block largura %}estrutura--formulario{% endblock %}
 {% block gestao %}
 <h1 id="titulo-gestao">{{ titulo }}</h1>
 {% if identificador %}<p>Nome de usuário <strong>{{ identificador }}</strong></p>{% endif %}

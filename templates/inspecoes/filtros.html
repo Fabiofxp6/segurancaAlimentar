@@ -1,17 +1,31 @@
 <form method="get" class="filtros-inspecoes" aria-label="Filtrar inspeções">
     {{ form.non_field_errors }}
     {{ form.pagina.errors }}
-    <div class="campos-filtro">
-        {% for campo in form.visible_fields %}
-        <div>
-            {{ campo.label_tag }}
-            {{ campo }}
-            {{ campo.errors }}
+    {% if form.busca %}
+    <div class="busca-inspecao">
+        <div class="caixa-busca">
+            <span class="icone ico-busca" aria-hidden="true"></span>
+            <label class="sr-only" for="{{ form.busca.id_for_label }}">Buscar inspeção</label>
+            {{ form.busca }}
         </div>
-        {% endfor %}
+        <button type="submit" class="acao acao--secundaria">Buscar</button>
     </div>
-    <div class="acoes-filtro">
-        <button type="submit">Aplicar filtros</button>
-        <a href="{{ sem_filtros }}">Limpar filtros</a>
-    </div>
+    {{ form.busca.errors }}
+    {{ form.recorte }}
+    {{ form.recorte.errors }}
+    {% endif %}
+    <details class="retratil"{% if not form.busca or form.errors %} open{% endif %}>
+        <summary class="filtros-toggle"><span class="icone ico-filtro" aria-hidden="true"></span>Filtros</summary>
+        <div class="campos-filtro">
+            {% for campo in form.visible_fields %}
+            {% if campo.name != "busca" %}
+            <div>{{ campo.label_tag }}{{ campo }}{{ campo.errors }}</div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        <div class="acoes-filtro">
+            <button type="submit">Aplicar filtros</button>
+            <a href="{{ sem_filtros }}">Limpar filtros</a>
+        </div>
+    </details>
 </form>

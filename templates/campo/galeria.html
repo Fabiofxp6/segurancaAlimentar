@@ -1,0 +1,34 @@
+{% extends "inspecoes/base.html" %}
+{% block largura %}estrutura--campo{% endblock %}
+{% block barra_titulo %}Evidências{% endblock %}
+{% block inspecoes %}
+<h1 id="titulo-gestao" class="sr-only">Evidências</h1>
+<nav class="abas" aria-label="Tipos de evidência">
+    <a href="{% url 'inspecoes:galeria' inspecao.pk %}"{% if not arquivos %} aria-current="page"{% endif %}>Fotos</a>
+    <a href="{% url 'inspecoes:galeria' inspecao.pk %}?tipo=arquivos"{% if arquivos %} aria-current="page"{% endif %}>Arquivos</a>
+</nav>
+{% if arquivos %}
+<h2>Documentos do estabelecimento</h2>
+<ul class="registros">
+    {% for documento in pagina %}
+    <li><a href="{% url 'inspecoes:documentos_baixar' inspecao.pk documento.pk %}">{{ documento.nome }}</a>
+    <span class="ajuda">{{ documento.autor.get_username }}</span></li>
+    {% empty %}<li>Nenhum documento recebido.</li>{% endfor %}
+</ul>
+{% else %}
+{% if pode_gravar %}
+<a class="acao acao--arquivo acao--largura" href="{% url 'inspecoes:campo' inspecao.pk %}">
+    <span class="icone ico-adicionar" aria-hidden="true"></span>Adicionar evidência
+</a>
+<p class="ajuda">Selecione o item ao qual a foto pertence.</p>
+{% endif %}
+{% if pagina %}
+<ul class="grade-fotos" aria-label="Fotos confirmadas">
+    {% for evidencia in pagina %}
+    {% include "campo/foto.html" with inspecao=inspecao item_id=evidencia.resposta.item_id evidencia=evidencia only %}
+    {% endfor %}
+</ul>
+{% else %}<p class="secundario">Nenhuma foto confirmada.</p>{% endif %}
+{% endif %}
+{% include "gestao/paginacao.html" %}
+{% endblock %}

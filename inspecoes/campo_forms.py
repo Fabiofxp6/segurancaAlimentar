@@ -7,12 +7,13 @@ from .models import EvidenciaCampo
 class RespostaCampoForm(forms.Form):
     opcao = forms.ChoiceField(label="Resposta", widget=forms.RadioSelect)
     observacao = forms.CharField(
-        label="Observação", max_length=1000, required=False, widget=forms.Textarea(attrs={"rows": 3}),
+        label="Observação", max_length=1000, required=False,
+        widget=forms.Textarea(attrs={"rows": 4, "placeholder": "Descreva o que foi observado…"}),
     )
     ha_irregularidade = forms.BooleanField(label="Registrar irregularidade", required=False)
     descricao_irregularidade = forms.CharField(
         label="Descrição da irregularidade", max_length=1000, required=False,
-        widget=forms.Textarea(attrs={"rows": 3}),
+        widget=forms.Textarea(attrs={"rows": 4, "placeholder": "Descreva a irregularidade…"}),
     )
     revisao = forms.IntegerField(min_value=0, widget=forms.HiddenInput)
     operacao_id = forms.UUIDField(widget=forms.HiddenInput)
@@ -42,3 +43,11 @@ class EvidenciaCampoForm(forms.Form):
         if len(self.files.getlist("arquivo")) != 1:
             raise ValidationError("Envie uma foto por vez.")
         return self.cleaned_data["arquivo"]
+
+
+class ObservacaoInspecaoForm(forms.Form):
+    texto = forms.CharField(
+        label="Observação geral", max_length=1000,
+        widget=forms.Textarea(attrs={"rows": 4, "placeholder": "Digite sua observação sobre a inspeção…"}),
+    )
+    operacao_id = forms.UUIDField(widget=forms.HiddenInput)

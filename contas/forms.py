@@ -15,7 +15,8 @@ class EntradaForm(AuthenticationForm):
         username.label = "Usuário"
         username.validators.append(MaxLengthValidator(username.max_length))
         username.widget.attrs.pop("autofocus", None)
-        username.widget.attrs["autocomplete"] = "username"
+        username.widget.attrs.update(autocomplete="username", placeholder="Digite seu usuário")
+        self.fields["password"].widget.attrs["placeholder"] = "Digite sua senha"
 
     def clean_password(self):
         password = self.cleaned_data["password"]

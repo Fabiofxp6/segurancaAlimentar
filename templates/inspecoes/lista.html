@@ -1,32 +1,60 @@
 {% extends "inspecoes/base.html" %}
-
+{% load tz %}
+{% block largura %}estrutura--lista{% endblock %}
+{% block barra_inicio %}
+<a class="botao-icone barra-app__voltar" href="{% url 'contas:acesso' %}" aria-label="Área de acesso"><span class="icone ico-pessoa" aria-hidden="true"></span></a>
+{% endblock %}
 {% block inspecoes %}
-<h1 id="titulo-gestao">Inspeções de demonstração</h1>
-<p><a href="{% url 'inspecoes:adiamentos' %}">Pedidos de adiamento</a></p>
-<p><a href="{% url 'inspecoes:cancelamentos' %}">Pedidos de cancelamento</a></p>
-<p><a href="{% url 'inspecoes:termos' %}">Termos emitidos</a></p>
-<p><a href="{% url 'inspecoes:correcoes' %}">Pedidos de correção</a></p>
-{% if admin %}
-<p><a href="{% url 'inspecoes:indicadores' %}">Indicadores de inspeção</a></p>
-<a class="acao" href="{% url 'inspecoes:atribuir' %}">Atribuir inspeção</a>
-{% else %}
-<a class="acao" href="{% url 'inspecoes:inicio_direto' %}">Iniciar nova inspeção</a>
-{% endif %}
+<div class="cabecalho-com-acoes">
+    <h1 id="titulo-gestao">Inspeções</h1>
+    {% if admin %}
+    <a class="acao" href="{% url 'inspecoes:atribuir' %}"><span class="icone ico-adicionar" aria-hidden="true"></span>Atribuir inspeção</a>
+    {% else %}
+    <a class="acao" href="{% url 'inspecoes:inicio_direto' %}"><span class="icone ico-adicionar" aria-hidden="true"></span>Iniciar nova inspeção</a>
+    {% endif %}
+</div>
+{% url 'inspecoes:lista' as rota_lista %}
+<nav class="abas abas--inspecoes" aria-label="Situação da inspeção">
+    <a href="{{ rota_lista }}{% querystring parametros estado=None recorte=None pagina=None %}"{% if not form.estado.value and not form.recorte.value %} aria-current="page"{% endif %}>Todas</a>
+    <a href="{{ rota_lista }}{% querystring parametros estado='em_andamento' recorte=None pagina=None %}"{% if form.estado.value == 'em_andamento' %} aria-current="page"{% endif %}>Em andamento</a>
+    <a href="{{ rota_lista }}{% querystring parametros estado=None recorte='finalizadas' pagina=None %}"{% if form.recorte.value == 'finalizadas' %} aria-current="page"{% endif %}>Finalizadas</a>
+</nav>
 {% url 'inspecoes:lista' as sem_filtros %}
 {% include "inspecoes/filtros.html" %}
 {% if pagina is not None %}
-<p>{{ pagina.paginator.count }} {% if pagina.paginator.count == 1 %}inspeção encontrada{% else %}inspeções encontradas{% endif %}.</p>
-<ul class="registros">
-    {% for inspecao in pagina %}
-    <li>
-        <a href="{% url 'inspecoes:detalhe' inspecao.pk %}">Inspeção #{{ inspecao.pk }} · {% firstof inspecao.identificacao_estabelecimento.nome inspecao.estabelecimento.nome %}</a>
-        <span>{{ inspecao.get_estado_display }}</span>
-        <span class="secundario">{{ inspecao.responsavel.get_username }} · Criada em {{ inspecao.criada_em|date:"d/m/Y" }}</span>
+<p class="ajuda">{{ pagina.paginator.count }} {% if pagina.paginator.count == 1 %}inspeção encontrada{% else %}inspeções encontradas{% endif %}.</p>
+<ul class="cartoes-inspecao">
+    {% if pagina %}
+    <li class="cartoes-inspecao__rotulos somente-desktop" aria-hidden="true">
+        <span>Inspeção</span><span>Estabelecimento</span><span>Situação</span><span>Fiscal</span><span>Data</span>
     </li>
+    {% endif %}
+    {% for inspecao in pagina %}
+    <li><a class="cartao-inspecao" href="{% url 'inspecoes:detalhe' inspecao.pk %}">
+        <span class="cartao-inspecao__conteudo">
+            <span class="cartao-inspecao__linha"><strong>Inspeção #{{ inspecao.pk }}</strong><span class="etiqueta" data-estado="{{ inspecao.estado }}">{{ inspecao.get_estado_display }}</span></span>
+            <span class="cartao-inspecao__unidade">{% firstof inspecao.identificacao_estabelecimento.nome inspecao.estabelecimento.nome %}</span>
+            <span class="cartao-inspecao__responsavel somente-desktop">{{ inspecao.responsavel.get_username }}</span>
+            <span class="cartao-inspecao__data"><span class="cartao-inspecao__somente-mobile">{{ inspecao.responsavel.get_username }} · </span>{% if inspecao.iniciada_em %}{{ inspecao.iniciada_em|timezone:"America/Maceio"|date:"d/m/Y · H:i" }}{% else %}Criada em {{ inspecao.criada_em|timezone:"America/Maceio"|date:"d/m/Y" }}{% endif %}</span>
+        </span>
+        <span class="icone ico-proximo" aria-hidden="true"></span>
+    </a></li>
     {% empty %}
-    <li>Nenhuma inspeção disponível.</li>
+    <li class="secundario cartoes-inspecao__vazio">Nenhuma inspeção disponível.</li>
     {% endfor %}
 </ul>
 {% include "gestao/paginacao.html" %}
 {% endif %}
+<div class="secao">
+    <details class="retratil">
+        <summary>Ações e consultas</summary>
+        <ul class="registros">
+            <li><a href="{% url 'inspecoes:adiamentos' %}">Pedidos de adiamento</a></li>
+            <li><a href="{% url 'inspecoes:cancelamentos' %}">Pedidos de cancelamento</a></li>
+            <li><a href="{% url 'inspecoes:correcoes' %}">Pedidos de correção</a></li>
+            <li><a href="{% url 'inspecoes:termos' %}">Termos emitidos</a></li>
+            {% if admin %}<li><a href="{% url 'inspecoes:indicadores' %}">Indicadores de inspeção</a></li>{% endif %}
+        </ul>
+    </details>
+</div>
 {% endblock %}

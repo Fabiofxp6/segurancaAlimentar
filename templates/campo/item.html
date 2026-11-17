@@ -1,71 +1,101 @@
 {% extends "inspecoes/base.html" %}
-{% block cabecalho %}
-{{ block.super }}
-<style>
-    .campo-painel form > div, .campo-painel fieldset > div { margin-bottom: .9rem; }
-    .campo-painel fieldset { min-width: 0; border: 0; margin: 0; padding: 0; }
-    .campo-painel fieldset fieldset { margin-bottom: .8rem; }
-    .campo-painel legend { font-weight: 700; margin-bottom: .55rem; }
-    .campo-painel input[type="radio"], .campo-painel input[type="checkbox"] { padding: 0; width: 1.25rem; min-height: 1.25rem; vertical-align: middle; }
-    .campo-painel textarea, .campo-painel label { margin-bottom: .4rem; }
-    .campo-painel label:has(input) { display: flex; align-items: center; gap: .5rem; }
-    .campo-painel button:disabled { opacity: .65; cursor: default; }
-    [aria-disabled="true"] { color: #4b5650; }
-    .status-envio { font-weight: 650; }
-    .foto-confirmada { overflow-wrap: anywhere; }
-</style>
+{% block largura %}estrutura--campo{% endblock %}
+{% block barra_titulo %}Item {{ posicao }} de {{ total_itens }}{% endblock %}
+{% block barra_inicio %}
+<a class="botao-icone barra-app__voltar" href="{% url 'inspecoes:campo' inspecao.pk %}" aria-label="Voltar ao checklist"><span class="icone ico-voltar" aria-hidden="true"></span></a>
 {% endblock %}
-
 {% block inspecoes %}
-<div class="campo-painel" id="campo" data-inspecao="{{ inspecao.pk }}" data-item="{{ item.id }}" data-contexto="{{ contexto }}" data-conexao="{% url 'inspecoes:campo_conexao' inspecao.pk item.id %}">
-    <p class="secundario">Inspeção #{{ inspecao.pk }} · Checklist versão {{ inspecao.versao_checklist.numero }}</p>
+<div class="campo-item" id="campo" data-inspecao="{{ inspecao.pk }}" data-item="{{ item.id }}" data-titulo-sem-conexao="Sem conexão"
+     data-contexto="{{ contexto }}" data-conexao="{% url 'inspecoes:campo_conexao' inspecao.pk item.id %}">
     <h1 id="titulo-gestao">{{ item.enunciado }}</h1>
-    {% if item.obrigatorio %}<p>Item obrigatório.</p>{% endif %}
-    <p id="estado-conexao" data-estado-conexao role="status" hidden></p>
+    <p><span class="etiqueta">{{ inspecao.versao_checklist.titulo }} · v{{ inspecao.versao_checklist.numero }}</span></p>
     {% if pode_gravar %}
+    {% include "comum/conexao.html" %}
     <noscript><p>Ative JavaScript para gravar e acompanhar a confirmação nesta tela.</p></noscript>
-
+    <div class="abas" aria-label="Seções do item" data-abas-item hidden>
+        <button type="button" data-aba-item="resposta" aria-controls="resposta-item" aria-pressed="true">Resposta</button>
+        <button type="button" data-aba-item="evidencias" aria-controls="irregularidade-item evidencias-item" aria-pressed="false">Irregularidade e evidências</button>
+    </div>
+    {% endif %}
+    <div class="mesa-item">
+    {% if pode_gravar %}
     <form method="post" action="{% url 'inspecoes:campo_responder' inspecao.pk item.id %}" data-envio="resposta">
         {% csrf_token %}
         <fieldset data-campos>
-            <legend>Resposta do item</legend>
-            {{ form_resposta.as_div }}
+            <legend class="sr-only">Preenchimento do item</legend>
+            {{ form_resposta.revisao }}{{ form_resposta.operacao_id }}
+            <section id="resposta-item" data-secao-item="resposta">
+                <fieldset class="opcoes-resposta">
+                    <legend>Resposta{% if item.obrigatorio %} <span class="ajuda">(item obrigatório)</span>{% endif %}</legend>
+                    {{ form_resposta.opcao }}
+                </fieldset>
+                <div class="area-envio">
+                    <label for="{{ form_resposta.observacao.id_for_label }}">Observação <span class="ajuda">(opcional)</span></label>
+                    {{ form_resposta.observacao }}
+                    <span data-contador-saida="{{ form_resposta.observacao.id_for_label }}" aria-hidden="true"></span>
+                </div>
+            </section>
+            <section id="irregularidade-item" data-secao-item="evidencias">
+                <p class="alerta alerta--erro"><span class="icone ico-alerta" aria-hidden="true"></span><strong>Registrar irregularidade</strong><br>Marque se houver uma não conformidade neste item.</p>
+                <div class="marcacao-irregularidade">
+                    <label for="{{ form_resposta.ha_irregularidade.id_for_label }}">Há irregularidade</label>
+                    {{ form_resposta.ha_irregularidade }}
+                </div>
+                <div>
+                    {{ form_resposta.descricao_irregularidade.label_tag }}
+                    {{ form_resposta.descricao_irregularidade }}
+                    <span data-contador-saida="{{ form_resposta.descricao_irregularidade.id_for_label }}" aria-hidden="true"></span>
+                </div>
+            </section>
         </fieldset>
-        <button type="submit" disabled>Salvar resposta</button>
-        <p class="status-envio" role="status" data-status>{% if resposta %}Salva{% else %}Pendente{% endif %}</p>
-    </form>
-
-    <h2>Fotos de evidência</h2>
-    <p>JPEG ou PNG até 5 MiB por envio.</p>
-    <p id="aviso-evidencia"{% if resposta %} hidden{% endif %}>Salve a resposta antes de enviar uma foto.</p>
-    <form method="post" enctype="multipart/form-data" action="{% url 'inspecoes:campo_anexar' inspecao.pk item.id %}" data-envio="arquivo" data-liberado="{% if resposta %}sim{% else %}nao{% endif %}">
-        {% csrf_token %}
-        <fieldset data-campos{% if not resposta %} disabled{% endif %}>
-            <legend>Adicionar foto</legend>
-            {{ form_arquivo.as_div }}
-        </fieldset>
-        <button type="submit" disabled>Enviar foto</button>
-        <p class="status-envio" role="status" data-status>Pendente</p>
+        <button class="acao acao--largura" type="submit" disabled>Salvar resposta</button>
+        <p class="status-envio" role="status" data-status data-estado="{% if resposta %}salva{% else %}pendente{% endif %}">{% if resposta %}Salva{% else %}Pendente{% endif %}</p>
     </form>
     {% else %}
-    <p>Novos registros estão bloqueados nesta inspeção.</p>
+    <div class="item-leitura">
+    <p class="alerta alerta--atencao">Novos registros estão bloqueados nesta inspeção.</p>
     {% if resposta %}
     <h2>Resposta salva</h2>
     <p>{{ resposta.opcao }}</p>
-    {% if resposta.observacao %}<p>{{ resposta.observacao }}</p>{% endif %}
-    {% if resposta.descricao_irregularidade %}<p>Irregularidade: {{ resposta.descricao_irregularidade }}</p>{% endif %}
+    {% if resposta.observacao %}{{ resposta.observacao|linebreaks }}{% endif %}
+    {% if resposta.descricao_irregularidade %}<p><strong>Irregularidade</strong></p>{{ resposta.descricao_irregularidade|linebreaks }}{% endif %}
     {% endif %}
-    <h2>Fotos de evidência</h2>
+    </div>
     {% endif %}
-    <ul class="registros" id="fotos-salvas" aria-label="Fotos salvas">
-        {% for evidencia in evidencias %}
-        <li class="foto-confirmada">
-            <a href="{% url 'inspecoes:campo_baixar' inspecao.pk item.id evidencia.pk %}">{{ evidencia.nome }}</a>
-            <span>Salva · {{ evidencia.get_vinculo_display }}</span>
-        </li>
-        {% endfor %}
-    </ul>
-    <p><a href="{% url 'inspecoes:campo' inspecao.pk %}">Voltar ao checklist</a></p>
+
+    <section class="secao" id="evidencias-item"{% if pode_gravar %} data-secao-item="evidencias"{% endif %}>
+        <h2>Evidências</h2>
+        {% if pode_gravar %}
+        <p id="aviso-evidencia" class="alerta"{% if resposta %} hidden{% endif %}>Salve a resposta antes de enviar uma foto.</p>
+        <form method="post" enctype="multipart/form-data" action="{% url 'inspecoes:campo_anexar' inspecao.pk item.id %}" data-envio="arquivo" data-liberado="{% if resposta %}sim{% else %}nao{% endif %}">
+            {% csrf_token %}
+            <fieldset data-campos{% if not resposta %} disabled{% endif %}>
+                <legend class="sr-only">Adicionar foto</legend>
+                {{ form_arquivo.revisao }}{{ form_arquivo.operacao_id }}
+                <div>{{ form_arquivo.vinculo.label_tag }}{{ form_arquivo.vinculo }}</div>
+                <div data-seletor-nativo>{{ form_arquivo.arquivo.label_tag }}{{ form_arquivo.arquivo }}</div>
+                <div class="acoes-upload" data-atalhos-arquivo hidden>
+                    <button type="button" class="acao acao--arquivo" data-camera><span class="icone ico-camera" aria-hidden="true"></span>Tirar foto</button>
+                    <button type="button" class="acao acao--arquivo" data-arquivo><span class="icone ico-arquivo" aria-hidden="true"></span>Inserir arquivo</button>
+                </div>
+                <p class="ajuda" data-nome-arquivo aria-live="polite">JPEG ou PNG, até 5 MiB por foto.</p>
+            </fieldset>
+            <button class="acao acao--largura" type="submit" disabled>Enviar foto</button>
+            <p class="status-envio" role="status" data-status data-estado="pendente">Pendente</p>
+        </form>
+        {% endif %}
+        <ul class="grade-fotos" id="fotos-salvas" aria-label="Fotos salvas">
+            {% for evidencia in evidencias %}
+            {% include "campo/foto.html" with inspecao=inspecao item_id=item.id evidencia=evidencia only %}
+            {% endfor %}
+        </ul>
+    </section>
+    </div>
+    <div class="rodape-acoes">
+        <a class="acao acao--secundaria" href="{% url 'inspecoes:campo' inspecao.pk %}">Voltar ao checklist</a>
+        <button class="acao acao--secundaria" type="button" data-abrir-dialogo="legenda-envios" hidden>Status do envio</button>
+    </div>
+    {% include "comum/legenda_envios.html" %}
 </div>
 {% if pode_gravar %}{% include "campo/envio.html" %}{% endif %}
 {% endblock %}

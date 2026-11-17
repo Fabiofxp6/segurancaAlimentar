@@ -1,13 +1,19 @@
 {% extends "gestao/base.html" %}
-
 {% block titulo %}Documentos do estabelecimento | Segurança Alimentar{% endblock %}
-{% block conteudo %}
-<nav class="navegacao" aria-label="Documentos">
-    <a href="{% url 'contas:acesso' %}">Área de acesso</a>
-    {% if cliente %}<a href="{% url 'inspecoes:documentos' %}">Documentos do estabelecimento</a>
-    {% elif inspecao %}<a href="{% url 'inspecoes:detalhe' inspecao.pk %}">Voltar à inspeção</a>{% endif %}
-</nav>
-<section class="painel" aria-labelledby="titulo-gestao">
-    {% block documentos %}{% endblock %}
-</section>
+{% block barra_titulo %}Documentos{% endblock %}
+{% block barra_inicio %}
+{% if cliente %}
+<a class="botao-icone" href="{% url 'inspecoes:documentos' %}" aria-label="Documentos do estabelecimento"><span class="icone ico-voltar" aria-hidden="true"></span></a>
+{% elif inspecao %}
+<a class="botao-icone" href="{% url 'inspecoes:detalhe' inspecao.pk %}" aria-label="Voltar à inspeção"><span class="icone ico-voltar" aria-hidden="true"></span></a>
+{% else %}{{ block.super }}{% endif %}
 {% endblock %}
+{% block menu_links %}
+{% if cliente %}
+<a href="{% url 'inspecoes:documentos' %}">Documentos do estabelecimento</a>
+<a href="{% url 'inspecoes:resultados_liberados' %}">Resultados liberados</a>
+{% else %}
+<a href="{% url 'inspecoes:lista' %}">Inspeções</a>
+{% endif %}
+{% endblock %}
+{% block gestao %}{% block documentos %}{% endblock %}{% endblock %}
