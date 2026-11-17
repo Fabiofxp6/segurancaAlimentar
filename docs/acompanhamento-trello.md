@@ -67,6 +67,10 @@ A [adaptação desktop](https://trello.com/c/I9hMFnXg) registra a navegação po
 
 O Administrador pode definir e redefinir senhas de contas gerenciáveis pela web conforme DC039. Foram verificados o fluxo em Chromium e os 128 testes da suíte local. [Cartão](https://trello.com/c/gWdTEHws) · [Entrega](entrega-i03.md#atualização-da-gestão-de-senhas)
 
+## Restauração do acesso — 17/11/2026
+
+O visual anterior do acesso foi recuperado a pedido do usuário e conferido em sete larguras no Chromium, com teclado e verificação automatizada de acessibilidade. [Cartão](https://trello.com/c/RNon82ya/103-restaurar-visual-anterior-da-tela-de-acesso) · [Entrega](entrega-interface-rf08.md#restauração-visual-do-acesso--17112026)
+
 ## Revisão global do frontend — 17/11/2026
 
 Revisão de identidade, layout responsivo, acessibilidade, metadados e estados de envio, com a linguagem visual em [DESIGN.md](../DESIGN.md). Os 128 testes passaram e o Chromium percorreu sete larguras de tela. [Cartão](https://trello.com/c/RUDd8LLh) · [Entrega](entrega-interface-rf08.md#revisão-visual-e-de-acessibilidade--17112026)

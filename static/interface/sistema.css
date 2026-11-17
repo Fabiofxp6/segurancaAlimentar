@@ -140,12 +140,12 @@ form label:has(input[type="radio"], input[type="checkbox"]) { display: flex; ali
 .form-remocao { margin-top: .7rem; }
 
 .estrutura-acesso { width: min(calc(100% - 1.8rem), 25rem); min-height: 100svh; margin: 0 auto; display: grid; align-content: center; padding: 1.25rem 0; }
-.sistema-acesso { background: var(--fundo); }
-.conta { padding: clamp(1.2rem, 5vw, 1.85rem); border-radius: .95rem; border: 1px solid #cbdfee; background: var(--superficie); }
+.sistema-acesso { --tinta: #0a2757; --secundaria: #455f82; color: var(--tinta); background: radial-gradient(ellipse at 50% 15%, #fff, #eaf3fa 74%); }
+.conta { padding: clamp(1.2rem, 5vw, 1.85rem); border-radius: .95rem; border: 1px solid #cbdfee; background: linear-gradient(152deg, #fbfdff, #f3faff 95%); box-shadow: 0 12px 34px rgb(23 63 109 / 9%); }
 .assinatura { text-align: center; margin: .65rem 0 1.8rem; }
 .assinatura img { margin: 0 auto .45rem; }
-.assinatura .sistema { margin: 0; font-size: clamp(1.13rem, 4.9vw, 1.45rem); font-weight: 750; line-height: 1.22; }
-.conta #titulo-conta { font-size: 1.2rem; margin-bottom: .65rem; }
+.assinatura .sistema { margin: 0; font-size: clamp(1.13rem, 4.9vw, 1.45rem); font-weight: 750; letter-spacing: -.035em; line-height: 1.22; text-wrap: wrap; }
+.conta #titulo-conta { letter-spacing: -.035em; font-size: 1.2rem; margin-bottom: .65rem; }
 .campo-login { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .55rem; background: #fbfdff; border: 1px solid var(--borda-campo); border-radius: .48rem; padding: .37rem .63rem; }
 .campo-login > div { min-width: 0; }
 .campo-login label { font-size: .78rem; margin: 0; color: var(--secundaria); }
@@ -153,6 +153,8 @@ form label:has(input[type="radio"], input[type="checkbox"]) { display: flex; ali
 .campo-login .icone { color: #254b7c; }
 .senha-visivel { width: 2.35rem; }
 .acesso-restrito { margin: .9rem 0 0; color: var(--secundaria); text-align: center; font-size: .78rem; }
+
+.conta button[type="submit"] { background: linear-gradient(110deg, #0755b1, #096aca); }
 
 .atalhos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(16rem,100%), 1fr)); gap: .55rem; }
 .atalhos--coluna { grid-template-columns: 1fr; }

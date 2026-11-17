@@ -39,11 +39,11 @@ O sistema organiza as inspeções de segurança alimentar e a consulta aos resul
 
 ## Colors
 
-Use a navegação azul-marinho para orientar o usuário e superfícies brancas para o conteúdo. Reserve o azul de ação para comandos e atalhos prioritários. Use borda mais escura nos campos editáveis e borda suave para separar registros. Combine verde, âmbar ou vermelho com o texto do estado correspondente em avisos e etiquetas.
+Use a navegação azul-marinho para orientar o usuário e superfícies brancas para o conteúdo. Reserve o azul de ação para comandos e atalhos prioritários. Use borda mais escura nos campos editáveis e borda suave para separar registros. Combine verde, âmbar ou vermelho com o texto do estado correspondente em avisos e etiquetas. No acesso, use o painel azul em degradê com arcos decorativos e o fundo claro da composição anterior.
 
 ## Typography
 
-Use a família sem serifa em títulos, formulários e listas. Dê mais peso ao nome da unidade ou à ação da página e deixe as informações complementares em cor secundária. Use algarismos tabulares em datas, contagens e progresso quando precisarem ser lidos em sequência.
+Use a família sem serifa em títulos, formulários e listas. Dê mais peso ao nome da unidade ou à ação da página e deixe as informações complementares em cor secundária. Use algarismos tabulares em datas, contagens e progresso quando precisarem ser lidos em sequência. No acesso, conserve a composição compacta do nome do sistema e as quebras de linha da apresentação restaurada.
 
 ## Layout
 
@@ -51,7 +51,7 @@ No celular, mantenha a barra superior compacta e use abas para alternar entre a 
 
 ## Elevation & Depth
 
-Separe painéis, registros e campos por bordas. Use a sombra de elevação para indicar que o menu ou o diálogo está sobre o conteúdo.
+Separe painéis, registros e campos por bordas. Use a sombra de elevação para indicar que o menu ou o diálogo está sobre o conteúdo. O cartão do acesso usa uma sombra suave para se separar do fundo.
 
 ## Shapes
 

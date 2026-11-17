@@ -186,10 +186,15 @@
 .cartoes-inspecao__vazio { padding: .9rem .75rem; }
 .abas--inspecoes a { flex: 0 1 auto; padding: .46rem 1rem; }
 
+.sistema-acesso {
+    background: radial-gradient(ellipse at 8% 3%, #fff, #eaf3fa 65%);
+}
 .estrutura-acesso { width: min(71rem, 100% - 4rem); }
 .conta { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); padding: 0; border-radius: 1.15rem; overflow: hidden; min-height: 32rem; background: #fff; }
 .assinatura {
     position: relative;
+    isolation: isolate;
+    overflow: hidden;
     display: grid;
     align-content: center;
     justify-items: start;
@@ -197,7 +202,19 @@
     margin: 0;
     text-align: start;
     color: #fff;
-    background: var(--navegacao);
+    background: radial-gradient(ellipse at 92% 0, #0c67bd 0, #104885 38%, #092952 80%);
+}
+.assinatura::after {
+    content: "";
+    z-index: -1;
+    position: absolute;
+    width: 26rem;
+    height: 26rem;
+    top: -14rem;
+    right: -12rem;
+    border: 1px solid #b2dbff55;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2.7rem #b6dcff13, 0 0 0 5.5rem #b6dcff0e;
 }
 .assinatura img {
     width: 6.1rem;
@@ -205,7 +222,7 @@
     margin: 0 0 1.45rem -.48rem;
     filter: brightness(0) invert(1);
 }
-.assinatura .sistema { font-size: clamp(1.9rem, 3.3vw, 3.3rem); line-height: 1.08; max-width: 27rem; }
+.assinatura .sistema { font-size: clamp(1.9rem, 3.3vw, 3.3rem); line-height: 1.08; letter-spacing: -.045em; max-width: 27rem; }
 .assinatura .sistema br { display: none; }
 .conta__formulario {
     display: block;
