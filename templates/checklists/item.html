@@ -1,4 +1,5 @@
 {% extends "gestao/base.html" %}
+{% block titulo %}{{ titulo|default:"Item do checklist" }} | Segurança Alimentar{% endblock %}
 
 {% block gestao %}
 <h1 id="titulo-gestao">{{ titulo }}</h1>
@@ -6,17 +7,26 @@
 {% if conflito %}
 <p class="alerta" role="alert">O rascunho mudou. <a href="{{ request_path }}">Reabra o item</a> antes de salvar.</p>
 {% endif %}
-<form method="post">
+<form method="post" class="central-formulario">
     {% csrf_token %}
+    {% include "comum/erros_formulario.html" %}
     {{ form.as_p }}
     <button type="submit">Salvar item</button>
 </form>
 {% if item and not conflito %}
-<form class="form-remocao" method="post" action="{% url 'checklists:item_remover' checklist.pk item.id %}">
+<form class="form-remocao" data-confirmar-dialogo="confirmar-remocao" method="post" action="{% url 'checklists:item_remover' checklist.pk item.id %}">
     {% csrf_token %}
     <input type="hidden" name="revisao" value="{{ form.revisao.value|default_if_none:checklist.revisao }}">
     <button class="acao-secundaria" type="submit">Remover do rascunho</button>
 </form>
+<dialog class="dialogo" id="confirmar-remocao" aria-labelledby="titulo-remocao" aria-describedby="descricao-remocao">
+    <h2 id="titulo-remocao">Remover este item do rascunho?</h2>
+    <p id="descricao-remocao">As versões já publicadas conservam o item.</p>
+    <form method="dialog" class="rodape-acoes">
+        <button class="acao acao--secundaria" type="submit" value="voltar" autofocus>Voltar</button>
+        <button class="acao acao-secundaria" type="submit" value="confirmar">Remover item</button>
+    </form>
+</dialog>
 {% endif %}
 <p><a href="{% url 'checklists:rascunho' checklist.pk %}">Voltar ao rascunho</a></p>
 {% endblock %}

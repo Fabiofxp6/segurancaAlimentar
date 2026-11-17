@@ -67,6 +67,10 @@ A [adaptação desktop](https://trello.com/c/I9hMFnXg) registra a navegação po
 
 O Administrador pode definir e redefinir senhas de contas gerenciáveis pela web conforme DC039. Foram verificados o fluxo em Chromium e os 128 testes da suíte local. [Cartão](https://trello.com/c/gWdTEHws) · [Entrega](entrega-i03.md#atualização-da-gestão-de-senhas)
 
+## Revisão global do frontend — 17/11/2026
+
+Revisão de identidade, layout responsivo, acessibilidade, metadados e estados de envio, com a linguagem visual em [DESIGN.md](../DESIGN.md). Os 128 testes passaram e o Chromium percorreu sete larguras de tela. [Cartão](https://trello.com/c/RUDd8LLh) · [Entrega](entrega-interface-rf08.md#revisão-visual-e-de-acessibilidade--17112026)
+
 ## Situação em 10/11/2026
 
 Etapa 1 registrada como concluída. Etapa 2 com redação e conferência terminadas, em Pendente para revisão; PRD Proposto. Etapa 3 com elaboração e conferência documentais concluídas, em Pendente para revisão. Etapa 4 com elaboração e conferência documentais concluídas, em Pendente para revisão. Etapa 5 com elaboração e conferência documentais concluídas, em Pendente para revisão; spec e novo ADR Propostos. Etapa 6 com elaboração e conferência documentais concluídas, em Pendente para revisão; spec e matriz Propostas. Etapa 7 com revisão integrada das três skills concluída, em Pendente para revisão do usuário; a curadoria anterior foi preservada como histórico. Etapa 8 com orientações da raiz e revisão final elaboradas/conferidas, em Pendente para revisão; nenhuma implementação iniciada.

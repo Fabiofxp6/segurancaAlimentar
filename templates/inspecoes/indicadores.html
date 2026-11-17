@@ -1,4 +1,6 @@
 {% extends "inspecoes/base.html" %}
+{% block titulo %}Indicadores de inspeção | Segurança Alimentar{% endblock %}
+{% block barra_titulo %}Indicadores{% endblock %}
 
 {% block inspecoes %}
 <h1 id="titulo-gestao">Indicadores de inspeção</h1>
@@ -8,7 +10,7 @@
 <section aria-labelledby="situacoes">
     <h2 id="situacoes">Inspeções por situação</h2>
     <p>{{ total_inspecoes }} {% if total_inspecoes == 1 %}inspeção na consulta{% else %}inspeções na consulta{% endif %}.</p>
-    <ul class="indicadores-situacoes">
+    <ul class="indicadores-situacoes" role="list">
         {% for rotulo, quantidade in situacoes %}
         <li>
             <span>{{ rotulo }}</span>

@@ -5,6 +5,12 @@ function iniciarEnvios(painel, confirmar, acompanhar = () => {}) {
     const titulo = painel.dataset.tituloSemConexao ? document.querySelector(".barra-app__titulo") : null;
     const tituloNormal = titulo?.textContent;
     const controles = painel.querySelectorAll("form[data-envio]");
+    const componentes = new Map([...controles].map((form) => [form, {
+        campos: form.querySelector("[data-campos]"),
+        acao: form.querySelector('button[type="submit"]'),
+        rotulo: form.querySelector("[data-status]"),
+    }]));
+    const acoesExternas = document.querySelectorAll("[data-acao-servidor]");
     const cabecalhos = {"X-Contexto-Campo": painel.dataset.contexto};
 
     let pendente = null;
@@ -14,11 +20,12 @@ function iniciarEnvios(painel, confirmar, acompanhar = () => {}) {
     let sondando = false;
     let timer;
     let intervalo = 1500;
+    let navegacaoBloqueada;
 
     function estado(form, situacao, mensagem) {
-        const rotulo = form.querySelector("[data-status]");
-        rotulo.dataset.estado = situacao;
-        rotulo.textContent = mensagem;
+        const {rotulo} = componentes.get(form);
+        if (rotulo.dataset.estado !== situacao) rotulo.dataset.estado = situacao;
+        if (rotulo.textContent !== mensagem) rotulo.textContent = mensagem;
     }
 
     function avisoConexao(mensagem) {
@@ -40,20 +47,21 @@ function iniciarEnvios(painel, confirmar, acompanhar = () => {}) {
     }
 
     function atualizarControles() {
-        for (const form of controles) {
+        const bloquearNavegacao = semConexao || Boolean(pendente);
+        for (const [form, {campos, acao}] of componentes) {
             const bloqueado = form.dataset.liberado === "nao";
-            form.querySelector("[data-campos]").disabled = bloqueado || pendente?.form === form || encerrado;
-            form.querySelector('button[type="submit"]').disabled = bloqueado || !!pendente || semConexao || encerrado;
+            const envioAtual = pendente?.form === form;
+            campos.disabled = bloqueado || envioAtual || encerrado;
+            acao.disabled = bloqueado || bloquearNavegacao || encerrado;
+            const ocupado = envioAtual && enviando && !semConexao;
+            campos.setAttribute("aria-busy", String(ocupado));
         }
-        for (const botao of document.querySelectorAll("[data-acao-servidor]")) {
-            botao.disabled = semConexao || !!pendente;
-        }
+        if (navegacaoBloqueada === bloquearNavegacao) return;
+        navegacaoBloqueada = bloquearNavegacao;
+        for (const botao of acoesExternas) botao.disabled = bloquearNavegacao;
         for (const link of document.querySelectorAll("a[href]:not([data-nav-local])")) {
-            if (semConexao || pendente) {
-                link.setAttribute("aria-disabled", "true");
-            } else {
-                link.removeAttribute("aria-disabled");
-            }
+            if (bloquearNavegacao) link.setAttribute("aria-disabled", "true");
+            else link.removeAttribute("aria-disabled");
         }
     }
 
@@ -109,6 +117,7 @@ function iniciarEnvios(painel, confirmar, acompanhar = () => {}) {
         if (!pendente || semConexao || enviando || encerrado) return;
         const envio = pendente;
         enviando = true;
+        atualizarControles();
         estado(envio.form, "enviando", "Enviando");
         acompanhar(envio.form, "enviando");
         try {

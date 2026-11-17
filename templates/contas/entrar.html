@@ -5,7 +5,7 @@
 <form method="post" action="{% url 'contas:entrar' %}" id="form-entrada" class="form-entrada">
     {% csrf_token %}
     {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
-    {% if form.errors %}<p class="alerta alerta--erro" role="alert">Confira os dados para continuar.</p>{% endif %}
+    {% include "comum/erros_formulario.html" %}
     {{ form.non_field_errors }}
     <div class="campo-login">
         <span class="icone ico-pessoa" aria-hidden="true"></span>
@@ -15,7 +15,7 @@
     <div class="campo-login">
         <span class="icone ico-cadeado" aria-hidden="true"></span>
         <div>{{ form.password.label_tag }}{{ form.password }}</div>
-        <button type="button" class="botao-icone senha-visivel" aria-label="Mostrar senha" aria-pressed="false" data-mostrar-senha="{{ form.password.id_for_label }}" hidden><span class="icone ico-olho" aria-hidden="true"></span></button>
+        <button type="button" class="botao-icone senha-visivel" aria-label="Mostrar senha" aria-controls="{{ form.password.id_for_label }}" data-mostrar-senha="{{ form.password.id_for_label }}" hidden><span class="icone ico-olho" aria-hidden="true"></span></button>
     </div>
     {{ form.password.errors }}
     <button class="acao acao--largura" type="submit">Entrar</button>

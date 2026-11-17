@@ -1,12 +1,19 @@
 {% extends "termos/portal.html" %}
+{% block titulo %}Resultados liberados | Segurança Alimentar{% endblock %}
 
 {% block resultados %}
 <h1 id="titulo-gestao">Resultados liberados</h1>
-<ul class="registros registros--catalogo">
+<ul class="registros registros--catalogo registros--atalhos" role="list">
     {% for termo in pagina %}
     <li>
-        <a href="{% url 'inspecoes:resultado_liberado' termo.pk %}">Inspeção #{{ termo.resultado.inspecao_id }} · {{ termo.resultado.inspecao.identificacao_estabelecimento.nome }}</a>
-        <span>Versão {{ termo.versao }} · {% if termo.versao_anterior %}Anterior{% else %}Mais recente liberada{% endif %}</span>
+        <a class="atalho" href="{% url 'inspecoes:resultado_liberado' termo.pk %}">
+            <span class="icone ico-checklist" aria-hidden="true"></span>
+            <span>
+                <strong>Inspeção #{{ termo.resultado.inspecao_id }} · {{ termo.resultado.inspecao.identificacao_estabelecimento.nome }}</strong>
+                <small>Versão {{ termo.versao }} · {% if termo.versao_anterior %}Anterior{% else %}Mais recente liberada{% endif %}</small>
+            </span>
+            <span class="icone ico-proximo" aria-hidden="true"></span>
+        </a>
     </li>
     {% empty %}<li>Nenhum resultado liberado para sua unidade.</li>{% endfor %}
 </ul>

@@ -4,7 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#0753a7">
+    <meta name="theme-color" content="#112d50">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Sistema de gestão de inspeções, evidências e resultados de segurança alimentar.">
     <title>{% block titulo %}Sistema de Avaliação de Segurança Alimentar{% endblock %}</title>
     <link rel="icon" type="image/png" href="{% static 'interface/marca.png' %}">
     <link rel="stylesheet" href="{% static 'interface/sistema.css' %}">
@@ -15,6 +17,6 @@
 <body class="{% block classe_corpo %}{% endblock %}">
     <a class="pular" href="#conteudo" data-nav-local>Ir para o conteúdo</a>
     {% block barra %}{% endblock %}
-    <main id="conteudo" class="{% block classe_main %}estrutura{% endblock %}">{% block conteudo %}{% endblock %}</main>
+    <main id="conteudo" tabindex="-1" class="{% block classe_main %}estrutura{% endblock %}">{% block conteudo %}{% endblock %}</main>
 </body>
 </html>

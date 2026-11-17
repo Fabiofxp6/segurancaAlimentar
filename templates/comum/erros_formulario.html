@@ -1,0 +1,14 @@
+{% if form.errors %}
+<div class="alerta alerta--erro sumario-erros" data-foco-erros tabindex="-1">
+    <strong>Confira os dados para continuar.</strong>
+    {% if form.errors|length > 1 or not form.non_field_errors %}
+    <ul>
+        {% for campo in form.visible_fields %}
+        {% if campo.errors %}
+        <li>{% if campo.id_for_label %}<a href="#{{ campo.id_for_label }}">{{ campo.label }}</a>{% else %}{{ campo.label }}{% endif %}</li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+{% endif %}

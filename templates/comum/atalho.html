@@ -1,4 +1,4 @@
-<a class="atalho{% if destaque %} atalho--destaque{% endif %}" href="{{ url }}">
+<a class="atalho{% if destaque %} atalho--destaque{% endif %}{% if largura_total %} atalho--largura-total{% endif %}" href="{{ url }}">
     <span class="icone ico-{{ icone }}" aria-hidden="true"></span>
     <span><strong>{{ rotulo }}</strong>{% if descricao %}<small>{{ descricao }}</small>{% endif %}</span>
     <span class="icone ico-proximo" aria-hidden="true"></span>

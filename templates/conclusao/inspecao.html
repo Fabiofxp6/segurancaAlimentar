@@ -1,4 +1,5 @@
 {% extends "inspecoes/base.html" %}
+{% block titulo %}{% if resultado %}Resultado interno{% else %}Resumo da inspeção{% endif %} | Segurança Alimentar{% endblock %}
 {% block largura %}estrutura--campo{% endblock %}
 {% block barra_titulo %}{% if resultado %}Resultado interno{% else %}Resumo da inspeção{% endif %}{% endblock %}
 {% block inspecoes %}

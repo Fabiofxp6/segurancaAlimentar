@@ -23,7 +23,6 @@ for (const botao of document.querySelectorAll("[data-mostrar-senha]")) {
     botao.addEventListener("click", () => {
         const mostrar = campo.type === "password";
         campo.type = mostrar ? "text" : "password";
-        botao.setAttribute("aria-pressed", String(mostrar));
         botao.setAttribute("aria-label", mostrar ? "Ocultar senha" : "Mostrar senha");
     });
 }
@@ -36,10 +35,40 @@ for (const contador of document.querySelectorAll("[data-contador-saida]")) {
     atualizar();
 }
 
+const sumario = document.querySelector("[data-foco-erros]");
+sumario?.focus();
+
 for (const botao of document.querySelectorAll("[data-abrir-dialogo]")) {
     const dialogo = document.getElementById(botao.dataset.abrirDialogo);
+    if (typeof dialogo?.showModal !== "function") continue;
     botao.hidden = false;
-    botao.addEventListener("click", () => dialogo.showModal());
+    botao.setAttribute("aria-haspopup", "dialog");
+    botao.addEventListener("click", () => {
+        dialogo.addEventListener("close", () => botao.focus({preventScroll: true}), {once: true});
+        dialogo.showModal();
+    });
+}
+
+for (const form of document.querySelectorAll("[data-confirmar-dialogo]")) {
+    const dialogo = document.getElementById(form.dataset.confirmarDialogo);
+    if (typeof dialogo?.showModal !== "function") continue;
+    const acao = form.querySelector('button[type="submit"]');
+    acao.setAttribute("aria-haspopup", "dialog");
+    let confirmou = false;
+    form.addEventListener("submit", (evento) => {
+        if (confirmou) return;
+        evento.preventDefault();
+        dialogo.returnValue = "";
+        dialogo.showModal();
+    });
+    dialogo.addEventListener("close", () => {
+        if (dialogo.returnValue === "confirmar") {
+            confirmou = true;
+            form.requestSubmit();
+        } else {
+            acao.focus({preventScroll: true});
+        }
+    });
 }
 
 document.addEventListener("keydown", (evento) => {

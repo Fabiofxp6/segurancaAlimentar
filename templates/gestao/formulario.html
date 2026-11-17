@@ -17,11 +17,17 @@
 {% if conflito %}
 <p class="alerta" role="alert">Este cadastro mudou desde que você abriu o formulário. <a href="{{ request_path }}">Reabra o cadastro</a> para conferir os dados atuais antes de editar.</p>
 {% endif %}
-<form method="post">
+<form method="post" class="central-formulario">
     {% csrf_token %}
+    {% include "comum/erros_formulario.html" %}
     {{ form.as_p }}
-    <button type="submit">{{ rotulo_salvar|default:"Salvar" }}</button>
+    <div class="rodape-acoes">
+        <button type="submit">{{ rotulo_salvar|default:"Salvar" }}</button>
+        {% if retorno_url %}
+        <a class="acao acao--secundaria" href="{{ retorno_url }}">Voltar ao cadastro</a>
+        {% else %}
+        <a class="acao acao--secundaria" href="{% url retorno %}">Voltar à lista</a>
+        {% endif %}
+    </div>
 </form>
-{% if retorno_url %}<p><a href="{{ retorno_url }}">Voltar ao cadastro</a></p>
-{% else %}<p><a href="{% url retorno %}">Voltar à lista</a></p>{% endif %}
 {% endblock %}

@@ -15,7 +15,11 @@
     {{ form.recorte.errors }}
     {% endif %}
     <details class="retratil"{% if not form.busca or form.errors %} open{% endif %}>
-        <summary class="filtros-toggle"><span class="icone ico-filtro" aria-hidden="true"></span>Filtros</summary>
+        <summary class="filtros-toggle"><span class="icone ico-filtro" aria-hidden="true"></span>Filtros
+            {% if form.estado.value or form.estabelecimento.value or form.fiscal.value or form.inicio.value or form.fim.value %}
+            <span class="ajuda status-filtros">Ativos</span>
+            {% endif %}
+        </summary>
         <div class="campos-filtro">
             {% for campo in form.visible_fields %}
             {% if campo.name != "busca" %}

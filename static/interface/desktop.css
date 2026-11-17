@@ -5,7 +5,7 @@
     grid-template-columns: var(--menu-largura) minmax(0, 1fr);
     grid-template-rows: auto 1fr;
     grid-template-areas: "menu barra" "menu conteudo";
-    background: #f3f7fc;
+    background: var(--fundo);
 }
 .sistema-interno.tem-navegacao .barra-app {
     grid-area: barra;
@@ -51,7 +51,7 @@
     height: 100dvh;
     overflow-y: auto;
     padding: 1.1rem .82rem .7rem;
-    background: linear-gradient(160deg, #103968 0, #09264b 68%, #082140);
+    background: var(--navegacao);
     color: #eaf4ff;
 }
 .navegacao-desktop__marca {
@@ -145,7 +145,7 @@
 .sistema-interno .atalhos { gap: .75rem; }
 .sistema-interno .secao { margin-top: 1.6rem; }
 .registros--catalogo { grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: .75rem; }
-.registros--catalogo > li { padding: .82rem .92rem; box-shadow: var(--sombra); }
+.registros--catalogo > li { padding: .82rem .92rem; }
 .filtros-inspecoes > .retratil { margin-top: .5rem; }
 .busca-inspecao { max-width: 36rem; }
 
@@ -186,15 +186,10 @@
 .cartoes-inspecao__vazio { padding: .9rem .75rem; }
 .abas--inspecoes a { flex: 0 1 auto; padding: .46rem 1rem; }
 
-.sistema-acesso {
-    background: radial-gradient(ellipse at 8% 3%, #fff, #eaf3fa 65%);
-}
 .estrutura-acesso { width: min(71rem, 100% - 4rem); }
 .conta { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); padding: 0; border-radius: 1.15rem; overflow: hidden; min-height: 32rem; background: #fff; }
 .assinatura {
     position: relative;
-    isolation: isolate;
-    overflow: hidden;
     display: grid;
     align-content: center;
     justify-items: start;
@@ -202,19 +197,7 @@
     margin: 0;
     text-align: start;
     color: #fff;
-    background: radial-gradient(ellipse at 92% 0, #0c67bd 0, #104885 38%, #092952 80%);
-}
-.assinatura::after {
-    content: "";
-    z-index: -1;
-    position: absolute;
-    width: 26rem;
-    height: 26rem;
-    top: -14rem;
-    right: -12rem;
-    border: 1px solid #b2dbff55;
-    border-radius: 50%;
-    box-shadow: 0 0 0 2.7rem #b6dcff13, 0 0 0 5.5rem #b6dcff0e;
+    background: var(--navegacao);
 }
 .assinatura img {
     width: 6.1rem;
@@ -222,7 +205,7 @@
     margin: 0 0 1.45rem -.48rem;
     filter: brightness(0) invert(1);
 }
-.assinatura .sistema { font-size: clamp(1.9rem, 3.3vw, 3.3rem); line-height: 1.08; letter-spacing: -.045em; max-width: 27rem; }
+.assinatura .sistema { font-size: clamp(1.9rem, 3.3vw, 3.3rem); line-height: 1.08; max-width: 27rem; }
 .assinatura .sistema br { display: none; }
 .conta__formulario {
     display: block;
@@ -249,7 +232,7 @@
     }
     .ficha-inspecao__dados h1 { font-size: clamp(1.45rem, 2.4vw, 2.05rem); }
     .ficha-inspecao__fluxos .atalhos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .ficha-inspecao__fluxos .atalho--destaque { grid-column: 1 / -1; }
+    .ficha-inspecao__fluxos :is(.atalho--destaque, .atalho--largura-total) { grid-column: 1 / -1; }
     .ficha-inspecao__secundario { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.6rem; margin-top: 1rem; }
     .ficha-inspecao__secundario details { align-self: start; background: #f7fafe; }
     .mesa-item {
@@ -279,3 +262,11 @@
 .cartao-inspecao__responsavel.somente-desktop { display: block; }
 .cartoes-inspecao__rotulos.somente-desktop { display: grid; }
 .cabecalho-catalogo { display: flex; justify-content: space-between; align-items: start; gap: .7rem; }
+
+
+html { scroll-padding-block-start: 4.3rem; }
+.resumo-progresso, .progresso-linha { font-variant-numeric: tabular-nums; }
+.navegacao-desktop__link[aria-current] { box-shadow: inset .2rem 0 #b0d6ff; }
+.central-formulario .rodape-acoes { padding-top: .8rem; border-top: 1px solid var(--borda); }
+.painel .indicadores-situacoes li { background: var(--superficie); border-top: .22rem solid var(--primary); }
+.mesa-item .alerta { max-width: 65ch; }

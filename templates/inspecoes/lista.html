@@ -40,7 +40,14 @@
         <span class="icone ico-proximo" aria-hidden="true"></span>
     </a></li>
     {% empty %}
-    <li class="secundario cartoes-inspecao__vazio">Nenhuma inspeção disponível.</li>
+    <li class="cartoes-inspecao__vazio">
+        <div class="estado-vazio">
+            <p>Nenhuma inspeção disponível.</p>
+            {% if form.busca.value or form.estado.value or form.recorte.value or form.estabelecimento.value or form.fiscal.value or form.inicio.value or form.fim.value %}
+            <a href="{{ rota_lista }}">Limpar filtros da lista</a>
+            {% endif %}
+        </div>
+    </li>
     {% endfor %}
 </ul>
 {% include "gestao/paginacao.html" %}
