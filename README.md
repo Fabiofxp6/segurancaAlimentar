@@ -117,11 +117,9 @@ Em outro terminal, a equipe técnica pode conceder o perfil à conta de demonstr
 uv run --locked --env-file .env.development python manage.py provisionar_administrador administrador-demonstracao
 ```
 
-Entre com a conta de demonstração e abra **Gerir usuários** ou **Gerir estabelecimentos**. Para testar um usuário de Estabelecimento, cadastre a conta e uma unidade fictícia, escolha **Gerir vínculo** no cadastro da conta e selecione a unidade. Defina uma senha fictícia com o comando interativo e, em seguida, ative a conta pela tela de gestão.
+Entre como Administrador de demonstração e abra **Gerir usuários > Novo usuário**. Preencha **Senha** e **Confirmar senha** se quiser configurá-la no cadastro. A conta começa inativa. Abra o cadastro salvo, confirme que a senha está configurada e mude **Situação** para **Ativa**. Para configurar a senha depois ou trocá-la, use **Definir senha** ou **Redefinir senha** na edição.
 
-```sh
-uv run --locked --env-file .env.development python manage.py changepassword nome-de-usuario-ficticio
-```
+Para testar um usuário de Estabelecimento, crie uma unidade fictícia em **Gerir estabelecimentos** e use **Gerir vínculo** no cadastro da conta.
 
 A conta poderá abrir **Meu estabelecimento** após entrar. Para confirmar a revogação, encerre o vínculo na gestão e recarregue a página da unidade na sessão do Estabelecimento. O canal de entrega de credenciais reais segue em P014.
 

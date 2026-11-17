@@ -1,6 +1,8 @@
+from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.paginator import Paginator
 from django.db import IntegrityError, transaction
+from django.views.decorators.debug import sensitive_variables
 
 from .autorizacao import exigir_administrador
 from .vinculos import encerrar_abertos
@@ -35,9 +37,26 @@ def consultar(ator_id, usuario_id):
     return _gerenciaveis().get(pk=usuario_id)
 
 
-def criar(ator_id, *, nome, username, perfil):
+def consultar_credencial(ator_id, usuario_id):
+    exigir_administrador(ator_id)
+    return _gerenciaveis().get(pk=usuario_id, perfil__in=PERFIS_GERENCIAVEIS)
+
+
+@sensitive_variables("senha")
+def _definir_senha(usuario, senha):
+    if not senha.strip():
+        raise ValidationError({"senha": "Informe uma senha que contenha caracteres além de espaços."})
     try:
-        return _criar(ator_id, nome=nome, username=username, perfil=perfil)
+        validate_password(senha, usuario)
+    except ValidationError as erro:
+        raise ValidationError({"senha": erro.messages}) from None
+    usuario.set_password(senha)
+
+
+@sensitive_variables("senha")
+def criar(ator_id, *, nome, username, perfil, senha=None):
+    try:
+        return _criar(ator_id, nome=nome, username=username, perfil=perfil, senha=senha)
     except IntegrityError as erro:
         if getattr(getattr(erro.__cause__, "diag", None), "constraint_name", "") == "contas_usuario_username_key":
             raise ValidationError({"username": "Este nome de usuário já está em uso."}) from None
@@ -45,18 +64,25 @@ def criar(ator_id, *, nome, username, perfil):
 
 
 @transaction.atomic
-def _criar(ator_id, *, nome, username, perfil):
+@sensitive_variables("senha")
+def _criar(ator_id, *, nome, username, perfil, senha):
     autor = exigir_administrador(ator_id, bloquear=True)
     _validar_perfil(perfil)
-    usuario = Usuario.objects.create_user(
-        username=username, nome=nome, perfil=perfil, is_active=False,
+    usuario = Usuario(
+        username=Usuario.normalize_username(username), nome=nome, perfil=perfil, is_active=False,
     )
+    alteracoes = {
+        "nome": {"atual": nome}, "username": {"atual": usuario.username},
+        "perfil": {"atual": perfil}, "is_active": {"atual": False},
+    }
+    if senha is None:
+        usuario.set_unusable_password()
+    else:
+        _definir_senha(usuario, senha)
+        alteracoes["credencial"] = {"acao": "definida"}
+    usuario.save()
     HistoricoUsuario.objects.create(
-        usuario=usuario, autor=autor, versao=usuario.versao_gestao,
-        alteracoes={
-            "nome": {"atual": nome}, "username": {"atual": username},
-            "perfil": {"atual": perfil}, "is_active": {"atual": False},
-        },
+        usuario=usuario, autor=autor, versao=usuario.versao_gestao, alteracoes=alteracoes,
     )
     return usuario
 
@@ -88,6 +114,23 @@ def editar(ator_id, usuario_id, *, nome, perfil, situacao, versao):
             usuario=usuario, autor=autor, versao=usuario.versao_gestao, alteracoes=alteracoes,
         )
     return usuario
+
+
+@transaction.atomic
+@sensitive_variables("senha")
+def redefinir_senha(ator_id, usuario_id, *, senha, versao):
+    autor = exigir_administrador(ator_id, bloquear=True)
+    usuario = _gerenciaveis().select_for_update().get(pk=usuario_id, perfil__in=PERFIS_GERENCIAVEIS)
+    if versao != usuario.versao_gestao:
+        raise CadastroDesatualizado
+    acao = "redefinida" if usuario.has_usable_password() else "definida"
+    _definir_senha(usuario, senha)
+    usuario.versao_gestao += 1
+    usuario.save(update_fields=["password", "versao_gestao"])
+    HistoricoUsuario.objects.create(
+        usuario=usuario, autor=autor, versao=usuario.versao_gestao,
+        alteracoes={"credencial": {"acao": acao}},
+    )
 
 
 @transaction.atomic

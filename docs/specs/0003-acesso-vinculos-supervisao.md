@@ -115,7 +115,7 @@ Os nomes abaixo representam operações candidatas, não classes obrigatórias. 
 | Operação candidata | Entradas | Saída e efeitos autorizáveis |
 |---|---|---|
 | Consultar usuários gerenciáveis | Ator, filtros permitidos e paginação validada | Lista mínima filtrada; sem hash, sessão, segredos ou dados fora do escopo; limite/paginação ainda a aprovar |
-| Manter usuário/perfil | Ator, dados validados, referência e versão esperada quando houver edição | Criar/alterar somente campos permitidos; preservar histórico e não conceder poderes técnicos. Criação/entrega de credencial depende de P014, sem senha-padrão inventada |
+| Manter usuário/perfil | Ator, dados validados, referência e versão esperada quando houver edição | Criar/alterar somente campos permitidos; preservar histórico e não conceder poderes técnicos. DC039 permite definir ou redefinir senha para contas gerenciáveis. Entrega de credencial real segue em P014 |
 | Consultar/manter vínculo | Ator, usuário e estabelecimento, operação pretendida e dados validados | Administrador ativo atribui, troca ou encerra. A troca encerra o vínculo anterior na mesma transação. |
 | Consultar equipe/designações | Ator e contexto validado | Dados de fiscalização mínimos autorizados; estabelecimento não obtém gestão de usuários ou deliberação interna |
 | Designar/substituir/encerrar supervisão | Ator, fiscal, contexto, operação, vigência aprovada e referência atual | Validar autoridade P004, elegibilidade, estado e concorrência; conservar registro anterior e autoria |
@@ -167,8 +167,9 @@ Namespace candidato `contas` para gestão de identidade; views próprias herdam 
 | Rota candidata / nome | Métodos e view candidata | Acesso e resposta |
 |---|---|---|
 | `/gestao/usuarios/` — `contas:usuarios` | GET, `UsuariosView(View)` | Gestão autorizada; 200 lista filtrada/paginada, sem credenciais |
-| `/gestao/usuarios/novo/` — `contas:usuario_criar` | GET/POST, `UsuarioCriarView(View)` | Autoridade de gestão; GET form, POST inválido 200, sucesso 302; criação de credencial bloqueada pela política aplicável |
+| `/gestao/usuarios/novo/` — `gestao_contas:criar` | GET/POST, `UsuarioCriarView(View)` | Autoridade de gestão. Cadastro inativo com senha opcional, confirmada em dois campos. POST inválido responde 200 e sucesso redireciona. |
 | `/gestao/usuarios/<usuario_ref>/` — `contas:usuario_editar` | GET/POST, `UsuarioEditarView(View)` | Campos permitidos e alvo no escopo; mesma validação no POST; flags técnicas indisponíveis |
+| `/gestao/usuarios/<id>/senha/` — `gestao_contas:senha` | GET/POST, `UsuarioSenhaView` | Administrador ativo para Fiscalização e Estabelecimento gerenciáveis. POST com versão, senha e confirmação, CSRF e histórico sem valor ou hash. Responde 409 se a versão mudou. Sessões anteriores do titular são recusadas na próxima requisição. |
 | `/gestao/usuarios/<id>/vinculo/` — `gestao_contas:vinculo` | GET/POST, `VinculoView` | GET consulta, POST concede, troca ou encerra. 409 se a versão mudou e a operação diverge do vínculo atual. |
 | `/conta/estabelecimento/<id>/` — `contas:estabelecimento` | GET, `MeuEstabelecimentoView` | 200 para unidade ativa do vínculo efetivo. 404 uniforme fora do conjunto acessível. |
 | `/inspecoes/acoes/<id>/supervisao/` — `inspecoes:supervisao` | GET/POST, `SupervisaoView` | Administrador consulta o histórico e seleciona o conjunto atual de supervisores. Retirar um nome encerra sua designação. |

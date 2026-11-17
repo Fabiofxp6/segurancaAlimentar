@@ -16,7 +16,7 @@ Atualizado em 16/11/2026.
 
 ## Próximo passo
 
-[I13 concluída no recorte local](entrega-i13.md) e [I14 entregue para demonstração](entrega-i14.md). A [interface RF-08](entrega-interface-rf08.md) foi refeita e validada localmente em mobile e desktop. Usar o [preparo local](../README.md#preparo-local) para a apresentação. As condições de operação real seguem em [pendências](pendencias.md).
+[I13 concluída no recorte local](entrega-i13.md) e [I14 entregue para demonstração](entrega-i14.md). A [interface RF-08](entrega-interface-rf08.md) foi refeita e validada localmente em mobile e desktop. A [gestão de senhas](entrega-i03.md#atualização-da-gestão-de-senhas) está disponível. Usar o [preparo local](../README.md#preparo-local) para a apresentação. As condições de operação real seguem em [pendências](pendencias.md).
 
 ## Contexto para retomada
 

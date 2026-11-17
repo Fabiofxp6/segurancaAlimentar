@@ -13,13 +13,45 @@ class UsuarioCadastroForm(forms.Form):
     )
 
 
-class UsuarioCriarForm(UsuarioCadastroForm):
+class SenhaForm(forms.Form):
+    senha = forms.CharField(
+        label="Senha", required=False, strip=False,
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+    )
+    confirmar_senha = forms.CharField(
+        label="Confirmar senha", required=False, strip=False,
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+    )
+
+    def clean(self):
+        dados = super().clean()
+        senha = dados.get("senha")
+        confirmacao = dados.pop("confirmar_senha", None)
+        if senha is not None and confirmacao is not None and senha != confirmacao:
+            self.add_error("confirmar_senha", "As senhas precisam ser iguais.")
+        elif senha == "":
+            dados["senha"] = None
+        return dados
+
+
+class UsuarioCriarForm(UsuarioCadastroForm, SenhaForm):
     username = UsernameField(
         label="Nome de usuário",
         max_length=campo_usuario.max_length,
         validators=campo_usuario.validators,
     )
-    field_order = ("nome", "username", "perfil")
+    field_order = ("nome", "username", "perfil", "senha", "confirmar_senha")
+
+
+class UsuarioSenhaForm(SenhaForm):
+    versao = forms.IntegerField(min_value=1, widget=forms.HiddenInput)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["senha"].label = "Nova senha"
+        self.fields["confirmar_senha"].label = "Confirmar nova senha"
+        self.fields["senha"].required = True
+        self.fields["confirmar_senha"].required = True
 
 
 class UsuarioEditarForm(UsuarioCadastroForm):

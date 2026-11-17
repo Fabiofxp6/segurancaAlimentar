@@ -7,7 +7,7 @@ Etapa verificada no ambiente local em 15/11/2026. A entrega reúne cadastro de e
 | Fluxo | Comportamento |
 |---|---|
 | `/gestao/estabelecimentos/` | Administrador ativo lista, cadastra, consulta, edita e inativa. Nome obrigatório, documento textual e chave preservada na inativação. [Spec 0004](specs/0004-cadastro-estabelecimentos.md) |
-| `/gestao/usuarios/` | Administrador ativo mantém nome, perfil permitido e situação de contas de Fiscalização e Estabelecimento. O nome de usuário é definido no cadastro. Conta nova começa inativa e sem senha utilizável. A ativação exige credencial já configurada. |
+| `/gestao/usuarios/` | Administrador ativo mantém nome, perfil permitido e situação de contas de Fiscalização e Estabelecimento. O nome de usuário é definido no cadastro. Conta nova começa inativa. A ativação exige credencial já configurada. DC039 acrescentou a opção de definir a senha no cadastro ou depois, pela web. |
 | `provisionar_administrador` | Equipe técnica concede o perfil a uma conta dedicada, ativa, com senha configurada e ainda sem perfil. O servidor registra o operador técnico, o alvo, a data e o perfil concedido. A repetição para a mesma conta mantém o registro original. |
 | `/gestao/usuarios/<id>/vinculo/` | Administrador ativo atribui, troca ou encerra a unidade vinculada à conta de Estabelecimento. Cada conta pode ter um vínculo aberto, e a mesma unidade pode ter várias contas. O vínculo pode ser preparado antes da ativação. |
 | `/conta/estabelecimento/<id>/` | Conta ativa de Estabelecimento vê apenas o nome da unidade ativa vinculada. O acesso é consultado no banco a cada requisição. Unidade alheia, inexistente ou com vínculo encerrado recebe a mesma página 404. |
@@ -27,10 +27,14 @@ Alterações de cadastros e vínculos registram autoria, data e dados pertinente
 
 A suíte executou **39 testes no PostgreSQL isolado**, incluindo 10 adicionados para vínculos e concessão administrativa. A navegação em Chromium a 360 px conferiu atribuição do vínculo, página da unidade própria, negativa para outra unidade e encerramento na mesma sessão.
 
+## Atualização da gestão de senhas
+
+A configuração e a redefinição administrativas foram verificadas com os 128 testes da suíte e em Chromium, incluindo a invalidação da sessão anterior na solicitação seguinte, o ingresso com a senha nova e as negativas de acesso. Histórico e respostas preservam o sigilo do valor e seu hash. [Trello](https://trello.com/c/gWdTEHws)
+
 ## Pendências operacionais
 
 - P002 mantém abertas as regras cadastrais adicionais de documento e contato e os procedimentos operacionais de revogação de Administrador.
-- P014 mantém em aberto o canal de entrega de credenciais reais, a política de senha e os efeitos de reativação sobre sessões antigas. O preparo local documenta uma credencial de demonstração configurada interativamente, com ativação separada.
+- P014 mantém em aberto o canal de entrega de credenciais reais, a política de senha e os efeitos de reativação sobre sessões antigas. A ativação continua separada. DC039 acrescentou a configuração de credencial pelo Administrador na própria gestão de usuários.
 - P017, P019 e P020 mantêm em revisão a retenção e consulta a histórico, a homologação em dispositivos e o tratamento geral de resposta perdida. A verificação de repetição desta etapa cobre vínculo e concessão administrativa.
 - A conferência de histórico de identificação em uma inspeção real depende da relação com a inspeção na I05.
 

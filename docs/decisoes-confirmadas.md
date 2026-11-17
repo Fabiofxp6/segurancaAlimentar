@@ -166,7 +166,7 @@ Origem da escolha técnica na I02 autorizada pelo usuário em 15/11/2026. [ADR 0
 
 A I03 adota um perfil-base por conta. Cada conta de Estabelecimento pode ter um vínculo aberto com uma unidade. Uma unidade pode ter várias contas. Administrador ativo mantém vínculos pelo sistema. O acesso do Estabelecimento é recalculado na sessão atual e exige conta e unidade ativas e vínculo aberto.
 
-A concessão do perfil Administrador é restrita ao procedimento técnico registrado, para uma conta ativa, dedicada, com credencial configurada e sem perfil prévio. Contas abertas pela gestão web começam inativas e recebem credencial em passo separado. O canal de entrega de credenciais reais permanece em P014.
+A concessão do perfil Administrador é restrita ao procedimento técnico registrado, para uma conta ativa, dedicada, com credencial configurada e sem perfil prévio. Contas abertas pela gestão web começam inativas. A definição de senha deixou de exigir etapa separada conforme DC039. O canal de entrega de credenciais reais permanece em P014.
 
 Origem: escolhas conservadoras adotadas no recorte local após autorização do usuário para retomar e concluir a I03 em 15/11/2026. [Entrega da I03](entrega-i03.md)
 
@@ -241,6 +241,12 @@ Na demonstração, o fiscal da equipe pode pedir adiamento justificando e propon
 Depois da conclusão, o Estabelecimento pode enviar documento complementar. O fiscal da equipe abre a reanálise e registra o parecer. Se houver correção, aplicar o fluxo de autorização da I11. O recorte não prevê nova visita.
 
 Origem: respostas do usuário em 16/11/2026 sobre autoridade, momento do adiamento e fluxo documental. [Adiamento](specs/0014-adiamento.md) · [Reanálise](specs/0015-reanalise-documental.md)
+
+## DC039 Senhas na gestão de usuários
+
+O Administrador pode definir a senha de contas de Fiscalização e Estabelecimento durante o cadastro ou na edição. A tela mostra a situação da credencial. A senha é armazenada pelo Django como hash. O cadastro permanece inativo até ser ativado na edição. A redefinição registra autoria e efeito no histórico, preservando o sigilo da credencial. O Django recusa as sessões anteriores do titular na requisição seguinte.
+
+Origem: solicitação do usuário em 16/11/2026 para definir, alterar e conferir a configuração da senha pela gestão. [Entrega da I03](entrega-i03.md) · [Preparo local](../README.md#demonstrar-a-gestão-no-ambiente-local)
 
 ## Regras antigas que deixaram de valer
 
