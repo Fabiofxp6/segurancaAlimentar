@@ -1,6 +1,6 @@
 # Estado atual
 
-Atualizado em 17/11/2026.
+Atualizado em 19/11/2026.
 
 ## Situação
 
@@ -16,7 +16,7 @@ Atualizado em 17/11/2026.
 
 ## Próximo passo
 
-[I13 concluída no recorte local](entrega-i13.md) e [I14 entregue para demonstração](entrega-i14.md). A [interface RF-08](entrega-interface-rf08.md) foi revisada em mobile e desktop. O visual anterior do acesso foi restaurado a pedido do usuário. A linguagem visual está em [DESIGN.md](../DESIGN.md). A [gestão de senhas](entrega-i03.md#atualização-da-gestão-de-senhas) está disponível. Usar o [preparo local](../README.md#preparo-local) para a apresentação. As condições de operação real seguem em [pendências](pendencias.md).
+[I13 concluída no recorte local](entrega-i13.md) e [I14 entregue para demonstração](entrega-i14.md). A [interface RF-08](entrega-interface-rf08.md) tem entrada por perfil, consulta de inspeções e seleção de resposta revisadas para celular e desktop. A linguagem visual está em [DESIGN.md](../DESIGN.md). A [gestão de senhas](entrega-i03.md#atualização-da-gestão-de-senhas) está disponível. Usar o [preparo local](../README.md#preparo-local) para a apresentação. As condições de operação real seguem em [pendências](pendencias.md) e no [Trello reconciliado](acompanhamento-trello.md#reconciliação-de-17112026).
 
 ## Contexto para retomada
 

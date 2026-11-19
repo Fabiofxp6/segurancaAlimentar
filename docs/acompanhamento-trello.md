@@ -33,6 +33,20 @@ Orientação do usuário registrada em 10/11/2026: atualizar o Trello em paralel
 
 O projeto local fica em `Documents/segurancaAlimentar`. Os cartões registram o acompanhamento; as fontes, o PRD, as decisões e as pendências permanecem nos documentos correspondentes. Citar um arquivo local no cartão não significa que ele foi anexado ao Trello.
 
+## Reconciliação de 17/11/2026
+
+A conferência cruzou o quadro, o plano I00–I14, a matriz de rastreabilidade e as evidências das entregas. As oito etapas documentais foram registradas como entregues. A validação acadêmica da especificação segue em [Pendente](https://trello.com/c/QfNCWA6o).
+
+| Família | Concluídos no escopo acadêmico local | Pendentes |
+|---|---:|---:|
+| RF | 27 | 1 |
+| RNF | 6 | 8 |
+| RS | 9 | 7 |
+
+A [revisão mais recente do frontend](https://trello.com/c/tv2CVUek) passou na suíte local de 128 testes e foi versionada em 19/11/2026. A [homologação de Safari, dispositivos físicos e acessibilidade complementar](https://trello.com/c/o1C96qWE) segue em Pendente. A [validação do checklist e da pontuação oficiais](https://trello.com/c/mXCEbs0B) e o [piloto remoto](https://trello.com/c/mS2df8Vy) estão em A fazer. A assinatura e o registro de ciência seguem em RF025. As condições de uso real continuam em [pendências](pendencias.md).
+
+[Visão atual do quadro](https://trello.com/c/GW9NBziI) · [Cartão da reconciliação](https://trello.com/c/fI5IHsND) · [Publicação no GitHub](https://trello.com/c/1EYB9XtI) · [Commit do frontend](https://github.com/Fabiofxp6/segurancaAlimentar/commit/476cebb1fe1cd998fbb09ccb70b8802809074022)
+
 ## Como manter o acompanhamento
 
 1. Consultar o cartão existente antes de criar outro. Reaproveitar o cartão da atividade e preservar seu histórico.
@@ -41,7 +55,7 @@ O projeto local fica em `Documents/segurancaAlimentar`. Os cartões registram o 
 4. Ajustar a situação de acordo com o resultado real. Distinguir redação concluída de documento aprovado e implementação de teste executado.
 5. Conferir a gravação no Trello e manter o [estado](state.md) coerente com a entrega. Se a atualização falhar, registrar o que falta sincronizar e comunicar a pendência ao usuário.
 
-Usar as listas existentes: referências em Recursos para Projetos; trabalho futuro em A fazer; validação ou revisão aguardada em Pendente; impedimento real em Bloqueio; tarefa efetivamente terminada em Concluído. Para requisitos, manter as listas da família correspondente e só registrar conclusão de implementação quando houver evidência desse trabalho.
+Use Recursos para Projetos para referências, A fazer para trabalho futuro, Em andamento para execução ativa, Pendente para validação ou decisão aguardada, Bloqueio para impedimentos concretos e Concluído para entregas com evidência. Os requisitos ficam nas listas de RF, RNF e RS. Um requisito concluído no escopo acadêmico mantém as condições para uso real registradas no cartão e em pendências.
 
 Essa rotina acompanha todas as etapas. Continua válida a execução de uma etapa por vez e o avanço somente quando solicitado pelo usuário.
 
@@ -75,7 +89,7 @@ O visual anterior do acesso foi recuperado a pedido do usuário e conferido em s
 
 Revisão de identidade, layout responsivo, acessibilidade, metadados e estados de envio, com a linguagem visual em [DESIGN.md](../DESIGN.md). Os 128 testes passaram e o Chromium percorreu sete larguras de tela. [Cartão](https://trello.com/c/RUDd8LLh) · [Entrega](entrega-interface-rf08.md#revisão-visual-e-de-acessibilidade--17112026)
 
-## Situação em 10/11/2026
+## Histórico da fundação em 10/11/2026
 
 Etapa 1 registrada como concluída. Etapa 2 com redação e conferência terminadas, em Pendente para revisão; PRD Proposto. Etapa 3 com elaboração e conferência documentais concluídas, em Pendente para revisão. Etapa 4 com elaboração e conferência documentais concluídas, em Pendente para revisão. Etapa 5 com elaboração e conferência documentais concluídas, em Pendente para revisão; spec e novo ADR Propostos. Etapa 6 com elaboração e conferência documentais concluídas, em Pendente para revisão; spec e matriz Propostas. Etapa 7 com revisão integrada das três skills concluída, em Pendente para revisão do usuário; a curadoria anterior foi preservada como histórico. Etapa 8 com orientações da raiz e revisão final elaboradas/conferidas, em Pendente para revisão; nenhuma implementação iniciada.
 
