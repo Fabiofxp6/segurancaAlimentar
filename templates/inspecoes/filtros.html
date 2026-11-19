@@ -3,9 +3,9 @@
     {{ form.pagina.errors }}
     {% if form.busca %}
     <div class="busca-inspecao">
+        <label for="{{ form.busca.id_for_label }}">Buscar inspeção</label>
         <div class="caixa-busca">
             <span class="icone ico-busca" aria-hidden="true"></span>
-            <label class="sr-only" for="{{ form.busca.id_for_label }}">Buscar inspeção</label>
             {{ form.busca }}
         </div>
         <button type="submit" class="acao acao--secundaria">Buscar</button>
@@ -14,7 +14,7 @@
     {{ form.recorte }}
     {{ form.recorte.errors }}
     {% endif %}
-    <details class="retratil"{% if not form.busca or form.errors %} open{% endif %}>
+    <details class="retratil"{% if form.errors or form.estabelecimento.value or form.fiscal.value or form.inicio.value or form.fim.value or form.estado.value and not form.busca %} open{% endif %}>
         <summary class="filtros-toggle"><span class="icone ico-filtro" aria-hidden="true"></span>Filtros
             {% if form.estado.value or form.estabelecimento.value or form.fiscal.value or form.inicio.value or form.fim.value %}
             <span class="ajuda status-filtros">Ativos</span>

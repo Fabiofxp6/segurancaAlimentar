@@ -9,7 +9,8 @@
         <a class="atalho" href="{% url 'inspecoes:resultado_liberado' termo.pk %}">
             <span class="icone ico-checklist" aria-hidden="true"></span>
             <span>
-                <strong>Inspeção #{{ termo.resultado.inspecao_id }} · {{ termo.resultado.inspecao.identificacao_estabelecimento.nome }}</strong>
+                <strong>Inspeção #{{ termo.resultado.inspecao_id }}</strong>
+                <small>{{ termo.resultado.inspecao.identificacao_estabelecimento.nome }}</small>
                 <small>Versão {{ termo.versao }} · {% if termo.versao_anterior %}Anterior{% else %}Mais recente liberada{% endif %}</small>
             </span>
             <span class="icone ico-proximo" aria-hidden="true"></span>

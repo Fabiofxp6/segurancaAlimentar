@@ -63,3 +63,5 @@ Use cantos arredondados em painéis e controles. Reserve a forma circular para i
 - **Registros.** Use o cartão inteiro como ligação quando ele representa um único destino. Mostre o texto da ação ou do registro antes dos metadados.
 - **Formulários.** Mantenha os rótulos visíveis e o foco por teclado. Quando houver erros, mostre o resumo no início do formulário e permita ir ao primeiro campo indicado.
 - **Envios.** Escreva o estado junto ao formulário. Exiba a confirmação de salvamento após o retorno do servidor e mantenha um aviso com ação de verificação quando a conexão cair.
+- **Área de acesso.** Destaque o destino principal de cada perfil em um cartão azul-marinho com título e verbo de ação na descrição. Agrupe os outros destinos pela tarefa do usuário.
+- **Checklist.** A área clicável inclui o rótulo inteiro de cada resposta. O rádio marcado, a borda e o fundo distinguem a opção escolhida. O foco por teclado tem contorno próprio.

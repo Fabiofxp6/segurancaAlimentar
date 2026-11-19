@@ -6,13 +6,19 @@
 {% endblock %}
 {% block inspecoes %}
 <div class="cabecalho-com-acoes">
-    <h1 id="titulo-gestao">Inspeções</h1>
+    <div>
+        <h1 id="titulo-gestao">Inspeções</h1>
+        {% if pagina is not None %}
+        <p class="consulta-total">{{ pagina.paginator.count }} {% if pagina.paginator.count == 1 %}inspeção encontrada{% else %}inspeções encontradas{% endif %}.</p>
+        {% endif %}
+    </div>
     {% if admin %}
     <a class="acao" href="{% url 'inspecoes:atribuir' %}"><span class="icone ico-adicionar" aria-hidden="true"></span>Atribuir inspeção</a>
     {% else %}
     <a class="acao" href="{% url 'inspecoes:inicio_direto' %}"><span class="icone ico-adicionar" aria-hidden="true"></span>Iniciar nova inspeção</a>
     {% endif %}
 </div>
+<div class="consulta-ferramentas">
 {% url 'inspecoes:lista' as rota_lista %}
 <nav class="abas abas--inspecoes" aria-label="Situação da inspeção">
     <a href="{{ rota_lista }}{% querystring parametros estado=None recorte=None pagina=None %}"{% if not form.estado.value and not form.recorte.value %} aria-current="page"{% endif %}>Todas</a>
@@ -21,8 +27,8 @@
 </nav>
 {% url 'inspecoes:lista' as sem_filtros %}
 {% include "inspecoes/filtros.html" %}
+</div>
 {% if pagina is not None %}
-<p class="ajuda">{{ pagina.paginator.count }} {% if pagina.paginator.count == 1 %}inspeção encontrada{% else %}inspeções encontradas{% endif %}.</p>
 <ul class="cartoes-inspecao">
     {% if pagina %}
     <li class="cartoes-inspecao__rotulos somente-desktop" aria-hidden="true">

@@ -3,26 +3,68 @@
 {% block barra_titulo %}Área de acesso{% endblock %}
 {% block barra_inicio %}<span class="icone ico-pessoa" aria-hidden="true"></span>{% endblock %}
 {% block menu_links %}{% endblock %}
+{% block painel_classe %}central-acesso{% endblock %}
 {% block gestao %}
-<h1 id="titulo-gestao">Área de acesso</h1>
-<p class="secundario usuario">Usuário conectado: <strong>{{ usuario }}</strong></p>
-<div class="atalhos">
+<header class="central-acesso__cabecalho">
+    <h1 id="titulo-gestao">Área de acesso</h1>
+    <p class="secundario usuario">{{ request.user.get_perfil_display }} · <strong>{{ usuario }}</strong></p>
+</header>
+{% if inspecoes_demo or documentos_demo %}
+<div class="central-acesso__principal">
     {% if inspecoes_demo %}
-    <a class="atalho atalho--destaque" href="{% url 'inspecoes:lista' %}"><span class="icone ico-checklist" aria-hidden="true"></span><span><strong>Inspeções</strong><small>Acompanhar e registrar inspeções</small></span><span class="icone ico-proximo" aria-hidden="true"></span></a>
-    {% endif %}
-    {% if administracao %}
-    <a class="atalho" href="{% url 'gestao_contas:lista' %}"><span class="icone ico-pessoa" aria-hidden="true"></span><strong>Gerir usuários</strong><span class="icone ico-proximo" aria-hidden="true"></span></a>
-    <a class="atalho" href="{% url 'estabelecimentos:lista' %}"><span class="icone ico-pasta" aria-hidden="true"></span><strong>Gerir estabelecimentos</strong><span class="icone ico-proximo" aria-hidden="true"></span></a>
-    <a class="atalho" href="{% url 'checklists:lista' %}"><span class="icone ico-checklist" aria-hidden="true"></span><strong>Gerir checklists</strong><span class="icone ico-proximo" aria-hidden="true"></span></a>
-    {% endif %}
-    {% if documentos_demo %}
-    <a class="atalho atalho--destaque" href="{% url 'inspecoes:resultados_liberados' %}"><span class="icone ico-checklist" aria-hidden="true"></span><strong>Resultados liberados</strong><span class="icone ico-proximo" aria-hidden="true"></span></a>
-    <a class="atalho" href="{% url 'inspecoes:documentos' %}"><span class="icone ico-arquivo" aria-hidden="true"></span><strong>Documentos do estabelecimento</strong><span class="icone ico-proximo" aria-hidden="true"></span></a>
-    {% endif %}
-    {% if unidade_id %}
-    <a class="atalho" href="{% url 'contas:estabelecimento' unidade_id %}"><span class="icone ico-pasta" aria-hidden="true"></span><strong>Meu estabelecimento</strong><span class="icone ico-proximo" aria-hidden="true"></span></a>
+        {% url 'inspecoes:lista' as url_inspecoes %}
+        {% if administracao %}
+            {% include "comum/atalho.html" with url=url_inspecoes icone="checklist" rotulo="Inspeções" descricao="Atribuir uma inspeção ou acompanhar o trabalho das equipes" destaque=True only %}
+        {% else %}
+            {% include "comum/atalho.html" with url=url_inspecoes icone="checklist" rotulo="Inspeções" descricao="Iniciar uma inspeção ou continuar o checklist da sua equipe" destaque=True only %}
+        {% endif %}
+    {% else %}
+        {% url 'inspecoes:resultados_liberados' as url_resultados %}
+        {% include "comum/atalho.html" with url=url_resultados icone="arquivo" rotulo="Resultados liberados" descricao="Consultar o resultado da sua unidade e abrir o termo em PDF" destaque=True only %}
     {% endif %}
 </div>
+{% endif %}
+{% if administracao %}
+<section class="secao">
+    <h2>Gestão</h2>
+    <div class="atalhos atalhos--gestao">
+        {% url 'gestao_contas:lista' as url_usuarios %}
+        {% include "comum/atalho.html" with url=url_usuarios icone="pessoa" rotulo="Gerir usuários" only %}
+        {% url 'estabelecimentos:lista' as url_estabelecimentos %}
+        {% include "comum/atalho.html" with url=url_estabelecimentos icone="pasta" rotulo="Gerir estabelecimentos" only %}
+        {% url 'checklists:lista' as url_checklists %}
+        {% include "comum/atalho.html" with url=url_checklists icone="checklist" rotulo="Gerir checklists" only %}
+        {% if inspecoes_demo %}
+            {% url 'inspecoes:indicadores' as url_indicadores %}
+            {% include "comum/atalho.html" with url=url_indicadores icone="indicadores" rotulo="Indicadores de inspeção" only %}
+        {% endif %}
+    </div>
+</section>
+{% elif unidade_id %}
+<section class="secao">
+    <h2>Minha unidade</h2>
+    <div class="atalhos">
+        {% if documentos_demo %}
+            {% url 'inspecoes:documentos' as url_documentos %}
+            {% include "comum/atalho.html" with url=url_documentos icone="arquivo" rotulo="Documentos do estabelecimento" only %}
+        {% endif %}
+        {% url 'contas:estabelecimento' unidade_id as url_unidade %}
+        {% include "comum/atalho.html" with url=url_unidade icone="pasta" rotulo="Meu estabelecimento" only %}
+    </div>
+</section>
+{% elif inspecoes_demo %}
+<section class="secao">
+    <h2>Pedidos da equipe</h2>
+    <div class="atalhos">
+        {% url 'inspecoes:adiamentos' as url_adiamentos %}
+        {% include "comum/atalho.html" with url=url_adiamentos icone="calendario" rotulo="Adiamentos" only %}
+        {% url 'inspecoes:cancelamentos' as url_cancelamentos %}
+        {% include "comum/atalho.html" with url=url_cancelamentos icone="fechar" rotulo="Cancelamentos" only %}
+        {% url 'inspecoes:correcoes' as url_correcoes %}
+        {% include "comum/atalho.html" with url=url_correcoes icone="nota" rotulo="Correções" only %}
+    </div>
+</section>
+{% endif %}
 <form class="acao-final acesso__sair" method="post" action="{% url 'contas:sair' %}">
     {% csrf_token %}
     <button class="acao acao--secundaria" type="submit">Sair</button>

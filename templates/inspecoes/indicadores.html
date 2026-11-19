@@ -7,9 +7,11 @@
 {% url 'inspecoes:indicadores' as sem_filtros %}
 {% include "inspecoes/filtros.html" %}
 {% if not form.errors %}
-<section aria-labelledby="situacoes">
-    <h2 id="situacoes">Inspeções por situação</h2>
-    <p>{{ total_inspecoes }} {% if total_inspecoes == 1 %}inspeção na consulta{% else %}inspeções na consulta{% endif %}.</p>
+<section class="distribuicao" aria-labelledby="situacoes">
+    <header class="distribuicao__cabecalho">
+        <h2 id="situacoes">Inspeções por situação</h2>
+        <p><strong>{{ total_inspecoes }}</strong> {% if total_inspecoes == 1 %}inspeção na consulta{% else %}inspeções na consulta{% endif %}.</p>
+    </header>
     <ul class="indicadores-situacoes" role="list">
         {% for rotulo, quantidade in situacoes %}
         <li>

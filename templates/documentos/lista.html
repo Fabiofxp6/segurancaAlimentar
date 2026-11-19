@@ -7,7 +7,7 @@
     {% for registro in pagina %}
     <li><a class="atalho" href="{% url 'inspecoes:documentos_inspecao' registro.pk %}">
         <span class="icone ico-arquivo" aria-hidden="true"></span>
-        <strong>Inspeção #{{ registro.pk }} · {% firstof registro.identificacao_estabelecimento.nome registro.estabelecimento.nome %}</strong>
+        <span><strong>Inspeção #{{ registro.pk }}</strong><small>{% firstof registro.identificacao_estabelecimento.nome registro.estabelecimento.nome %}</small></span>
         <span class="icone ico-proximo" aria-hidden="true"></span>
     </a></li>
     {% empty %}<li>Nenhuma inspeção disponível para documentos.</li>{% endfor %}

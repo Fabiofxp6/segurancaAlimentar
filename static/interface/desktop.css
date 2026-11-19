@@ -21,8 +21,8 @@
 }
 .sistema-interno .barra-app__titulo { font-weight: 650; }
 .sistema-interno .barra-app__voltar {
-    min-height: 2.35rem;
-    width: 2.35rem;
+    min-height: 2.75rem;
+    width: 2.75rem;
     margin-inline-start: 0;
     color: var(--azul-forte);
     border: 1px solid #dbe7f3;
@@ -88,7 +88,7 @@
     gap: .55rem;
     align-items: center;
     padding: .53rem .6rem;
-    min-height: 2.5rem;
+    min-height: 2.75rem;
     color: #e2effe;
     border: 1px solid transparent;
     border-radius: .48rem;
@@ -285,5 +285,26 @@ html { scroll-padding-block-start: 4.3rem; }
 .resumo-progresso, .progresso-linha { font-variant-numeric: tabular-nums; }
 .navegacao-desktop__link[aria-current] { box-shadow: inset .2rem 0 #b0d6ff; }
 .central-formulario .rodape-acoes { padding-top: .8rem; border-top: 1px solid var(--borda); }
-.painel .indicadores-situacoes li { background: var(--superficie); border-top: .22rem solid var(--primary); }
+.central-acesso .central-acesso__cabecalho h1 { margin-bottom: .25rem; }
+.sistema-interno .central-acesso .atalhos { grid-template-columns: repeat(auto-fit, minmax(min(100%, 13.5rem), 1fr)); }
+.sistema-interno .central-acesso .atalhos--gestao { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.consulta-ferramentas .filtros-inspecoes {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: .55rem .75rem;
+}
+.consulta-ferramentas .busca-inspecao { max-width: none; margin: 0; }
+.consulta-ferramentas .retratil { align-self: end; margin: 0; padding: 0 .8rem; }
+.consulta-ferramentas .retratil[open], .consulta-ferramentas .errorlist { grid-column: 1 / -1; }
+.consulta-ferramentas .retratil[open] { padding-bottom: .8rem; }
+.consulta-ferramentas .filtros-toggle { gap: .6rem; }
+.consulta-ferramentas .filtros-toggle::after { margin-inline-start: .3rem; }
+.cartao-inspecao__unidade { font-weight: 650; }
+.cartoes-inspecao__rotulos { background: var(--fundo); }
+.sistema-interno .ficha-inspecao__dados .dados-inspecao {
+    border-block: 1px solid var(--borda);
+    padding-block: 1rem;
+    row-gap: .7rem;
+}
 .mesa-item .alerta { max-width: 65ch; }

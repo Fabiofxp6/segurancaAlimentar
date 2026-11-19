@@ -36,3 +36,13 @@ O ambiente isolado passou os 128 testes Django. O fluxo RF-08 e as áreas por pe
 ## Restauração visual do acesso — 17/11/2026
 
 A pedido do usuário, o acesso recuperou o degradê azul, os arcos, a sombra suave e a tipografia da versão a59c033. As mudanças visuais ficam nos blocos do acesso em sistema.css e desktop.css. O Chromium conferiu sete larguras entre 360 e 1.920 px, navegação por teclado, mostrar/ocultar senha e foco nos erros. O axe-core passou nas regras WCAG 2.0 e 2.1 A/AA selecionadas para celular e desktop. [Trello](https://trello.com/c/RNon82ya/103-restaurar-visual-anterior-da-tela-de-acesso)
+
+## Uso em campo e área de acesso por perfil
+
+O fiscal entra em Inspeções e encontra os pedidos da equipe logo abaixo. O administrador tem atalhos para os cadastros e indicadores. O estabelecimento abre os resultados liberados e consulta os documentos da unidade. A lista de inspeções reúne a contagem da consulta, as abas de situação, a busca e os filtros. O painel administrativo mostra a distribuição das inspeções antes dos resultados por versão e regra.
+
+No checklist, tocar ou clicar no rótulo inteiro seleciona a resposta. A seleção, o foco por teclado e o estado de envio têm tratamentos visuais distintos. As folhas de estilo ganharam uma nova URL para que o navegador busque esta revisão. [Trello](https://trello.com/c/tv2CVUek)
+
+A suíte de 128 testes Django passou. A lista coube em 320, 390, 768, 820, 1.024 e 1.440 px. O fluxo de campo passou no Chrome com teclado, perda de conexão e reenvio. O axe-core verificou 15 telas e estados sem apontamentos nas regras WCAG A/AA selecionadas. A automação remota estava desativada no Safari do Mac.
+
+O verificador da design-taste-frontend avaliou uma cópia renderizada da lista com dados fictícios. A revisão corrigiu o foco, o rótulo da busca e o alvo de toque. Ficaram 17 apontamentos visuais, incluindo os critérios de página promocional, as margens calculadas sobre a barra lateral e o recuo do ícone dentro da busca. A captura do login em 1.440 × 818 px é idêntica à da restauração anterior.
